@@ -853,6 +853,12 @@ elif st.session_state.stage == "analyzing":
 # STAGE 4: Results — topic refinement lives here now.
 # ============================================================
 elif st.session_state.stage == "results":
+    # Results use a dedicated view module to keep this analysis file focused
+    # and to present the report as a concise, tabbed decision workspace.
+    from results_view import render_results_page
+    render_results_page(LLM_AVAILABLE, LLM_MODELS, confidence_band, suggest_format)
+    st.stop()
+
     has_ai = "ai_backlog" in st.session_state
     if has_ai:
         view_choice = st.radio(
