@@ -93,6 +93,7 @@ p { line-height: 1.65; }
     background: #F8FAFC; border-left: 3px solid #94A3B8; padding: 10px 14px;
     font-size: 13px; color: #475569; margin: 6px 0; border-radius: 4px;
 }
+.redaction-token { display:inline-block; background:#d9f1ec; color:#0d6258; border:1px solid #b8e2da; border-radius:4px; padding:0 4px; font-weight:750; }
 .privacy-note { background:#e8f7f5; color:#126b5e; padding:12px 16px; border-radius:10px; font-size:13px; }
 .mission-card { display:flex; align-items:center; justify-content:space-between; gap:18px; background:#ffffff; border:1px solid #dfe6ed; border-left:4px solid #147d76; border-radius:10px; padding:17px 20px; margin:8px 0 22px; }
 .mission-label { color:#147d76; font-size:10px; font-weight:850; letter-spacing:.14em; text-transform:uppercase; }
@@ -684,14 +685,39 @@ elif st.session_state.stage == "cleaning":
     st.success(f"**Preparation complete:** {st.session_state.pseudonym_count} unique names, emails, and phone numbers protected.")
     st.markdown('<div class="mission-card"><div><div class="mission-label">Control status</div><div class="mission-title">Personal data protected and reply history safely removed</div></div><div class="xp-pill">Validated</div></div>', unsafe_allow_html=True)
 
-    example_row = df.iloc[0]
-    example_redacted = working_df.iloc[0][st.session_state.body_col + "_redacted"]
-    with st.expander("See an example of what changed"):
-        c1, c2 = st.columns(2)
-        c1.markdown("**Before**")
-        c1.markdown(f'<div class="evidence-box">{html.escape(str(example_row[st.session_state.body_col])[:200])}</div>', unsafe_allow_html=True)
-        c2.markdown("**After**")
-        c2.markdown(f'<div class="evidence-box">{html.escape(str(example_redacted)[:200])}</div>', unsafe_allow_html=True)
+    # Show a record where redaction visibly changed the content. The first
+    # mailbox row often contains no PII, which made the previous before/after
+    # example look identical even when other rows were protected correctly.
+    example = None
+    for field, field_label in [(st.session_state.body_col, "Message body"),
+                               (st.session_state.subject_col, "Subject line")]:
+        redacted_field = field + "_redacted"
+        if field not in working_df.columns or redacted_field not in working_df.columns:
+            continue
+        for idx in working_df.index:
+            original = str(working_df.at[idx, field] or "")
+            protected = str(working_df.at[idx, redacted_field] or "")
+            if original != protected:
+                example = (field_label, original, protected)
+                break
+        if example:
+            break
+
+    with st.expander("Review a redaction example", expanded=example is not None):
+        if example:
+            field_label, original, protected = example
+            protected_html = html.escape(protected[:350])
+            protected_html = re.sub(
+                r"(\[(?:PERSON|EMAIL_ADDRESS|PHONE_NUMBER)_\d+\])",
+                r'<span class="redaction-token">\1</span>', protected_html)
+            st.caption(f"Example selected from: {field_label}. The original is displayed locally for comparison only.")
+            c1, c2 = st.columns(2)
+            c1.markdown("**Cleaned original**")
+            c1.markdown(f'<div class="evidence-box">{html.escape(original[:350])}</div>', unsafe_allow_html=True)
+            c2.markdown("**Protected version used for analysis**")
+            c2.markdown(f'<div class="evidence-box">{protected_html}</div>', unsafe_allow_html=True)
+        else:
+            st.info("No subject or message-body text changed during redaction, so there is no meaningful before-and-after example to display.")
 
     if st.button("Continue →", type="primary"):
         st.session_state.stage = "scoping" if st.session_state.get("use_llm") else "analyzing"
