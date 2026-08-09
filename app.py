@@ -34,22 +34,48 @@ st.set_page_config(page_title="Mailbox Knowledge Gap Analyzer", layout="wide", p
 
 st.markdown("""
 <style>
-.stApp { background: radial-gradient(circle at 90% 0%, #eef2ff 0, transparent 30%), #f8fafc; }
-.block-container { max-width: 1180px; padding-top: 2rem; padding-bottom: 4rem; }
-h1, h2, h3 { letter-spacing: -0.025em; color: #172554; }
-[data-testid="stFileUploaderDropzone"] { background: white; border: 1.5px dashed #94a3b8; border-radius: 16px; }
-[data-testid="stMetric"] { background: white; border: 1px solid #e2e8f0; padding: 16px; border-radius: 14px; }
-.hero-kicker { color:#4f46e5; font-size:12px; font-weight:800; letter-spacing:.12em; text-transform:uppercase; }
-.step-pill {
-    display: inline-block; padding: 6px 16px; border-radius: 20px;
-    font-size: 13px; font-weight: 600; margin-right: 8px;
+.stApp { background: #f6f8fc; color: #15233c; }
+[data-testid="stHeader"] { background: transparent; }
+.block-container { max-width: 1120px; padding-top: 3.25rem; padding-bottom: 5rem; }
+h1, h2, h3 { letter-spacing: -0.035em; color: #112344; }
+h1 a, h2 a, h3 a { display: none !important; }
+p { line-height: 1.65; }
+.hero {
+    position: relative; overflow: hidden; color: white;
+    background: linear-gradient(120deg, #0b1f3a 0%, #183d65 58%, #176b78 100%);
+    border-radius: 24px; padding: 34px 38px 32px; margin: 0 0 22px;
+    box-shadow: 0 20px 60px rgba(15, 35, 64, .14);
 }
-.step-done { background: #DCFCE7; color: #166534; }
-.step-active { background: #1F3864; color: white; }
-.step-pending { background: #E5E7EB; color: #6B7280; }
+.hero:after { content:""; position:absolute; width:260px; height:260px; border-radius:50%; right:-70px; top:-120px; background:rgba(255,255,255,.08); }
+.hero-kicker { color:#8ee3dc; font-size:11px; font-weight:800; letter-spacing:.16em; text-transform:uppercase; margin-bottom:9px; }
+.hero-title { font-size:clamp(28px,4vw,44px); line-height:1.08; letter-spacing:-.045em; font-weight:780; margin:0 0 10px; }
+.hero-copy { color:#cfdae8; font-size:15px; max-width:690px; margin:0; }
+.steps { display:flex; align-items:center; gap:8px; margin:18px 0 42px; flex-wrap:wrap; }
+.step-pill {
+    display: inline-flex; align-items:center; padding: 8px 14px; border-radius: 999px;
+    font-size: 12px; font-weight: 750; border:1px solid transparent;
+}
+.step-done { background: #e3f8f3; color: #126b5e; border-color:#c7eee5; }
+.step-active { background: #16385f; color: white; box-shadow:0 7px 18px rgba(22,56,95,.18); }
+.step-pending { background: #edf1f6; color: #768399; border-color:#e1e6ed; }
+.feature-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin:22px 0 26px; }
+.feature-card { background:#fff; border:1px solid #e4e9f0; border-radius:16px; padding:20px; box-shadow:0 5px 20px rgba(17,35,68,.04); }
+.feature-icon { width:38px; height:38px; display:flex; align-items:center; justify-content:center; border-radius:11px; background:#e8f7f5; font-size:19px; margin-bottom:14px; }
+.feature-title { font-weight:750; color:#152c4f; font-size:14px; margin-bottom:5px; }
+.feature-copy { color:#64748b; font-size:13px; line-height:1.5; }
+[data-testid="stFileUploader"] { background:white; padding:22px; border:1px solid #e4e9f0; border-radius:18px; box-shadow:0 8px 25px rgba(17,35,68,.045); }
+[data-testid="stFileUploaderDropzone"] { background:#f8fbfd; border:1.5px dashed #91a7b9; border-radius:13px; }
+[data-testid="stMetric"] { background: white; border: 1px solid #e4e9f0; padding: 18px; border-radius: 16px; box-shadow:0 6px 20px rgba(17,35,68,.04); }
+[data-testid="stMetricLabel"] { color:#64748b; }
+[data-testid="stMetricValue"] { color:#112344; }
+.stButton > button, .stDownloadButton > button { border-radius:10px; min-height:44px; font-weight:700; padding-left:20px; padding-right:20px; }
+.stButton > button[kind="primary"] { background:#147d76; border-color:#147d76; box-shadow:0 7px 18px rgba(20,125,118,.18); }
+.stButton > button[kind="primary"]:hover { background:#0f6a64; border-color:#0f6a64; }
+[data-testid="stExpander"] { background:white; border:1px solid #e4e9f0; border-radius:12px; overflow:hidden; }
+[data-testid="stProgress"] > div > div > div { background-color:#16867d; }
 .article-card {
-    background: white; border: 1px solid #E5E7EB; border-radius: 12px;
-    padding: 20px 24px; margin-bottom: 16px;
+    background: white; border: 1px solid #e4e9f0; border-radius: 16px;
+    padding: 22px 24px; margin: 14px 0 8px; box-shadow:0 6px 20px rgba(17,35,68,.04);
 }
 .rank-badge {
     display: inline-block; width: 36px; height: 36px; border-radius: 50%;
@@ -63,7 +89,13 @@ h1, h2, h3 { letter-spacing: -0.025em; color: #172554; }
     background: #F8FAFC; border-left: 3px solid #94A3B8; padding: 10px 14px;
     font-size: 13px; color: #475569; margin: 6px 0; border-radius: 4px;
 }
-.privacy-note { background:#eef2ff; color:#3730a3; padding:12px 16px; border-radius:10px; font-size:13px; }
+.privacy-note { background:#e8f7f5; color:#126b5e; padding:12px 16px; border-radius:10px; font-size:13px; }
+@media (max-width: 720px) {
+  .block-container { padding-top:1.5rem; }
+  .hero { padding:26px 22px; border-radius:18px; }
+  .feature-grid { grid-template-columns:1fr; }
+  .steps { margin-bottom:30px; }
+}
 </style>
 """, unsafe_allow_html=True)
 
@@ -444,13 +476,16 @@ def step_indicator():
     for i, s in enumerate(steps):
         cls = "step-done" if i < current else ("step-active" if i == current else "step-pending")
         html += f'<span class="step-pill {cls}">{s}</span>'
-    st.markdown(html, unsafe_allow_html=True)
-    st.write("")
+    st.markdown(f'<div class="steps">{html}</div>', unsafe_allow_html=True)
 
 
-st.markdown('<div class="hero-kicker">Support intelligence · privacy first</div>', unsafe_allow_html=True)
-st.title("📬 Mailbox Knowledge Gap Analyzer")
-st.caption("Turn repeated questions into a defensible, evidence-backed help-article backlog.")
+st.markdown("""
+<section class="hero">
+  <div class="hero-kicker">Support intelligence · privacy first</div>
+  <div class="hero-title">Mailbox Knowledge Gap Analyzer</div>
+  <p class="hero-copy">Turn recurring support questions into a ranked, evidence-backed content plan—without exposing personal information.</p>
+</section>
+""", unsafe_allow_html=True)
 step_indicator()
 
 # ============================================================
@@ -460,10 +495,13 @@ if st.session_state.stage == "upload":
     st.subheader("Upload a mailbox export to begin")
     st.caption("We'll protect personal data first, then find which self-service articles would cut the most repeat emails.")
 
-    c1, c2, c3 = st.columns(3)
-    c1.info("🔒 **Privacy-first**\n\nNames, emails, and phone numbers are removed before any analysis runs.")
-    c2.info("🎯 **Evidence-based**\n\nEvery recommendation is backed by real examples, not a black-box score.")
-    c3.info("📊 **Ranked output**\n\nSee exactly which article to write first, and why.")
+    st.markdown("""
+    <div class="feature-grid">
+      <div class="feature-card"><div class="feature-icon">🔒</div><div class="feature-title">Privacy-first</div><div class="feature-copy">Names, emails and phone numbers are protected before analysis.</div></div>
+      <div class="feature-card"><div class="feature-icon">🎯</div><div class="feature-title">Evidence-based</div><div class="feature-copy">Recommendations are backed by real, redacted mailbox examples.</div></div>
+      <div class="feature-card"><div class="feature-icon">↗</div><div class="feature-title">Prioritised output</div><div class="feature-copy">Know which help article to write first, and why it matters.</div></div>
+    </div>
+    """, unsafe_allow_html=True)
 
     st.write("")
     uploaded_file = st.file_uploader("Mailbox export (.xlsx, .xls, or .csv)", type=["xlsx", "xls", "csv"])
@@ -562,7 +600,7 @@ elif st.session_state.stage == "cleaning":
     working_df = st.session_state.working_df
     status.empty()
     progress.progress(1.0)
-    st.success(f"✅ **{len(pseudonym_map)} unique names, emails, and phone numbers protected.** Nothing identifiable leaves this step.")
+    st.success(f"✅ **{st.session_state.pseudonym_count} unique names, emails, and phone numbers protected.** Nothing identifiable leaves this step.")
 
     example_row = df.iloc[0]
     example_redacted = working_df.iloc[0][st.session_state.body_col + "_redacted"]
