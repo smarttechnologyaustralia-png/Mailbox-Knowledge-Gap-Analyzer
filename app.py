@@ -805,13 +805,49 @@ elif st.session_state.stage == "results":
 
     st.subheader("Stage 4 — Executive findings")
 
-    if active == "ai" and st.session_state.get("chosen_scope") == "sample":
-        pop = st.session_state.get("population_size", total)
-        used = st.session_state.get("sample_size_used", total)
-        st.info(f"**These results are based on a sample of {used} emails, "
-                f"out of {pop} total in this mailbox** — not every email was individually "
-                f"classified. Topic percentages below are from the sample directly; treat "
-                f"them as an estimate of the full mailbox, not an exact count.")
+    analysis_method = "AI-powered semantic classification" if active == "ai" else "Local keyword and rule-based classification"
+    is_sample = active == "ai" and st.session_state.get("chosen_scope") == "sample"
+    population_size = st.session_state.get("population_size", total) if is_sample else total
+
+    st.markdown("## Purpose")
+    st.write(
+        "To identify recurring knowledge demand in the mailbox and prioritise the help content "
+        "most likely to address genuine, repeatable questions."
+    )
+
+    st.markdown("## Scope of Analysis")
+    scope_c1, scope_c2, scope_c3 = st.columns(3)
+    scope_c1.metric("Mailbox population", population_size)
+    scope_c2.metric("Records assessed", total)
+    scope_c3.metric("Analysis method", "Semantic AI" if active == "ai" else "Rules-based")
+    if is_sample:
+        st.info(f"**Sample-based assessment:** {total} of {population_size} emails were classified. Findings are directional estimates, not exact whole-mailbox counts.")
+    else:
+        st.caption(f"The assessment covered all {total} records selected during data intake using {analysis_method.lower()}.")
+
+    included_col, excluded_col = st.columns(2)
+    with included_col:
+        st.markdown("## Included in the Analysis")
+        st.markdown(
+            "- Redacted subject lines and current-message content\n"
+            "- Classification of questions, acknowledgments, updates and automated messages\n"
+            "- Topic demand, supporting examples and content priorities\n"
+            + ("- Generic versus case-specific question assessment" if active == "ai" else "- Editable topic taxonomy and keyword patterns")
+        )
+    with excluded_col:
+        st.markdown("## Excluded from the Analysis")
+        excluded_items = [
+            "Personal identifiers removed during preparation",
+            "Quoted reply history and HTML formatting",
+            "Attachments and information outside the uploaded export",
+        ]
+        if is_sample:
+            excluded_items.append(f"Individual classification of {population_size - total} non-sampled emails")
+        if active == "free":
+            excluded_items.append("Semantic meaning and case-specificity assessment")
+        st.markdown("\n".join(f"- {item}" for item in excluded_items))
+
+    st.markdown("## Key Findings")
 
     c1, c2, c3, c4 = st.columns(4)
     c1.metric("Emails analyzed", total)
@@ -819,6 +855,7 @@ elif st.session_state.stage == "results":
     c3.metric("Topics identified", len(backlog))
     c4.metric("Names/emails/phones protected", st.session_state.pseudonym_count)
 
+    st.markdown("### Knowledge Demand Summary")
     st.markdown(f"""
     <div class="achievement-grid">
       <div class="achievement"><div class="achievement-icon">PII</div><div><strong>Privacy control</strong><span>Identifiers protected before analysis</span></div></div>
@@ -832,11 +869,11 @@ elif st.session_state.stage == "results":
     """, unsafe_allow_html=True)
 
     st.write("")
-    st.markdown("### What's actually in this mailbox")
+    st.markdown("#### Mailbox composition")
     st.bar_chart(type_summary.set_index("type")["count"])
 
     st.write("")
-    st.markdown("### Prioritised knowledge article backlog")
+    st.markdown("#### Prioritised knowledge article backlog")
     st.caption("Ranked by genuine, answerable question volume per topic — not raw email count.")
 
     if len(backlog) == 0:
@@ -872,12 +909,57 @@ elif st.session_state.stage == "results":
             else:
                 st.caption("No clean example snippets available for this topic.")
 
-    st.write("")
-    st.download_button(
-        "Download full backlog as CSV",
-        backlog.drop(columns=["examples"]).to_csv(index=False).encode("utf-8"),
-        "knowledge_backlog.csv", "text/csv",
-    )
+    st.markdown("## Assumptions and Limitations")
+    limitations = [
+        "Results reflect only the content and data quality of the uploaded mailbox export.",
+        "Rule-based results depend on the configured topic terms and may miss context, synonyms or unfamiliar domains.",
+        "Redaction and quoted-reply removal are automated controls; representative records should be reviewed before decisions are finalised.",
+        "The opportunity score is an indicator of potentially answerable demand, not a forecast of contact reduction.",
+    ]
+    if is_sample:
+        limitations.append("Sample-based topic volumes are estimates and should not be presented as exact full-mailbox counts.")
+    if active == "ai":
+        limitations.append("AI classifications may contain errors and should be validated by a subject-matter owner.")
+    st.markdown("\n".join(f"- {item}" for item in limitations))
+
+    topic_report_lines = [
+        f"{int(row['rank'])}. **{row['topic']}** — {int(row['genuine_questions'])} priority questions from {int(row['total_emails'])} topic emails."
+        for _, row in backlog.iterrows()
+    ] or ["No topic demand met the configured matching criteria."]
+    report_markdown = f"""# Mailbox Knowledge Gap Assessment
+
+## Purpose
+To identify recurring knowledge demand in the mailbox and prioritise help content most likely to address genuine, repeatable questions.
+
+## Scope of Analysis
+- Mailbox population: {population_size}
+- Records assessed: {total}
+- Method: {analysis_method}
+- Scope basis: {'Stratified sample; findings are directional estimates' if is_sample else 'All records selected during data intake'}
+
+## Included in the Analysis
+- Redacted subject lines and current-message content
+- Email type and topic classification
+- Knowledge-demand ranking and supporting evidence
+
+## Excluded from the Analysis
+{chr(10).join(f'- {item}' for item in excluded_items)}
+
+## Key Findings
+- Genuine questions identified: {genuine_total} ({100*genuine_total/total:.0f}% of assessed records)
+- Topics identified: {len(backlog)}
+- Self-Service Opportunity Score: {opportunity_score}/100
+
+### Knowledge Demand Summary
+{chr(10).join(topic_report_lines)}
+
+## Assumptions and Limitations
+{chr(10).join(f'- {item}' for item in limitations)}
+"""
+
+    dl1, dl2 = st.columns(2)
+    dl1.download_button("Download structured report", report_markdown.encode("utf-8"), "mailbox_knowledge_gap_report.md", "text/markdown", width="stretch")
+    dl2.download_button("Download backlog data", backlog.drop(columns=["examples"]).to_csv(index=False).encode("utf-8"), "knowledge_backlog.csv", "text/csv", width="stretch")
 
     # ---- Refinement, now living here instead of pre-analysis ----
     # Only applies to rule-based mode -- AI-powered mode discovers topics
