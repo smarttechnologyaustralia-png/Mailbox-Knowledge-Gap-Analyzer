@@ -51,7 +51,7 @@ p { line-height: 1.65; }
 .hero-kicker { color:#8ee3dc; font-size:11px; font-weight:800; letter-spacing:.16em; text-transform:uppercase; margin-bottom:9px; }
 .hero-title { font-size:clamp(28px,4vw,44px); line-height:1.08; letter-spacing:-.045em; font-weight:780; margin:0 0 10px; }
 .hero-copy { color:#cfdae8; font-size:15px; max-width:690px; margin:0; }
-.hero-chip { display:inline-flex; align-items:center; gap:7px; margin-top:20px; padding:7px 11px; border:1px solid rgba(255,255,255,.16); background:rgba(255,255,255,.08); border-radius:999px; color:#e8f6f4; font-size:11px; font-weight:700; }
+.hero-chip { display:inline-flex; align-items:center; gap:7px; margin-top:20px; padding-top:14px; border-top:1px solid rgba(255,255,255,.14); color:#c9dce3; font-size:11px; font-weight:650; letter-spacing:.02em; }
 .steps { display:flex; align-items:center; gap:8px; margin:18px 0 42px; flex-wrap:wrap; }
 .step-pill {
     display: inline-flex; align-items:center; padding: 8px 14px; border-radius: 999px;
@@ -59,13 +59,12 @@ p { line-height: 1.65; }
 }
 .step-done { background: #e3f8f3; color: #126b5e; border-color:#c7eee5; }
 .step-done:before { content:'✓'; display:inline-grid; place-items:center; width:18px; height:18px; margin-right:6px; border-radius:50%; color:white; background:#20a38f; font-size:11px; }
-.step-active { background: #16385f; color: white; box-shadow:0 7px 18px rgba(22,56,95,.18); animation:activeGlow 2.2s ease-in-out infinite; }
+.step-active { background: #16385f; color: white; box-shadow:0 7px 18px rgba(22,56,95,.18); }
 .step-pending { background: #edf1f6; color: #768399; border-color:#e1e6ed; }
-@keyframes activeGlow { 0%,100%{box-shadow:0 7px 18px rgba(22,56,95,.16)} 50%{box-shadow:0 8px 25px rgba(20,125,118,.3)} }
 .feature-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin:22px 0 26px; }
 .feature-card { background:#fff; border:1px solid #e4e9f0; border-radius:16px; padding:20px; box-shadow:0 5px 20px rgba(17,35,68,.04); transition:transform .2s ease, box-shadow .2s ease, border-color .2s ease; }
 .feature-card:hover { transform:translateY(-3px); border-color:#b9ddd8; box-shadow:0 12px 30px rgba(17,35,68,.09); }
-.feature-icon { width:38px; height:38px; display:flex; align-items:center; justify-content:center; border-radius:11px; background:#e8f7f5; font-size:19px; margin-bottom:14px; }
+.feature-icon { width:38px; height:38px; display:flex; align-items:center; justify-content:center; border-radius:9px; background:#e8f7f5; color:#126b5e; font-size:11px; font-weight:850; letter-spacing:.06em; margin-bottom:14px; }
 .feature-title { font-weight:750; color:#152c4f; font-size:14px; margin-bottom:5px; }
 .feature-copy { color:#64748b; font-size:13px; line-height:1.5; }
 [data-testid="stFileUploader"] { background:white; padding:22px; border:1px solid #e4e9f0; border-radius:18px; box-shadow:0 8px 25px rgba(17,35,68,.045); }
@@ -95,13 +94,13 @@ p { line-height: 1.65; }
     font-size: 13px; color: #475569; margin: 6px 0; border-radius: 4px;
 }
 .privacy-note { background:#e8f7f5; color:#126b5e; padding:12px 16px; border-radius:10px; font-size:13px; }
-.mission-card { display:flex; align-items:center; justify-content:space-between; gap:18px; background:linear-gradient(135deg,#ffffff,#f1fbf9); border:1px solid #cfeae6; border-radius:16px; padding:17px 20px; margin:8px 0 22px; }
+.mission-card { display:flex; align-items:center; justify-content:space-between; gap:18px; background:#ffffff; border:1px solid #dfe6ed; border-left:4px solid #147d76; border-radius:10px; padding:17px 20px; margin:8px 0 22px; }
 .mission-label { color:#147d76; font-size:10px; font-weight:850; letter-spacing:.14em; text-transform:uppercase; }
 .mission-title { color:#173456; font-weight:760; font-size:15px; margin-top:3px; }
-.xp-pill { flex:none; background:#16385f; color:white; padding:8px 12px; border-radius:999px; font-size:11px; font-weight:800; }
+.xp-pill { flex:none; background:#edf3f7; color:#34506d; padding:8px 12px; border-radius:6px; font-size:10px; font-weight:800; letter-spacing:.06em; text-transform:uppercase; }
 .achievement-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin:16px 0 28px; }
 .achievement { display:flex; align-items:center; gap:12px; background:white; border:1px solid #e4e9f0; border-radius:14px; padding:14px 16px; }
-.achievement-icon { display:grid; place-items:center; width:38px; height:38px; flex:none; border-radius:50%; background:linear-gradient(145deg,#fff4c7,#ffd966); box-shadow:inset 0 0 0 1px rgba(154,111,0,.12); }
+.achievement-icon { display:grid; place-items:center; width:38px; height:38px; flex:none; border-radius:8px; background:#e8f7f5; color:#126b5e; border:1px solid #cde8e3; font-size:10px; font-weight:850; letter-spacing:.05em; }
 .achievement strong { display:block; color:#173456; font-size:12px; }
 .achievement span { color:#78869a; font-size:10px; }
 .score-panel { display:flex; align-items:center; gap:22px; background:linear-gradient(135deg,#102b4c,#17516a); color:white; border-radius:18px; padding:22px 26px; margin:22px 0 30px; box-shadow:0 14px 35px rgba(16,43,76,.14); }
@@ -110,8 +109,8 @@ p { line-height: 1.65; }
 .score-value { position:relative; z-index:1; font-weight:850; font-size:23px; }
 .score-copy strong { display:block; color:white; font-size:18px; margin-bottom:5px; }
 .score-copy span { color:#c9dce3; font-size:12px; line-height:1.5; }
-.rank-one { border-color:#e6c75b; background:linear-gradient(120deg,#fffdf5,#fff); }
-@media (prefers-reduced-motion: reduce) { .step-active { animation:none; } .feature-card { transition:none; } }
+.rank-one { border-left:4px solid #147d76; background:linear-gradient(120deg,#f6fcfb,#fff); }
+@media (prefers-reduced-motion: reduce) { .feature-card { transition:none; } }
 @media (max-width: 720px) {
   .block-container { padding-top:1.5rem; }
   .hero { padding:26px 22px; border-radius:18px; }
@@ -394,10 +393,10 @@ def run_llm_analysis(df, subject_col, body_col, api_key, model, sample_size=40,
 
 def confidence_band(pct_genuine):
     if pct_genuine >= 70:
-        return "High", "badge-high", "🟢"
+        return "High", "badge-high", "●"
     if pct_genuine >= 40:
-        return "Medium", "badge-medium", "🟡"
-    return "Needs review", "badge-low", "🔴"
+        return "Medium", "badge-medium", "●"
+    return "Needs review", "badge-low", "●"
 
 
 def suggest_format(topic):
@@ -508,7 +507,7 @@ st.markdown("""
   <div class="hero-kicker">Support intelligence · privacy first</div>
   <div class="hero-title">Mailbox Knowledge Gap Analyzer</div>
   <p class="hero-copy">Turn recurring support questions into a ranked, evidence-backed content plan—without exposing personal information.</p>
-  <div class="hero-chip">✦ 4 checkpoints &nbsp;·&nbsp; instant free analysis &nbsp;·&nbsp; real evidence</div>
+  <div class="hero-chip">FOUR-STAGE REVIEW &nbsp;·&nbsp; PRIVACY-LED &nbsp;·&nbsp; EVIDENCE-BASED</div>
 </section>
 """, unsafe_allow_html=True)
 step_indicator()
@@ -517,16 +516,16 @@ step_indicator()
 # STAGE 1: Upload — no column dropdowns, no topic config.
 # ============================================================
 if st.session_state.stage == "upload":
-    st.subheader("Checkpoint 1 — Load your mailbox")
+    st.subheader("Stage 1 — Data intake")
     st.caption("We'll protect personal data first, then find which self-service articles would cut the most repeat emails.")
 
-    st.markdown('<div class="mission-card"><div><div class="mission-label">Current mission</div><div class="mission-title">Upload a mailbox export and unlock your knowledge-gap map</div></div><div class="xp-pill">+25 insight XP</div></div>', unsafe_allow_html=True)
+    st.markdown('<div class="mission-card"><div><div class="mission-label">Engagement brief</div><div class="mission-title">Upload a mailbox export to establish the knowledge-demand baseline</div></div><div class="xp-pill">Stage 1 of 4</div></div>', unsafe_allow_html=True)
 
     st.markdown("""
     <div class="feature-grid">
-      <div class="feature-card"><div class="feature-icon">🔒</div><div class="feature-title">Privacy-first</div><div class="feature-copy">Names, emails and phone numbers are protected before analysis.</div></div>
-      <div class="feature-card"><div class="feature-icon">🎯</div><div class="feature-title">Evidence-based</div><div class="feature-copy">Recommendations are backed by real, redacted mailbox examples.</div></div>
-      <div class="feature-card"><div class="feature-icon">↗</div><div class="feature-title">Prioritised output</div><div class="feature-copy">Know which help article to write first, and why it matters.</div></div>
+      <div class="feature-card"><div class="feature-icon">01</div><div class="feature-title">Privacy by design</div><div class="feature-copy">Personal identifiers are protected before analytical processing.</div></div>
+      <div class="feature-card"><div class="feature-icon">02</div><div class="feature-title">Traceable evidence</div><div class="feature-copy">Each recommendation is supported by real, redacted mailbox examples.</div></div>
+      <div class="feature-card"><div class="feature-icon">03</div><div class="feature-title">Decision-ready output</div><div class="feature-copy">A clear, ranked content backlog focused on measurable demand.</div></div>
     </div>
     """, unsafe_allow_html=True)
 
@@ -605,7 +604,7 @@ if st.session_state.stage == "upload":
 # STAGE 2: Cleaning
 # ============================================================
 elif st.session_state.stage == "cleaning":
-    st.subheader("Checkpoint 2 — Activate the privacy shield")
+    st.subheader("Stage 2 — Data protection and preparation")
     df = st.session_state.raw_df
 
     st.write("Before any analysis runs, every name, email address, and phone number is found and replaced with a placeholder — locally, before anything is examined further.")
@@ -627,8 +626,8 @@ elif st.session_state.stage == "cleaning":
     working_df = st.session_state.working_df
     status.empty()
     progress.progress(1.0)
-    st.success(f"🛡️ **Privacy shield complete:** {st.session_state.pseudonym_count} unique names, emails, and phone numbers protected.")
-    st.markdown('<div class="mission-card"><div><div class="mission-label">Checkpoint cleared</div><div class="mission-title">Personal data protected and reply history safely cleaned</div></div><div class="xp-pill">+50 privacy XP</div></div>', unsafe_allow_html=True)
+    st.success(f"**Preparation complete:** {st.session_state.pseudonym_count} unique names, emails, and phone numbers protected.")
+    st.markdown('<div class="mission-card"><div><div class="mission-label">Control status</div><div class="mission-title">Personal data protected and reply history safely removed</div></div><div class="xp-pill">Validated</div></div>', unsafe_allow_html=True)
 
     example_row = df.iloc[0]
     example_redacted = working_df.iloc[0][st.session_state.body_col + "_redacted"]
@@ -649,7 +648,7 @@ elif st.session_state.stage == "cleaning":
 # stratified sample instead, with live-updating cost/time as they adjust.
 # ============================================================
 elif st.session_state.stage == "scoping":
-    st.subheader("Checkpoint 3 — Choose your analysis quest")
+    st.subheader("Stage 3 — Analysis scope")
     working_df = st.session_state.working_df
     subj_col = st.session_state.subject_col + "_redacted"
     body_col = st.session_state.body_col + "_redacted"
@@ -719,7 +718,7 @@ elif st.session_state.stage == "scoping":
 # STAGE 3: Analyzing — uses smart defaults automatically, or the AI path.
 # ============================================================
 elif st.session_state.stage == "analyzing":
-    st.subheader("Checkpoint 3 — Mapping the knowledge gaps")
+    st.subheader("Stage 3 — Pattern analysis")
     status = st.empty()
     progress = st.progress(0.0)
 
@@ -747,7 +746,7 @@ elif st.session_state.stage == "analyzing":
             st.session_state.sample_size_used = len(data_to_analyze)
             st.session_state.population_size = len(st.session_state.working_df)
             status.empty()
-            st.success("✅ Analysis complete — topics were discovered directly from this mailbox, not from a pre-set list.")
+            st.success("Analysis complete — topics were discovered directly from this mailbox, not from a pre-set list.")
         except Exception as e:
             status.empty()
             st.error(f"AI-powered analysis failed: {e}")
@@ -770,7 +769,7 @@ elif st.session_state.stage == "analyzing":
             st.session_state.subject_col + "_redacted", st.session_state.body_col + "_redacted",
             st.session_state.sender_col)
         status.empty()
-        st.success("✅ Analysis complete, using a general-purpose starting taxonomy. You can refine the topic categories from the results screen.")
+        st.success("Analysis complete, using a general-purpose starting taxonomy. You can refine the topic categories from the results screen.")
 
     result_key = "ai" if st.session_state.get("use_llm") else "free"
     st.session_state[f"{result_key}_analyzed_df"] = analyzed_df
@@ -789,11 +788,11 @@ elif st.session_state.stage == "results":
     if has_ai:
         view_choice = st.radio(
             "Which results to view?",
-            ["🧠 AI-powered (more accurate)", "⚡ Fast/keyword-based"],
+            ["AI-powered (more accurate)", "Fast / keyword-based"],
             horizontal=True,
             index=0 if st.session_state.get("active_result") == "ai" else 1,
         )
-        active = "ai" if view_choice.startswith("🧠") else "free"
+        active = "ai" if view_choice.startswith("AI-powered") else "free"
     else:
         active = "free"
 
@@ -804,12 +803,12 @@ elif st.session_state.stage == "results":
     genuine_total = int((analyzed_df["email_type"] == "genuine_question").sum())
     opportunity_score = round(100 * genuine_total / total)
 
-    st.subheader("🏆 Mission complete — Your knowledge roadmap")
+    st.subheader("Stage 4 — Executive findings")
 
     if active == "ai" and st.session_state.get("chosen_scope") == "sample":
         pop = st.session_state.get("population_size", total)
         used = st.session_state.get("sample_size_used", total)
-        st.info(f"📐 **These results are based on a sample of {used} emails, "
+        st.info(f"**These results are based on a sample of {used} emails, "
                 f"out of {pop} total in this mailbox** — not every email was individually "
                 f"classified. Topic percentages below are from the sample directly; treat "
                 f"them as an estimate of the full mailbox, not an exact count.")
@@ -822,9 +821,9 @@ elif st.session_state.stage == "results":
 
     st.markdown(f"""
     <div class="achievement-grid">
-      <div class="achievement"><div class="achievement-icon">🛡️</div><div><strong>Privacy Guardian</strong><span>PII protected before analysis</span></div></div>
-      <div class="achievement"><div class="achievement-icon">🔎</div><div><strong>Pattern Finder</strong><span>{len(backlog)} knowledge gaps mapped</span></div></div>
-      <div class="achievement"><div class="achievement-icon">🎯</div><div><strong>Backlog Builder</strong><span>Priorities backed by real evidence</span></div></div>
+      <div class="achievement"><div class="achievement-icon">PII</div><div><strong>Privacy control</strong><span>Identifiers protected before analysis</span></div></div>
+      <div class="achievement"><div class="achievement-icon">MAP</div><div><strong>Demand profile</strong><span>{len(backlog)} knowledge gaps identified</span></div></div>
+      <div class="achievement"><div class="achievement-icon">KB</div><div><strong>Content priorities</strong><span>Backlog supported by source evidence</span></div></div>
     </div>
     <div class="score-panel">
       <div class="score-ring" style="--score:{opportunity_score}"><div class="score-value">{opportunity_score}</div></div>
@@ -832,28 +831,24 @@ elif st.session_state.stage == "results":
     </div>
     """, unsafe_allow_html=True)
 
-    if "celebrated" not in st.session_state:
-        st.balloons()
-        st.session_state.celebrated = True
-
     st.write("")
     st.markdown("### What's actually in this mailbox")
     st.bar_chart(type_summary.set_index("type")["count"])
 
     st.write("")
-    st.markdown("### 📚 Ranked knowledge article backlog")
+    st.markdown("### Prioritised knowledge article backlog")
     st.caption("Ranked by genuine, answerable question volume per topic — not raw email count.")
 
     if len(backlog) == 0:
         st.warning(
             "**No topics matched this mailbox.** The starting topic list is tuned for an IT "
             "Helpdesk mailbox (password resets, VPN, etc.) — if this is a different kind of "
-            "mailbox, open **'🔧 Refine topic categories & re-run'** below and replace the "
+            "mailbox, open **'Refine topic categories and re-run'** below and replace the "
             "topic list with keywords that match what this mailbox is actually about, then "
             "re-run the analysis."
         )
 
-    medals = {1: "🥇", 2: "🥈", 3: "🥉"}
+    medals = {1: "01", 2: "02", 3: "03"}
     for _, row in backlog.iterrows():
         label, cls, dot = confidence_band(row["pct_genuine"])
         medal = medals.get(row["rank"], f'{row["rank"]}')
@@ -879,7 +874,7 @@ elif st.session_state.stage == "results":
 
     st.write("")
     st.download_button(
-        "⬇ Download full backlog as CSV",
+        "Download full backlog as CSV",
         backlog.drop(columns=["examples"]).to_csv(index=False).encode("utf-8"),
         "knowledge_backlog.csv", "text/csv",
     )
@@ -890,7 +885,7 @@ elif st.session_state.stage == "results":
     st.write("")
     st.divider()
     if active == "free":
-        with st.expander("🔧 Refine topic categories & re-run analysis"):
+        with st.expander("Refine topic categories and re-run analysis"):
             st.caption("Adjust the keyword rules below, add a topic that's missing, or remove one that doesn't apply — then re-run using the same cleaned data (no need to re-upload or re-redact).")
             topics_df = pd.DataFrame([{"topic": k, "keyword_pattern": v} for k, v in st.session_state.topic_patterns.items()])
             edited = st.data_editor(topics_df, num_rows="dynamic", width="stretch", key="topic_editor")
@@ -899,7 +894,6 @@ elif st.session_state.stage == "results":
                                                     if r["topic"] and r["keyword_pattern"]}
                 st.session_state.use_llm = False
                 st.session_state.stage = "analyzing"
-                st.session_state.pop("celebrated", None)
                 st.rerun()
     else:
         st.caption("Topics were discovered automatically from this mailbox's actual content — there's no fixed rule list to edit in AI-powered mode.")
@@ -907,7 +901,7 @@ elif st.session_state.stage == "results":
     if not has_ai:
         st.write("")
         st.divider()
-        st.markdown("### 🧠 Want more accurate results?")
+        st.markdown("### Optional semantic analysis")
         st.caption(
             "The results above use keyword matching, which works well for familiar topics but "
             "can misjudge things like generic vs. case-specific questions. AI-powered analysis "
@@ -935,7 +929,7 @@ elif st.session_state.stage == "results":
                     st.caption("Enter an API key to continue.")
 
     st.write("")
-    if st.button("↺ Start over with a new file"):
+    if st.button("Start over with a new file"):
         for key in list(st.session_state.keys()):
             st.session_state.pop(key, None)
         st.rerun()
