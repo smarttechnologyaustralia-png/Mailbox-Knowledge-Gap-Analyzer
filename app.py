@@ -479,6 +479,51 @@ def detect_all_columns(df):
     return dict(subject=subject_col, body=body_col, sender=sender_col), all_confident
 
 
+def validate_mailbox_dataframe(df, detected, confident):
+    """Rejects readable spreadsheets that do not contain usable email data.
+
+    Named subject/body fields are strong evidence of a mailbox export. When
+    names are unfamiliar and content-based fallback is needed, require a small
+    body of message-like text so templates, trackers and mostly empty sheets do
+    not pass as mailboxes merely because pandas can read them.
+    """
+    if df is None or df.empty or len(df.columns) == 0:
+        return False, "The file does not contain any data rows."
+
+    body_col = detected.get("body")
+    subject_col = detected.get("subject")
+    if body_col not in df.columns:
+        return False, "A usable message-body field could not be identified."
+
+    def clean_value(value):
+        if pd.isna(value):
+            return ""
+        value = re.sub(r"\s+", " ", str(value)).strip()
+        return "" if value.lower() in {"nan", "none", "null"} else value
+
+    body_text = df[body_col].map(clean_value)
+    subject_text = df[subject_col].map(clean_value) if subject_col in df.columns else pd.Series("", index=df.index)
+    usable_mask = (body_text.str.len() > 0) | (subject_text.str.len() > 0)
+    usable_count = int(usable_mask.sum())
+    nonempty_body_count = int((body_text.str.len() > 0).sum())
+
+    if usable_count == 0 or nonempty_body_count == 0:
+        return False, "The file has no usable email subject or message content."
+
+    if not confident:
+        # Unknown column names are allowed, but the fallback body must resemble
+        # a collection of messages rather than headings or spreadsheet labels.
+        message_like_count = int((body_text.str.len() >= 25).sum())
+        substantial_count = int((body_text.str.len() >= 60).sum())
+        if message_like_count < 2 and substantial_count < 1:
+            return False, (
+                "The spreadsheet is readable, but it does not appear to contain mailbox data. "
+                "No subject/body columns were recognised and there is not enough message-like text to analyze."
+            )
+
+    return True, ""
+
+
 # ============================================================
 # Session state
 # ============================================================
@@ -542,8 +587,12 @@ if st.session_state.stage == "upload":
             st.error(f"Couldn't read this file: {e}. Check it's a valid, unlocked .xlsx/.xls/.csv export.")
             st.stop()
 
+        # A formatted worksheet can report dozens of rows even when those rows
+        # contain no values. Remove structural blanks before validating it as a
+        # mailbox or presenting an email count.
+        df = df.replace(r"^\s*$", pd.NA, regex=True).dropna(how="all").reset_index(drop=True)
         if len(df) == 0:
-            st.error("This file has no rows to analyze.")
+            st.error("This file is readable, but it contains no populated rows to analyze.")
             st.stop()
 
         # Safety valve for very large files in a live setting -- keeps
@@ -558,9 +607,14 @@ if st.session_state.stage == "upload":
                                     f"Analyze all {len(df)} rows (accurate, may take a while)"])
             if use_sample.startswith("Sample"):
                 df = df.sample(n=MAX_ROWS_DEFAULT, random_state=42).sort_index().copy()
-        st.session_state.raw_df = df
-
         detected, confident = detect_all_columns(df)
+        valid_mailbox, validation_message = validate_mailbox_dataframe(df, detected, confident)
+        if not valid_mailbox:
+            st.error(validation_message)
+            st.caption("Upload a mailbox export containing a subject field and a message/body field. Sender is optional.")
+            st.stop()
+
+        st.session_state.raw_df = df
         st.session_state.subject_col = detected["subject"]
         st.session_state.body_col = detected["body"]
         st.session_state.sender_col = detected["sender"]
