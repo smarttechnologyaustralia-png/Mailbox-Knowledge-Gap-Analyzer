@@ -47,19 +47,24 @@ p { line-height: 1.65; }
     box-shadow: 0 20px 60px rgba(15, 35, 64, .14);
 }
 .hero:after { content:""; position:absolute; width:260px; height:260px; border-radius:50%; right:-70px; top:-120px; background:rgba(255,255,255,.08); }
+.hero:before { content:""; position:absolute; width:170px; height:170px; border-radius:50%; right:150px; bottom:-135px; background:rgba(142,227,220,.12); }
 .hero-kicker { color:#8ee3dc; font-size:11px; font-weight:800; letter-spacing:.16em; text-transform:uppercase; margin-bottom:9px; }
 .hero-title { font-size:clamp(28px,4vw,44px); line-height:1.08; letter-spacing:-.045em; font-weight:780; margin:0 0 10px; }
 .hero-copy { color:#cfdae8; font-size:15px; max-width:690px; margin:0; }
+.hero-chip { display:inline-flex; align-items:center; gap:7px; margin-top:20px; padding:7px 11px; border:1px solid rgba(255,255,255,.16); background:rgba(255,255,255,.08); border-radius:999px; color:#e8f6f4; font-size:11px; font-weight:700; }
 .steps { display:flex; align-items:center; gap:8px; margin:18px 0 42px; flex-wrap:wrap; }
 .step-pill {
     display: inline-flex; align-items:center; padding: 8px 14px; border-radius: 999px;
     font-size: 12px; font-weight: 750; border:1px solid transparent;
 }
 .step-done { background: #e3f8f3; color: #126b5e; border-color:#c7eee5; }
-.step-active { background: #16385f; color: white; box-shadow:0 7px 18px rgba(22,56,95,.18); }
+.step-done:before { content:'✓'; display:inline-grid; place-items:center; width:18px; height:18px; margin-right:6px; border-radius:50%; color:white; background:#20a38f; font-size:11px; }
+.step-active { background: #16385f; color: white; box-shadow:0 7px 18px rgba(22,56,95,.18); animation:activeGlow 2.2s ease-in-out infinite; }
 .step-pending { background: #edf1f6; color: #768399; border-color:#e1e6ed; }
+@keyframes activeGlow { 0%,100%{box-shadow:0 7px 18px rgba(22,56,95,.16)} 50%{box-shadow:0 8px 25px rgba(20,125,118,.3)} }
 .feature-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin:22px 0 26px; }
-.feature-card { background:#fff; border:1px solid #e4e9f0; border-radius:16px; padding:20px; box-shadow:0 5px 20px rgba(17,35,68,.04); }
+.feature-card { background:#fff; border:1px solid #e4e9f0; border-radius:16px; padding:20px; box-shadow:0 5px 20px rgba(17,35,68,.04); transition:transform .2s ease, box-shadow .2s ease, border-color .2s ease; }
+.feature-card:hover { transform:translateY(-3px); border-color:#b9ddd8; box-shadow:0 12px 30px rgba(17,35,68,.09); }
 .feature-icon { width:38px; height:38px; display:flex; align-items:center; justify-content:center; border-radius:11px; background:#e8f7f5; font-size:19px; margin-bottom:14px; }
 .feature-title { font-weight:750; color:#152c4f; font-size:14px; margin-bottom:5px; }
 .feature-copy { color:#64748b; font-size:13px; line-height:1.5; }
@@ -90,10 +95,29 @@ p { line-height: 1.65; }
     font-size: 13px; color: #475569; margin: 6px 0; border-radius: 4px;
 }
 .privacy-note { background:#e8f7f5; color:#126b5e; padding:12px 16px; border-radius:10px; font-size:13px; }
+.mission-card { display:flex; align-items:center; justify-content:space-between; gap:18px; background:linear-gradient(135deg,#ffffff,#f1fbf9); border:1px solid #cfeae6; border-radius:16px; padding:17px 20px; margin:8px 0 22px; }
+.mission-label { color:#147d76; font-size:10px; font-weight:850; letter-spacing:.14em; text-transform:uppercase; }
+.mission-title { color:#173456; font-weight:760; font-size:15px; margin-top:3px; }
+.xp-pill { flex:none; background:#16385f; color:white; padding:8px 12px; border-radius:999px; font-size:11px; font-weight:800; }
+.achievement-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin:16px 0 28px; }
+.achievement { display:flex; align-items:center; gap:12px; background:white; border:1px solid #e4e9f0; border-radius:14px; padding:14px 16px; }
+.achievement-icon { display:grid; place-items:center; width:38px; height:38px; flex:none; border-radius:50%; background:linear-gradient(145deg,#fff4c7,#ffd966); box-shadow:inset 0 0 0 1px rgba(154,111,0,.12); }
+.achievement strong { display:block; color:#173456; font-size:12px; }
+.achievement span { color:#78869a; font-size:10px; }
+.score-panel { display:flex; align-items:center; gap:22px; background:linear-gradient(135deg,#102b4c,#17516a); color:white; border-radius:18px; padding:22px 26px; margin:22px 0 30px; box-shadow:0 14px 35px rgba(16,43,76,.14); }
+.score-ring { --score:0; width:92px; height:92px; flex:none; border-radius:50%; display:grid; place-items:center; background:conic-gradient(#63d9c7 calc(var(--score)*1%),rgba(255,255,255,.13) 0); position:relative; }
+.score-ring:after { content:""; position:absolute; inset:8px; border-radius:50%; background:#173b59; }
+.score-value { position:relative; z-index:1; font-weight:850; font-size:23px; }
+.score-copy strong { display:block; color:white; font-size:18px; margin-bottom:5px; }
+.score-copy span { color:#c9dce3; font-size:12px; line-height:1.5; }
+.rank-one { border-color:#e6c75b; background:linear-gradient(120deg,#fffdf5,#fff); }
+@media (prefers-reduced-motion: reduce) { .step-active { animation:none; } .feature-card { transition:none; } }
 @media (max-width: 720px) {
   .block-container { padding-top:1.5rem; }
   .hero { padding:26px 22px; border-radius:18px; }
   .feature-grid { grid-template-columns:1fr; }
+  .achievement-grid { grid-template-columns:1fr; }
+  .score-panel { align-items:flex-start; }
   .steps { margin-bottom:30px; }
 }
 </style>
@@ -484,6 +508,7 @@ st.markdown("""
   <div class="hero-kicker">Support intelligence · privacy first</div>
   <div class="hero-title">Mailbox Knowledge Gap Analyzer</div>
   <p class="hero-copy">Turn recurring support questions into a ranked, evidence-backed content plan—without exposing personal information.</p>
+  <div class="hero-chip">✦ 4 checkpoints &nbsp;·&nbsp; instant free analysis &nbsp;·&nbsp; real evidence</div>
 </section>
 """, unsafe_allow_html=True)
 step_indicator()
@@ -492,8 +517,10 @@ step_indicator()
 # STAGE 1: Upload — no column dropdowns, no topic config.
 # ============================================================
 if st.session_state.stage == "upload":
-    st.subheader("Upload a mailbox export to begin")
+    st.subheader("Checkpoint 1 — Load your mailbox")
     st.caption("We'll protect personal data first, then find which self-service articles would cut the most repeat emails.")
+
+    st.markdown('<div class="mission-card"><div><div class="mission-label">Current mission</div><div class="mission-title">Upload a mailbox export and unlock your knowledge-gap map</div></div><div class="xp-pill">+25 insight XP</div></div>', unsafe_allow_html=True)
 
     st.markdown("""
     <div class="feature-grid">
@@ -578,7 +605,7 @@ if st.session_state.stage == "upload":
 # STAGE 2: Cleaning
 # ============================================================
 elif st.session_state.stage == "cleaning":
-    st.subheader("Step 2 — Protecting personal information")
+    st.subheader("Checkpoint 2 — Activate the privacy shield")
     df = st.session_state.raw_df
 
     st.write("Before any analysis runs, every name, email address, and phone number is found and replaced with a placeholder — locally, before anything is examined further.")
@@ -600,7 +627,8 @@ elif st.session_state.stage == "cleaning":
     working_df = st.session_state.working_df
     status.empty()
     progress.progress(1.0)
-    st.success(f"✅ **{st.session_state.pseudonym_count} unique names, emails, and phone numbers protected.** Nothing identifiable leaves this step.")
+    st.success(f"🛡️ **Privacy shield complete:** {st.session_state.pseudonym_count} unique names, emails, and phone numbers protected.")
+    st.markdown('<div class="mission-card"><div><div class="mission-label">Checkpoint cleared</div><div class="mission-title">Personal data protected and reply history safely cleaned</div></div><div class="xp-pill">+50 privacy XP</div></div>', unsafe_allow_html=True)
 
     example_row = df.iloc[0]
     example_redacted = working_df.iloc[0][st.session_state.body_col + "_redacted"]
@@ -621,7 +649,7 @@ elif st.session_state.stage == "cleaning":
 # stratified sample instead, with live-updating cost/time as they adjust.
 # ============================================================
 elif st.session_state.stage == "scoping":
-    st.subheader("Choose how much to analyze")
+    st.subheader("Checkpoint 3 — Choose your analysis quest")
     working_df = st.session_state.working_df
     subj_col = st.session_state.subject_col + "_redacted"
     body_col = st.session_state.body_col + "_redacted"
@@ -675,7 +703,7 @@ elif st.session_state.stage == "scoping":
         preview_sample = build_stratified_sample(working_df, "_rough_topic", sample_size, min_per_topic=8)
         with st.expander("See how this sample would be split across topics"):
             st.dataframe(preview_sample["_rough_topic"].value_counts().rename_axis("topic").reset_index(name="sample_count"),
-                         use_container_width=True, hide_index=True)
+                         width="stretch", hide_index=True)
 
         st.session_state.chosen_scope = "sample"
         st.session_state.chosen_sample_size = sample_size
@@ -691,7 +719,7 @@ elif st.session_state.stage == "scoping":
 # STAGE 3: Analyzing — uses smart defaults automatically, or the AI path.
 # ============================================================
 elif st.session_state.stage == "analyzing":
-    st.subheader("Step 3 — Finding patterns")
+    st.subheader("Checkpoint 3 — Mapping the knowledge gaps")
     status = st.empty()
     progress = st.progress(0.0)
 
@@ -776,7 +804,7 @@ elif st.session_state.stage == "results":
     genuine_total = int((analyzed_df["email_type"] == "genuine_question").sum())
     opportunity_score = round(100 * genuine_total / total)
 
-    st.subheader("Step 4 — Results")
+    st.subheader("🏆 Mission complete — Your knowledge roadmap")
 
     if active == "ai" and st.session_state.get("chosen_scope") == "sample":
         pop = st.session_state.get("population_size", total)
@@ -792,10 +820,17 @@ elif st.session_state.stage == "results":
     c3.metric("Topics identified", len(backlog))
     c4.metric("Names/emails/phones protected", st.session_state.pseudonym_count)
 
-    st.write("")
-    st.markdown(f"### 🎯 Self-Service Opportunity Score: **{opportunity_score}/100**")
-    st.caption("Share of this mailbox that looks like a genuine, answerable question — the honest ceiling on what self-service content could address. Not a promise of how many emails would actually stop.")
-    st.progress(opportunity_score / 100)
+    st.markdown(f"""
+    <div class="achievement-grid">
+      <div class="achievement"><div class="achievement-icon">🛡️</div><div><strong>Privacy Guardian</strong><span>PII protected before analysis</span></div></div>
+      <div class="achievement"><div class="achievement-icon">🔎</div><div><strong>Pattern Finder</strong><span>{len(backlog)} knowledge gaps mapped</span></div></div>
+      <div class="achievement"><div class="achievement-icon">🎯</div><div><strong>Backlog Builder</strong><span>Priorities backed by real evidence</span></div></div>
+    </div>
+    <div class="score-panel">
+      <div class="score-ring" style="--score:{opportunity_score}"><div class="score-value">{opportunity_score}</div></div>
+      <div class="score-copy"><strong>Self-Service Opportunity Score</strong><span>The share of this mailbox that looks like a genuine, answerable question. Treat this as the opportunity ceiling—not a promise that every email will disappear.</span></div>
+    </div>
+    """, unsafe_allow_html=True)
 
     if "celebrated" not in st.session_state:
         st.balloons()
@@ -825,7 +860,7 @@ elif st.session_state.stage == "results":
         fmt = suggest_format(row["topic"])
 
         st.markdown(f"""
-        <div class="article-card">
+        <div class="article-card {'rank-one' if row['rank'] == 1 else ''}">
             <span style="font-size:22px;">{medal}</span>
             <span style="font-size:18px; font-weight:700;"> {row['topic']}</span>
             <span class="rank-badge {cls}" style="width:auto; border-radius:20px; padding:4px 12px; margin-left:10px;">{dot} {label} confidence</span>
@@ -858,7 +893,7 @@ elif st.session_state.stage == "results":
         with st.expander("🔧 Refine topic categories & re-run analysis"):
             st.caption("Adjust the keyword rules below, add a topic that's missing, or remove one that doesn't apply — then re-run using the same cleaned data (no need to re-upload or re-redact).")
             topics_df = pd.DataFrame([{"topic": k, "keyword_pattern": v} for k, v in st.session_state.topic_patterns.items()])
-            edited = st.data_editor(topics_df, num_rows="dynamic", use_container_width=True, key="topic_editor")
+            edited = st.data_editor(topics_df, num_rows="dynamic", width="stretch", key="topic_editor")
             if st.button("Re-analyze with these topics"):
                 st.session_state.topic_patterns = {r["topic"]: r["keyword_pattern"] for _, r in edited.iterrows()
                                                     if r["topic"] and r["keyword_pattern"]}
