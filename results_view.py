@@ -142,6 +142,9 @@ def render_results_page(llm_available, llm_models, confidence_band, suggest_form
     method = "AI-powered semantic classification" if active == "ai" else "Local keyword and rule-based classification"
     is_sample = active == "ai" and st.session_state.get("chosen_scope") == "sample"
     population = st.session_state.get("population_size", total) if is_sample else total
+    source_sampled = bool(st.session_state.get("source_was_sampled", False))
+    source_population = st.session_state.get("source_population_size")
+    source_sample_method = st.session_state.get("source_sample_method") or "a 1,000-row file-level sample"
 
     st.subheader("Stage 4 — Executive findings")
     if active == "ai":
@@ -183,6 +186,9 @@ def render_results_page(llm_available, llm_models, confidence_band, suggest_form
         st.write("Identify recurring knowledge demand and prioritise the help content most likely to address genuine, repeatable questions.")
         if is_sample:
             st.info(f"Directional assessment based on a stratified sample of {total} from {population} mailbox records.")
+        if source_sampled:
+            source_context = f" from {source_population} detected rows" if source_population else " from a large source file whose complete row count was not loaded"
+            st.warning(f"File-level sample: this assessment uses {source_sample_method}{source_context}. Findings are directional, not exact whole-file counts.")
 
         c1, c2, c3, c4 = st.columns(4)
         c1.metric("Records assessed", total)
@@ -245,6 +251,8 @@ def render_results_page(llm_available, llm_models, confidence_band, suggest_form
         s2.metric("Records assessed", total)
         s3.metric("Method", "Semantic AI" if active == "ai" else "Rules-based")
         st.caption("Sample-based directional findings." if is_sample else f"All records selected during data intake were assessed using {method.lower()}.")
+        if source_sampled:
+            st.warning(f"Source coverage is limited to {source_sample_method}. The unprocessed portion of the source file is outside this assessment.")
 
         included, excluded = st.columns(2)
         with included:
@@ -253,6 +261,8 @@ def render_results_page(llm_available, llm_models, confidence_band, suggest_form
         excluded_items = ["Personal identifiers removed during preparation", "Quoted reply history and HTML formatting", "Attachments and information outside the export"]
         if is_sample:
             excluded_items.append(f"Individual classification of {population-total} non-sampled emails")
+        if source_sampled:
+            excluded_items.append("Rows outside the file-level ingestion sample")
         if active == "free":
             excluded_items.append("Semantic meaning and case-specificity assessment")
         with excluded:
@@ -268,6 +278,8 @@ def render_results_page(llm_available, llm_models, confidence_band, suggest_form
         ]
         if is_sample:
             limitations.append("Sample-based volumes are estimates, not exact whole-mailbox counts.")
+        if source_sampled:
+            limitations.append("The source file was sampled during ingestion; findings cannot be treated as exact whole-file totals.")
         if active == "ai":
             limitations.append("AI classifications require subject-matter validation.")
         st.markdown("\n".join(f"- {item}" for item in limitations))
@@ -297,7 +309,7 @@ Identify recurring knowledge demand and prioritise help content for genuine, rep
 - Mailbox population: {population}
 - Records assessed: {total}
 - Method: {method}
-- Basis: {'Stratified sample; directional estimates' if is_sample else 'All selected records'}
+- Basis: {'Stratified AI sample; directional estimates' if is_sample else 'All ingested records'}{' plus file-level sampling' if source_sampled else ''}
 
 ## Included in the Analysis
 - Redacted subject and current-message content

@@ -643,14 +643,34 @@ if st.session_state.stage == "upload":
     """, unsafe_allow_html=True)
 
     st.write("")
-    uploaded_file = st.file_uploader("Mailbox export (.xlsx, .xls, or .csv)", type=["xlsx", "xls", "csv"])
+    uploaded_file = st.file_uploader(
+        "Mailbox export (.xlsx, .xls, or .csv)", type=["xlsx", "xls", "csv"],
+        help="Maximum upload size: 500 MB. Files above 50 MB default to a memory-safe 1,000-row assessment.")
 
     if uploaded_file:
+        file_size_mb = uploaded_file.size / (1024 * 1024)
+        pre_sampled = False
+        source_sample_method = None
+        read_limit = None
+        if file_size_mb > 50:
+            st.warning(
+                f"This file is {file_size_mb:.1f} MB. Large spreadsheet files can expand substantially in memory during processing."
+            )
+            large_file_choice = st.radio(
+                "Large-file processing mode",
+                ["Assess the first 1,000 rows (recommended)",
+                 "Attempt to load the complete file (may exceed hosting memory)"],
+                help="The recommended option avoids loading the entire workbook and clearly labels results as sample-based.")
+            if large_file_choice.startswith("Assess"):
+                read_limit = 1000
+                pre_sampled = True
+                source_sample_method = "the first 1,000 rows of a large file"
         try:
+            uploaded_file.seek(0)
             if uploaded_file.name.lower().endswith(".csv"):
-                df = pd.read_csv(uploaded_file)
+                df = pd.read_csv(uploaded_file, nrows=read_limit)
             else:
-                df = pd.read_excel(uploaded_file)
+                df = pd.read_excel(uploaded_file, nrows=read_limit)
         except Exception as e:
             st.error(f"Couldn't read this file: {e}. Check it's a valid, unlocked .xlsx/.xls/.csv export.")
             st.stop()
@@ -667,6 +687,7 @@ if st.session_state.stage == "upload":
         # redaction (the slow step) from taking minutes in front of an
         # audience. Full analysis is still possible, just not the default.
         MAX_ROWS_DEFAULT = 1000
+        source_population_size = None
         if len(df) > MAX_ROWS_DEFAULT:
             st.warning(f"This file has {len(df)} rows. For a live demo, analyzing a sample of "
                        f"the first {MAX_ROWS_DEFAULT} is much faster.")
@@ -674,7 +695,10 @@ if st.session_state.stage == "upload":
                                    [f"Sample the first {MAX_ROWS_DEFAULT} rows (fast, good for a demo)",
                                     f"Analyze all {len(df)} rows (accurate, may take a while)"])
             if use_sample.startswith("Sample"):
+                source_population_size = len(df)
                 df = df.sample(n=MAX_ROWS_DEFAULT, random_state=42).sort_index().copy()
+                pre_sampled = True
+                source_sample_method = "a reproducible random sample of 1,000 rows"
         detected, confident = detect_all_columns(df)
         valid_mailbox, validation_message = validate_mailbox_dataframe(df, detected, confident)
         if not valid_mailbox:
@@ -683,11 +707,18 @@ if st.session_state.stage == "upload":
             st.stop()
 
         st.session_state.raw_df = df
+        st.session_state.source_was_sampled = pre_sampled
+        st.session_state.source_population_size = source_population_size
+        st.session_state.source_sample_method = source_sample_method
+        st.session_state.source_file_size_mb = round(file_size_mb, 1)
         st.session_state.subject_col = detected["subject"]
         st.session_state.body_col = detected["body"]
         st.session_state.sender_col = detected["sender"]
 
-        st.success(f"Loaded **{len(df)} emails** and identified the subject, message, and sender fields automatically.")
+        sample_label = "sampled records" if pre_sampled else "emails"
+        st.success(f"Loaded **{len(df)} {sample_label}** and identified the subject, message, and sender fields automatically.")
+        if pre_sampled:
+            st.caption("Results and exports will explicitly identify this as a file-level sample.")
 
         if not confident:
             st.warning("Couldn't confidently identify all fields — please confirm below.")
