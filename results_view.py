@@ -122,6 +122,14 @@ def render_results_page(llm_available, llm_models, confidence_band, suggest_form
         choice = st.radio("Result set", ["AI-powered", "Fast / keyword-based"], horizontal=True,
                           index=0 if st.session_state.get("active_result") == "ai" else 1)
         active = "ai" if choice == "AI-powered" else "free"
+    elif has_ai:
+        st.markdown("""
+        <div class="guided-strip">
+          <div class="guided-step"><b>1. Compare the baseline</b>Review the original directional findings.</div>
+          <div class="guided-step"><b>2. Inspect rule matches</b>Check how keyword priorities were formed.</div>
+          <div class="guided-step recommended"><b>3. View AI-powered results</b>Use the result-set control above to return to the full report.</div>
+        </div>
+        """, unsafe_allow_html=True)
     else:
         active = "free"
 
@@ -136,6 +144,33 @@ def render_results_page(llm_available, llm_models, confidence_band, suggest_form
     population = st.session_state.get("population_size", total) if is_sample else total
 
     st.subheader("Stage 4 — Executive findings")
+    if active == "ai":
+        st.markdown("""
+        <div class="guided-strip">
+          <div class="guided-step"><b>1. Review findings</b>Confirm the opportunity and leading demand.</div>
+          <div class="guided-step"><b>2. Validate priorities</b>Inspect the evidence behind each recommendation.</div>
+          <div class="guided-step recommended"><b>3. Review article drafts</b>Complete placeholders before publishing.</div>
+        </div>
+        """, unsafe_allow_html=True)
+    else:
+        st.markdown("""
+        <div class="guided-strip">
+          <div class="guided-step"><b>1. Review the baseline</b>Understand volume and obvious demand patterns.</div>
+          <div class="guided-step"><b>2. Inspect priorities</b>Check the evidence in the backlog.</div>
+          <div class="guided-step recommended"><b>3. Build the full report</b>Unlock semantic findings and drafted articles.</div>
+        </div>
+        """, unsafe_allow_html=True)
+
+    if not has_ai:
+        @st.dialog("Build the full semantic report", width="large")
+        def full_report_dialog():
+            _semantic_upgrade(llm_available, llm_models, key_prefix="semantic_dialog")
+
+        def compact_report_cta(button_key):
+            st.markdown('<div class="compact-cta"><div><strong>Ready for the decision-grade deliverable?</strong><span>Your protected dataset can now produce the full report and drafted article pack.</span></div><div class="report-cta-status">Dataset ready</div></div>', unsafe_allow_html=True)
+            if st.button("Build the full report", type="primary", width="stretch", key=button_key):
+                full_report_dialog()
+
     tab_names = ["Executive Summary", "Priority Backlog", "Methodology & Export"]
     if active == "ai":
         tab_names.append("Draft Articles")
@@ -194,16 +229,14 @@ def render_results_page(llm_available, llm_models, confidence_band, suggest_form
             </section>
             """, unsafe_allow_html=True)
 
-            @st.dialog("Build the full semantic report", width="large")
-            def full_report_dialog():
-                _semantic_upgrade(llm_available, llm_models, key_prefix="semantic_dialog")
-
             if st.button("Build the full report", type="primary", width="stretch", key="open_full_report_dialog"):
                 full_report_dialog()
             st.caption("One controlled API workflow. Topic preview, estimated cost and analysis scope are confirmed before the full run.")
 
     with tabs[1]:
         _priority_backlog(backlog, confidence_band, suggest_format)
+        if not has_ai:
+            compact_report_cta("open_full_report_from_backlog")
 
     with tabs[2]:
         st.markdown("### Scope of Analysis")
@@ -287,6 +320,9 @@ Identify recurring knowledge demand and prioritise help content for genuine, rep
         d1.download_button(report_label, report.encode("utf-8"), "mailbox_knowledge_gap_report.md", "text/markdown", width="stretch")
         d2.download_button("Download backlog data", backlog.drop(columns=["examples"]).to_csv(index=False).encode("utf-8"), "knowledge_backlog.csv", "text/csv", width="stretch")
 
+        if not has_ai:
+            compact_report_cta("open_full_report_from_methodology")
+
         if active == "free":
             with st.expander("Advanced: refine baseline topic rules"):
                 topics_df = pd.DataFrame([{"topic": k, "keyword_pattern": v} for k, v in st.session_state.topic_patterns.items()])
@@ -305,7 +341,15 @@ Identify recurring knowledge demand and prioritise help content for genuine, rep
             _semantic_upgrade(llm_available, llm_models, key_prefix="semantic_tab")
 
     st.write("")
-    if st.button("Start over with a new file", key="start_over_v2"):
-        for key in list(st.session_state.keys()):
-            st.session_state.pop(key, None)
-        st.rerun()
+    back_col, restart_col = st.columns([1.25, 1])
+    with back_col:
+        back_label = "Back to analysis scope" if active == "ai" else "Back to data preparation"
+        if st.button(back_label, width="stretch", key="back_from_results"):
+            st.session_state.use_llm = active == "ai"
+            st.session_state.stage = "scoping" if active == "ai" else "cleaning"
+            st.rerun()
+    with restart_col:
+        if st.button("Start over with a new file", width="stretch", key="start_over_v2"):
+            for key in list(st.session_state.keys()):
+                st.session_state.pop(key, None)
+            st.rerun()

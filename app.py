@@ -94,6 +94,7 @@ p { line-height: 1.65; }
     font-size: 13px; color: #475569; margin: 6px 0; border-radius: 4px;
 }
 .redaction-token { display:inline-block; background:#d9f1ec; color:#0d6258; border:1px solid #b8e2da; border-radius:4px; padding:0 4px; font-weight:750; }
+.sensitive-mask { display:inline-block; background:#25384d; color:white; border-radius:4px; padding:0 6px; font-size:10px; font-weight:750; letter-spacing:.03em; }
 .privacy-note { background:#e8f7f5; color:#126b5e; padding:12px 16px; border-radius:10px; font-size:13px; }
 .mission-card { display:flex; align-items:center; justify-content:space-between; gap:18px; background:#ffffff; border:1px solid #dfe6ed; border-left:4px solid #147d76; border-radius:10px; padding:17px 20px; margin:8px 0 22px; }
 .mission-label { color:#147d76; font-size:10px; font-weight:850; letter-spacing:.14em; text-transform:uppercase; }
@@ -133,6 +134,14 @@ p { line-height: 1.65; }
 .report-cta-status { position:relative; z-index:1; flex:none; background:#102b4c; color:white; border-radius:9px; padding:11px 14px; font-size:9px; font-weight:850; letter-spacing:.09em; text-transform:uppercase; white-space:nowrap; }
 .deliverable-line { display:flex; flex-wrap:wrap; gap:7px; margin-top:12px; }
 .deliverable-line span { background:white; color:#315d58; border:1px solid #d7e9e5; border-radius:999px; padding:5px 9px; font-size:9px; font-weight:700; }
+.guided-strip { display:grid; grid-template-columns:repeat(3,1fr); background:white; border:1px solid #dfe6ed; border-radius:12px; overflow:hidden; margin:8px 0 22px; }
+.guided-step { padding:13px 15px; border-right:1px solid #e5ebf0; color:#69798a; font-size:10px; line-height:1.45; }
+.guided-step:last-child { border-right:0; }
+.guided-step b { display:block; color:#173456; font-size:11px; margin-bottom:2px; }
+.guided-step.recommended { background:#eef8f6; }
+.compact-cta { display:flex; align-items:center; justify-content:space-between; gap:16px; background:#102b4c; color:white; border-radius:12px; padding:16px 18px; margin:20px 0 10px; }
+.compact-cta strong { display:block; color:white; font-size:13px; }
+.compact-cta span { color:#bfd0dc; font-size:10px; }
 @media (prefers-reduced-motion: reduce) { .feature-card { transition:none; } }
 @media (max-width: 720px) {
   .block-container { padding-top:1.5rem; }
@@ -142,6 +151,9 @@ p { line-height: 1.65; }
   .upgrade-grid { grid-template-columns:1fr; }
   .report-cta { grid-template-columns:1fr; }
   .report-cta-status { width:max-content; }
+  .guided-strip { grid-template-columns:1fr; }
+  .guided-step { border-right:0; border-bottom:1px solid #e5ebf0; }
+  .compact-cta { align-items:flex-start; }
   .score-panel { align-items:flex-start; }
   .steps { margin-bottom:30px; }
 }
@@ -750,18 +762,31 @@ elif st.session_state.stage == "cleaning":
             protected_html = re.sub(
                 r"(\[(?:PERSON|EMAIL_ADDRESS|PHONE_NUMBER)_\d+\])",
                 r'<span class="redaction-token">\1</span>', protected_html)
-            st.caption(f"Example selected from: {field_label}. The original is displayed locally for comparison only.")
+            masked_original_html = re.sub(
+                r"\[(?:PERSON|EMAIL_ADDRESS|PHONE_NUMBER)_\d+\]",
+                r'<span class="sensitive-mask">SENSITIVE VALUE HIDDEN</span>',
+                html.escape(protected[:350]))
+            st.caption(f"Example selected from: {field_label}. Raw personal information is never displayed in the interface.")
             c1, c2 = st.columns(2)
-            c1.markdown("**Cleaned original**")
-            c1.markdown(f'<div class="evidence-box">{html.escape(original[:350])}</div>', unsafe_allow_html=True)
+            c1.markdown("**Before analysis (safe preview)**")
+            c1.markdown(f'<div class="evidence-box">{masked_original_html}</div>', unsafe_allow_html=True)
             c2.markdown("**Protected version used for analysis**")
             c2.markdown(f'<div class="evidence-box">{protected_html}</div>', unsafe_allow_html=True)
         else:
             st.info("No subject or message-body text changed during redaction, so there is no meaningful before-and-after example to display.")
 
-    if st.button("Continue →", type="primary"):
-        st.session_state.stage = "scoping" if st.session_state.get("use_llm") else "analyzing"
-        st.rerun()
+    st.caption("Recommended next step: continue to the free baseline analysis. No API key or external service is required.")
+    back_col, continue_col = st.columns([1, 2.2])
+    with back_col:
+        if st.button("Back to upload", width="stretch"):
+            for key in ["raw_df", "working_df", "pseudonym_count", "subject_col", "body_col", "sender_col"]:
+                st.session_state.pop(key, None)
+            st.session_state.stage = "upload"
+            st.rerun()
+    with continue_col:
+        if st.button("Continue to analysis", type="primary", width="stretch"):
+            st.session_state.stage = "scoping" if st.session_state.get("use_llm") else "analyzing"
+            st.rerun()
 
 # ============================================================
 # STAGE 2.5: Scoping — only for AI-powered mode. Shows real cost/time
@@ -832,9 +857,16 @@ elif st.session_state.stage == "scoping":
         st.session_state.chosen_scope = "full"
 
     st.write("")
-    if st.button("Confirm and run analysis →", type="primary"):
-        st.session_state.stage = "analyzing"
-        st.rerun()
+    back_col, run_col = st.columns([1, 2.2])
+    with back_col:
+        if st.button("Back to results", width="stretch"):
+            st.session_state.use_llm = False
+            st.session_state.stage = "results"
+            st.rerun()
+    with run_col:
+        if st.button("Confirm scope and run analysis", type="primary", width="stretch"):
+            st.session_state.stage = "analyzing"
+            st.rerun()
 
 # ============================================================
 # STAGE 3: Analyzing — uses smart defaults automatically, or the AI path.
