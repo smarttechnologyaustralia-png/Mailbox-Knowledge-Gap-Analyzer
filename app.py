@@ -649,20 +649,6 @@ if st.session_state.stage == "upload":
                 sender_default = detected["sender"] or "(No sender column)"
                 sender_choice = st.selectbox("Sender name column (optional)", sender_options, index=sender_options.index(sender_default))
                 st.session_state.sender_col = None if sender_choice == "(No sender column)" else sender_choice
-        else:
-            with st.expander("⚙️ Advanced: change detected columns"):
-                cols = df.columns.tolist()
-                c1, c2, c3 = st.columns(3)
-                with c1:
-                    st.session_state.subject_col = st.selectbox("Subject column", cols, index=cols.index(st.session_state.subject_col))
-                with c2:
-                    st.session_state.body_col = st.selectbox("Body column", cols, index=cols.index(st.session_state.body_col))
-                with c3:
-                    sender_options = ["(No sender column)"] + cols
-                    sender_default = st.session_state.sender_col or "(No sender column)"
-                    sender_choice = st.selectbox("Sender name column (optional)", sender_options, index=sender_options.index(sender_default))
-                    st.session_state.sender_col = None if sender_choice == "(No sender column)" else sender_choice
-
         st.write("")
         if st.button("Start →", type="primary"):
             st.session_state.use_llm = False  # always starts with the free, automatic pass
