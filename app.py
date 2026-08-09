@@ -125,6 +125,14 @@ p { line-height: 1.65; }
 .comparison td { color:#40546c; font-size:11px; padding:11px 14px; border-top:1px solid #e8edf2; }
 .comparison td:last-child { color:#11675f; font-weight:720; }
 .commercial-note { background:#eef8f6; border:1px solid #cfe8e3; border-radius:10px; padding:13px 15px; color:#315d58; font-size:11px; line-height:1.55; margin-bottom:14px; }
+.report-cta { position:relative; overflow:hidden; display:grid; grid-template-columns:1fr auto; align-items:center; gap:24px; background:linear-gradient(120deg,#f1faf8 0%,#ffffff 55%,#edf4f8 100%); border:1px solid #bcded8; border-left:5px solid #147d76; border-radius:16px; padding:24px 26px; margin:26px 0 12px; box-shadow:0 10px 30px rgba(15,58,74,.08); }
+.report-cta:after { content:""; position:absolute; width:150px; height:150px; right:-70px; top:-80px; border-radius:50%; background:rgba(20,125,118,.07); }
+.report-cta-label { color:#147d76; font-size:9px; font-weight:900; letter-spacing:.16em; text-transform:uppercase; margin-bottom:7px; }
+.report-cta-title { color:#102b4c; font-size:21px; font-weight:800; letter-spacing:-.025em; line-height:1.25; margin-bottom:6px; }
+.report-cta-copy { color:#5d6f81; font-size:11px; line-height:1.55; max-width:720px; }
+.report-cta-status { position:relative; z-index:1; flex:none; background:#102b4c; color:white; border-radius:9px; padding:11px 14px; font-size:9px; font-weight:850; letter-spacing:.09em; text-transform:uppercase; white-space:nowrap; }
+.deliverable-line { display:flex; flex-wrap:wrap; gap:7px; margin-top:12px; }
+.deliverable-line span { background:white; color:#315d58; border:1px solid #d7e9e5; border-radius:999px; padding:5px 9px; font-size:9px; font-weight:700; }
 @media (prefers-reduced-motion: reduce) { .feature-card { transition:none; } }
 @media (max-width: 720px) {
   .block-container { padding-top:1.5rem; }
@@ -132,6 +140,8 @@ p { line-height: 1.65; }
   .feature-grid { grid-template-columns:1fr; }
   .achievement-grid { grid-template-columns:1fr; }
   .upgrade-grid { grid-template-columns:1fr; }
+  .report-cta { grid-template-columns:1fr; }
+  .report-cta-status { width:max-content; }
   .score-panel { align-items:flex-start; }
   .steps { margin-bottom:30px; }
 }

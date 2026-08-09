@@ -6,7 +6,7 @@ import pandas as pd
 import streamlit as st
 
 
-def _semantic_upgrade(llm_available, llm_models):
+def _semantic_upgrade(llm_available, llm_models, key_prefix="semantic"):
     st.markdown("""
     <section class="upgrade-panel">
       <div class="upgrade-eyebrow">Semantic intelligence</div>
@@ -37,11 +37,11 @@ def _semantic_upgrade(llm_available, llm_models):
     st.markdown('<div class="commercial-note"><strong>Controlled spend:</strong> first, one small discovery call reviews approximately 40 redacted emails. Full-run cost and time are shown before classification is authorised.</div>', unsafe_allow_html=True)
     c1, c2 = st.columns([1.35, 1])
     with c1:
-        api_key = st.text_input("Anthropic API key", type="password", placeholder="sk-ant-...",
+        api_key = st.text_input("Anthropic API key", type="password", placeholder="sk-ant-...", key=f"{key_prefix}_api_key",
                                 help="Used only in this browser session and never written to the repository.")
     with c2:
-        model_label = st.selectbox("Analysis model", list(llm_models.keys()))
-    if st.button("Preview semantic topics and cost", type="primary", disabled=not api_key, width="stretch"):
+        model_label = st.selectbox("Analysis model", list(llm_models.keys()), key=f"{key_prefix}_model")
+    if st.button("Preview semantic topics and cost", type="primary", disabled=not api_key, width="stretch", key=f"{key_prefix}_submit"):
         st.session_state.api_key = api_key
         st.session_state.llm_model = llm_models[model_label]
         st.session_state.use_llm = True
@@ -181,6 +181,27 @@ def render_results_page(llm_available, llm_models, confidence_band, suggest_form
                     "topic": "Topic", "genuine_questions": "Priority questions", "total_emails": "Topic emails"})
                 st.dataframe(top, hide_index=True, width="stretch")
 
+        if not has_ai:
+            st.markdown("""
+            <section class="report-cta">
+              <div>
+                <div class="report-cta-label">Full semantic deliverable</div>
+                <div class="report-cta-title">Turn this baseline into a publishable knowledge plan</div>
+                <div class="report-cta-copy">Your mailbox is already cleaned and protected. Continue from the current analysis to produce the decision-ready deliverable without uploading or preparing the data again.</div>
+                <div class="deliverable-line"><span>Full executive report</span><span>Semantic priority model</span><span>Up to 3 drafted articles</span><span>Copy-ready Markdown</span></div>
+              </div>
+              <div class="report-cta-status">Dataset ready</div>
+            </section>
+            """, unsafe_allow_html=True)
+
+            @st.dialog("Build the full semantic report", width="large")
+            def full_report_dialog():
+                _semantic_upgrade(llm_available, llm_models, key_prefix="semantic_dialog")
+
+            if st.button("Build the full report", type="primary", width="stretch", key="open_full_report_dialog"):
+                full_report_dialog()
+            st.caption("One controlled API workflow. Topic preview, estimated cost and analysis scope are confirmed before the full run.")
+
     with tabs[1]:
         _priority_backlog(backlog, confidence_band, suggest_format)
 
@@ -281,7 +302,7 @@ Identify recurring knowledge demand and prioritise help content for genuine, rep
             _draft_articles()
     elif not has_ai:
         with tabs[3]:
-            _semantic_upgrade(llm_available, llm_models)
+            _semantic_upgrade(llm_available, llm_models, key_prefix="semantic_tab")
 
     st.write("")
     if st.button("Start over with a new file", key="start_over_v2"):
