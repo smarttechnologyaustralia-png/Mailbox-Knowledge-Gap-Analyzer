@@ -30,7 +30,7 @@ LLM_MODELS = {
     "More capable, higher cost": "claude-sonnet-5",
 }
 
-st.set_page_config(page_title="Mailbox Knowledge Gap Analyzer", layout="wide", page_icon="📬")
+st.set_page_config(page_title="Smart Technology | Mailbox Knowledge Gap Analyzer", layout="wide", page_icon="◆")
 
 st.markdown("""
 <style>
@@ -49,6 +49,10 @@ p { line-height: 1.65; }
 .hero:after { content:""; position:absolute; width:260px; height:260px; border-radius:50%; right:-70px; top:-120px; background:rgba(255,255,255,.08); }
 .hero:before { content:""; position:absolute; width:170px; height:170px; border-radius:50%; right:150px; bottom:-135px; background:rgba(142,227,220,.12); }
 .hero-kicker { color:#8ee3dc; font-size:11px; font-weight:800; letter-spacing:.16em; text-transform:uppercase; margin-bottom:9px; }
+.brand-lockup { position:relative; z-index:1; display:flex; align-items:center; gap:11px; margin-bottom:27px; }
+.brand-mark { width:38px; height:38px; flex:none; filter:drop-shadow(0 5px 12px rgba(0,0,0,.14)); }
+.brand-name { color:white; font-size:15px; line-height:1.1; font-weight:790; letter-spacing:-.015em; }
+.brand-name span { display:block; color:#8ee3dc; font-size:8px; font-weight:800; letter-spacing:.16em; text-transform:uppercase; margin-top:5px; }
 .hero-title { font-size:clamp(28px,4vw,44px); line-height:1.08; letter-spacing:-.045em; font-weight:780; margin:0 0 10px; }
 .hero-copy { color:#cfdae8; font-size:15px; max-width:690px; margin:0; }
 .hero-chip { display:inline-flex; align-items:center; gap:7px; margin-top:20px; padding-top:14px; border-top:1px solid rgba(255,255,255,.14); color:#c9dce3; font-size:11px; font-weight:650; letter-spacing:.02em; }
@@ -609,7 +613,11 @@ def step_indicator():
 
 st.markdown("""
 <section class="hero">
-  <div class="hero-kicker">Support intelligence · privacy first</div>
+  <div class="brand-lockup">
+    <svg class="brand-mark" viewBox="0 0 64 64" aria-label="Smart Technology logo"><rect width="64" height="64" rx="15" fill="#07182C"/><path d="M16 22.5c0-5.2 4.3-9.5 9.5-9.5H42v8H25.5a1.5 1.5 0 0 0 0 3h8a9.5 9.5 0 0 1 0 19H17v-8h16.5a1.5 1.5 0 0 0 0-3h-8c-5.2 0-9.5-4.3-9.5-9.5Z" fill="#FFFFFF"/><path d="M39 13h10v38h-8V23.5L35 29v-10l4-3.6Z" fill="#43C7B5"/><circle cx="49" cy="51" r="4" fill="#43C7B5"/></svg>
+    <div class="brand-name">Smart Technology<span>Clear insight. Better service.</span></div>
+  </div>
+  <div class="hero-kicker">Knowledge intelligence · privacy first</div>
   <div class="hero-title">Mailbox Knowledge Gap Analyzer</div>
   <p class="hero-copy">Turn recurring support questions into a ranked, evidence-backed content plan—without exposing personal information.</p>
   <div class="hero-chip">FOUR-STAGE REVIEW &nbsp;·&nbsp; PRIVACY-LED &nbsp;·&nbsp; EVIDENCE-BASED</div>

@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="title desc">
+  <title id="title">Smart Technology</title>
+  <desc id="desc">ST monogram in navy and teal</desc>
+  <rect width="64" height="64" rx="15" fill="#0C223D"/>
+  <path d="M16 22.5c0-5.2 4.3-9.5 9.5-9.5H42v8H25.5a1.5 1.5 0 0 0 0 3h8a9.5 9.5 0 0 1 0 19H17v-8h16.5a1.5 1.5 0 0 0 0-3h-8c-5.2 0-9.5-4.3-9.5-9.5Z" fill="#FFFFFF"/>
+  <path d="M39 13h10v38h-8V23.5L35 29v-10l4-3.6Z" fill="#43C7B5"/>
+  <circle cx="49" cy="51" r="4" fill="#43C7B5"/>
+</svg>

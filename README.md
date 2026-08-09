@@ -1,5 +1,8 @@
 # Mailbox Knowledge Gap Analyzer
 
+**A Smart Technology knowledge-intelligence solution.**  
+*Clear insight. Better service.*
+
 A privacy-first Streamlit app that turns a mailbox export into a ranked,
 evidence-backed backlog of help articles. The free analysis works immediately;
 an optional Anthropic-powered pass discovers topics and separates generic
@@ -34,3 +37,6 @@ browser session and is not committed to the repository.
 `.csv`, `.xlsx`, and `.xls` mailbox exports. Subject and body columns are
 auto-detected; sender is optional. The included
 `Sample_IT_Helpdesk_Mailbox_500.xlsx` is ready for a demo.
+
+The original Smart Technology visual identity is documented in `BRAND.md` and
+the reusable vector mark is stored in `assets/smart-technology-mark.svg`.

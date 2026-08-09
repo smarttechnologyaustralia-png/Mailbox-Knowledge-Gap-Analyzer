@@ -66,7 +66,7 @@ def _draft_articles():
             st.info("No article-addressable topics were available to draft.")
         return
 
-    combined = ["# Draft Knowledge Article Pack", "", "> AI-assisted drafts. Validate policies, links and procedures before publication.", ""]
+    combined = ["# Smart Technology", "", "## Draft Knowledge Article Pack", "", "> Clear insight. Better service.", "", "> AI-assisted drafts. Validate policies, links and procedures before publication.", ""]
     for index, draft in enumerate(drafts, start=1):
         title = str(draft.get("title", "Untitled article"))
         audience = str(draft.get("audience", "General audience"))
@@ -284,7 +284,11 @@ def render_results_page(llm_available, llm_models, confidence_band, suggest_form
                 )
             draft_appendix = "\n\n## Draft Knowledge Articles\n\n" + "\n\n---\n\n".join(article_sections)
 
-        report = f"""# Mailbox Knowledge Gap Assessment
+        report = f"""# Smart Technology
+
+*Clear insight. Better service.*
+
+## Mailbox Knowledge Gap Assessment
 
 ## Purpose
 Identify recurring knowledge demand and prioritise help content for genuine, repeatable questions.
