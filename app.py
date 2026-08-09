@@ -110,12 +110,27 @@ p { line-height: 1.65; }
 .score-copy strong { display:block; color:white; font-size:18px; margin-bottom:5px; }
 .score-copy span { color:#c9dce3; font-size:12px; line-height:1.5; }
 .rank-one { border-left:4px solid #147d76; background:linear-gradient(120deg,#f6fcfb,#fff); }
+.upgrade-panel { position:relative; overflow:hidden; background:linear-gradient(125deg,#0c223d 0%,#153d5d 62%,#11675f 100%); color:white; border-radius:20px; padding:30px 32px; margin:12px 0 18px; box-shadow:0 18px 45px rgba(12,34,61,.16); }
+.upgrade-panel:after { content:""; position:absolute; width:240px; height:240px; right:-95px; top:-120px; border-radius:50%; background:rgba(109,224,203,.1); }
+.upgrade-eyebrow { color:#78d8ca; font-size:10px; font-weight:850; letter-spacing:.15em; text-transform:uppercase; margin-bottom:9px; }
+.upgrade-title { color:white; font-size:27px; line-height:1.18; font-weight:780; letter-spacing:-.035em; max-width:720px; margin-bottom:9px; }
+.upgrade-copy { color:#c9d8e3; font-size:13px; line-height:1.65; max-width:780px; }
+.upgrade-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-top:22px; }
+.upgrade-benefit { background:rgba(255,255,255,.07); border:1px solid rgba(255,255,255,.11); border-radius:11px; padding:14px; }
+.upgrade-benefit strong { display:block; color:white; font-size:12px; margin-bottom:5px; }
+.upgrade-benefit span { display:block; color:#bcd0dd; font-size:10px; line-height:1.5; }
+.comparison { width:100%; border-collapse:separate; border-spacing:0; margin:0 0 18px; overflow:hidden; border:1px solid #dfe6ed; border-radius:12px; background:white; }
+.comparison th { background:#f2f5f8; color:#40546c; font-size:10px; letter-spacing:.07em; text-transform:uppercase; padding:11px 14px; text-align:left; }
+.comparison td { color:#40546c; font-size:11px; padding:11px 14px; border-top:1px solid #e8edf2; }
+.comparison td:last-child { color:#11675f; font-weight:720; }
+.commercial-note { background:#eef8f6; border:1px solid #cfe8e3; border-radius:10px; padding:13px 15px; color:#315d58; font-size:11px; line-height:1.55; margin-bottom:14px; }
 @media (prefers-reduced-motion: reduce) { .feature-card { transition:none; } }
 @media (max-width: 720px) {
   .block-container { padding-top:1.5rem; }
   .hero { padding:26px 22px; border-radius:18px; }
   .feature-grid { grid-template-columns:1fr; }
   .achievement-grid { grid-template-columns:1fr; }
+  .upgrade-grid { grid-template-columns:1fr; }
   .score-panel { align-items:flex-start; }
   .steps { margin-bottom:30px; }
 }
@@ -1015,54 +1030,65 @@ To identify recurring knowledge demand in the mailbox and prioritise help conten
     dl1.download_button("Download structured report", report_markdown.encode("utf-8"), "mailbox_knowledge_gap_report.md", "text/markdown", width="stretch")
     dl2.download_button("Download backlog data", backlog.drop(columns=["examples"]).to_csv(index=False).encode("utf-8"), "knowledge_backlog.csv", "text/csv", width="stretch")
 
-    # ---- Refinement, now living here instead of pre-analysis ----
-    # Only applies to rule-based mode -- AI-powered mode discovers topics
-    # from the data itself rather than using editable keyword rules.
+    if not has_ai:
+        st.write("")
+        st.divider()
+        st.markdown("""
+        <section class="upgrade-panel">
+          <div class="upgrade-eyebrow">Semantic intelligence</div>
+          <div class="upgrade-title">Move from keyword matches to decision-grade insight</div>
+          <div class="upgrade-copy">The baseline identifies obvious patterns. Semantic analysis reads the meaning of each message, discovers the mailbox's own topic structure and isolates the questions a knowledge article can genuinely resolve.</div>
+          <div class="upgrade-grid">
+            <div class="upgrade-benefit"><strong>Discover topics automatically</strong><span>No fixed taxonomy. The model derives themes from the actual mailbox.</span></div>
+            <div class="upgrade-benefit"><strong>Understand intent and context</strong><span>Distinguishes real questions from updates, acknowledgments and automated traffic.</span></div>
+            <div class="upgrade-benefit"><strong>Prioritise addressable demand</strong><span>Separates reusable guidance from requests that require a personal case lookup.</span></div>
+          </div>
+        </section>
+        <table class="comparison">
+          <thead><tr><th>Capability</th><th>Baseline analysis</th><th>Semantic analysis</th></tr></thead>
+          <tbody>
+            <tr><td>Topic model</td><td>Pre-set keyword rules</td><td>Discovered from mailbox content</td></tr>
+            <tr><td>Message understanding</td><td>Literal phrase matching</td><td>Meaning, intent and context</td></tr>
+            <tr><td>Knowledge opportunity</td><td>All detected questions</td><td>Generic, article-addressable questions</td></tr>
+            <tr><td>Best use</td><td>Immediate directional baseline</td><td>Defensible content investment decisions</td></tr>
+          </tbody>
+        </table>
+        """, unsafe_allow_html=True)
+        if not LLM_AVAILABLE:
+            st.info("Semantic analysis is unavailable in this deployment because the Anthropic client is not installed.")
+        else:
+            st.markdown('<div class="commercial-note"><strong>Controlled spend:</strong> the next step makes one small discovery call on approximately 40 redacted emails. You will then see the estimated full-run cost and time, with a lower-cost sample option, before authorising classification.</div>', unsafe_allow_html=True)
+            setup_c1, setup_c2 = st.columns([1.35, 1])
+            with setup_c1:
+                api_key_input = st.text_input("Anthropic API key", type="password",
+                                               placeholder="sk-ant-...",
+                                               help="Used only for this browser session and never written to the repository.")
+            with setup_c2:
+                model_choice = st.selectbox("Analysis model", list(LLM_MODELS.keys()))
+            if st.button("Preview semantic topics and cost", type="primary", disabled=not api_key_input, width="stretch"):
+                st.session_state.api_key = api_key_input
+                st.session_state.llm_model = LLM_MODELS[model_choice]
+                st.session_state.use_llm = True
+                st.session_state.pop("scoping_topics", None)
+                st.session_state.stage = "scoping"
+                st.rerun()
+            st.caption("No full-mailbox analysis starts from this button. Scope and estimated spend are confirmed on the next screen.")
+
+    # Topic refinement remains available as a secondary baseline control.
     st.write("")
-    st.divider()
     if active == "free":
-        with st.expander("Refine topic categories and re-run analysis"):
-            st.caption("Adjust the keyword rules below, add a topic that's missing, or remove one that doesn't apply — then re-run using the same cleaned data (no need to re-upload or re-redact).")
+        with st.expander("Advanced: refine baseline topic rules"):
+            st.caption("Adjust keyword rules, add a missing topic or remove one that does not apply, then re-run without uploading or redacting the data again.")
             topics_df = pd.DataFrame([{"topic": k, "keyword_pattern": v} for k, v in st.session_state.topic_patterns.items()])
             edited = st.data_editor(topics_df, num_rows="dynamic", width="stretch", key="topic_editor")
-            if st.button("Re-analyze with these topics"):
+            if st.button("Re-run baseline analysis"):
                 st.session_state.topic_patterns = {r["topic"]: r["keyword_pattern"] for _, r in edited.iterrows()
                                                     if r["topic"] and r["keyword_pattern"]}
                 st.session_state.use_llm = False
                 st.session_state.stage = "analyzing"
                 st.rerun()
     else:
-        st.caption("Topics were discovered automatically from this mailbox's actual content — there's no fixed rule list to edit in AI-powered mode.")
-
-    if not has_ai:
-        st.write("")
-        st.divider()
-        st.markdown("### Optional semantic analysis")
-        st.caption(
-            "The results above use keyword matching, which works well for familiar topics but "
-            "can misjudge things like generic vs. case-specific questions. AI-powered analysis "
-            "reads each email properly, works on any industry or language, and doesn't need a "
-            "pre-set topic list — you'll see the real cost and time before anything runs."
-        )
-        if not LLM_AVAILABLE:
-            st.info("Install `anthropic` (`pip install anthropic`) to unlock this.")
-        else:
-            with st.expander("Set up AI-powered analysis"):
-                c1, c2 = st.columns(2)
-                with c1:
-                    api_key_input = st.text_input("Anthropic API key", type="password",
-                                                   help="Never stored beyond this session.")
-                with c2:
-                    model_choice = st.selectbox("Model", list(LLM_MODELS.keys()))
-                if st.button("Continue →", type="primary", disabled=not api_key_input):
-                    st.session_state.api_key = api_key_input
-                    st.session_state.llm_model = LLM_MODELS[model_choice]
-                    st.session_state.use_llm = True
-                    st.session_state.pop("scoping_topics", None)  # force fresh discovery
-                    st.session_state.stage = "scoping"
-                    st.rerun()
-                if not api_key_input:
-                    st.caption("Enter an API key to continue.")
+        st.caption("Semantic topics were discovered from this mailbox; no fixed keyword taxonomy was used.")
 
     st.write("")
     if st.button("Start over with a new file"):
