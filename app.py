@@ -164,6 +164,11 @@ QUESTION_PATTERN = re.compile(
 ACK_PATTERN = re.compile(
     r"^(thanks|thank you|noted|no problem|great|perfect|all good|done|sounds good)\b", re.I)
 AUTOMATED_SENDER_MARKERS = ["no-reply", "noreply", "system", "automated", "notification", "service desk"]
+NON_PERSON_TERMS = {
+    "wifi", "wi-fi", "vpn", "outlook", "windows", "microsoft", "teams", "zoom",
+    "printer", "password", "mailbox", "internet", "software", "hardware", "helpdesk",
+    "service desk", "sharepoint", "onedrive", "excel", "word", "powerpoint",
+}
 
 
 def strip_html(text):
@@ -258,6 +263,23 @@ def redact_dataframe(df, text_columns, progress_callback=None):
                 out = out[:start] + get_pseudonym(text[start:end], entity_type) + out[end:]
             return out
         results = analyzer.analyze(text=text, entities=["PERSON", "EMAIL_ADDRESS", "PHONE_NUMBER"], language="en")
+        # Named-entity models can confidently mistake product or technology
+        # names (for example "WiFi") for people. Keep email/phone recognizers,
+        # but apply a quality threshold and domain guardrail to PERSON results.
+        filtered_results = []
+        for result in results:
+            candidate = text[result.start:result.end].strip()
+            if result.entity_type == "PERSON":
+                if result.score < 0.70:
+                    continue
+                if candidate.lower() in NON_PERSON_TERMS:
+                    continue
+                if not re.fullmatch(r"[A-Za-z][A-Za-z .'-]{1,79}", candidate):
+                    continue
+                if candidate.isupper() and len(candidate) <= 6:
+                    continue
+            filtered_results.append(result)
+        results = filtered_results
         results = sorted(results, key=lambda r: r.start, reverse=True)
         out = text
         for r in results:
@@ -688,7 +710,7 @@ elif st.session_state.stage == "cleaning":
     # Show a record where redaction visibly changed the content. The first
     # mailbox row often contains no PII, which made the previous before/after
     # example look identical even when other rows were protected correctly.
-    example = None
+    example_candidates = []
     for field, field_label in [(st.session_state.body_col, "Message body"),
                                (st.session_state.subject_col, "Subject line")]:
         redacted_field = field + "_redacted"
@@ -698,10 +720,18 @@ elif st.session_state.stage == "cleaning":
             original = str(working_df.at[idx, field] or "")
             protected = str(working_df.at[idx, redacted_field] or "")
             if original != protected:
-                example = (field_label, original, protected)
-                break
-        if example:
-            break
+                token_types = re.findall(r"\[(PERSON|EMAIL_ADDRESS|PHONE_NUMBER)_\d+\]", protected)
+                # Prefer an unmistakable, explanatory example: email and phone
+                # redactions are clearer than a name alone; a message body is
+                # generally more understandable than an isolated subject.
+                score = (token_types.count("EMAIL_ADDRESS") * 100 +
+                         token_types.count("PHONE_NUMBER") * 90 +
+                         token_types.count("PERSON") * 20 +
+                         (5 if field_label == "Message body" else 0) +
+                         min(len(original), 300) / 100)
+                example_candidates.append((score, field_label, original, protected))
+
+    example = max(example_candidates, key=lambda item: item[0])[1:] if example_candidates else None
 
     with st.expander("Review a redaction example", expanded=example is not None):
         if example:
