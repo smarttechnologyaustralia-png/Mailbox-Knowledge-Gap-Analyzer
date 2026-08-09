@@ -142,6 +142,58 @@ same order as the emails above. Example format:
     return results
 
 
+def draft_kb_articles_with_llm(client, model, article_briefs):
+    """Draft publication-ready KB articles grounded in classified evidence.
+
+    article_briefs is a list of dictionaries containing topic, demand_count
+    and redacted example questions. The model must preserve explicit
+    placeholders where the mailbox does not provide organisation-specific
+    policy or procedural detail rather than inventing an answer.
+    """
+    if not article_briefs:
+        return []
+
+    briefs = "\n\n".join(
+        f"Article {i + 1}\nTopic: {brief['topic']}\n"
+        f"Addressable question count: {brief['demand_count']}\n"
+        f"Evidence questions:\n" + "\n".join(f"- {e}" for e in brief.get("examples", []))
+        for i, brief in enumerate(article_briefs)
+    )
+    prompt = f"""You are a senior knowledge-management writer. Draft one practical,
+copy-ready knowledge article for each evidence brief below.
+
+{briefs}
+
+Rules:
+- Ground each article only in the supplied topic and evidence questions.
+- Do not invent organisation-specific URLs, contact details, policies,
+  approval paths, system names or service levels.
+- Where an organisation-specific fact is required, insert a clear editor
+  placeholder such as [INSERT SERVICE DESK LINK].
+- Use plain, confident language suitable for an employee help centre.
+- Make each article useful immediately, approximately 300-500 words.
+- The markdown body must include: Overview, Before you begin, Steps,
+  Troubleshooting, and When to contact support.
+
+Return ONLY a JSON array with exactly {len(article_briefs)} objects in the
+same order. Each object must contain these string fields:
+"topic", "title", "audience", "summary", and "body_markdown".
+"""
+    response = client.messages.create(
+        model=model,
+        max_tokens=min(5000, 1400 * len(article_briefs)),
+        messages=[{"role": "user", "content": prompt}],
+    )
+    drafts = _extract_json(_get_response_text(response))
+    if not isinstance(drafts, list) or len(drafts) != len(article_briefs):
+        raise ValueError(f"Expected {len(article_briefs)} article drafts, got {len(drafts) if isinstance(drafts, list) else 'invalid JSON'}.")
+    required = {"topic", "title", "audience", "summary", "body_markdown"}
+    for draft in drafts:
+        if not isinstance(draft, dict) or not required.issubset(draft):
+            raise ValueError("An article draft was missing required fields.")
+    return [{key: str(draft[key]) for key in required} for draft in drafts]
+
+
 def estimate_cost(num_emails, model="claude-haiku-4-5-20251001"):
     """Rough order-of-magnitude cost estimate, NOT a quote. Assumes ~400
     input tokens and ~60 output tokens per email once batching overhead is
@@ -159,3 +211,17 @@ def estimate_cost(num_emails, model="claude-haiku-4-5-20251001"):
     cost = (est_input_tokens / 1_000_000 * input_rate_per_million +
             est_output_tokens / 1_000_000 * output_rate_per_million)
     return round(cost, 2)
+
+
+def estimate_article_drafting_cost(model="claude-haiku-4-5-20251001", n_articles=3):
+    """Estimated incremental cost for the final article-pack generation call."""
+    if n_articles <= 0:
+        return 0.0
+    input_tokens = 900 + (n_articles * 350)
+    output_tokens = n_articles * 1100
+    if "sonnet" in model.lower():
+        input_rate, output_rate = 3.0, 15.0
+    else:
+        input_rate, output_rate = 1.0, 5.0
+    return round((input_tokens / 1_000_000 * input_rate) +
+                 (output_tokens / 1_000_000 * output_rate), 2)

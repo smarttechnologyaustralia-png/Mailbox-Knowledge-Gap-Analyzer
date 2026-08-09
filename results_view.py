@@ -10,12 +10,12 @@ def _semantic_upgrade(llm_available, llm_models):
     st.markdown("""
     <section class="upgrade-panel">
       <div class="upgrade-eyebrow">Semantic intelligence</div>
-      <div class="upgrade-title">Move from keyword matches to decision-grade insight</div>
-      <div class="upgrade-copy">Read the meaning of each message, discover the mailbox's own topic structure and isolate the questions a knowledge article can genuinely resolve.</div>
+      <div class="upgrade-title">From mailbox evidence to a publishable knowledge programme</div>
+      <div class="upgrade-copy">Semantic analysis converts recurring demand into a complete decision report and professionally structured article drafts that can move directly into editorial review.</div>
       <div class="upgrade-grid">
-        <div class="upgrade-benefit"><strong>Discover topics automatically</strong><span>No fixed taxonomy. Themes come from the actual mailbox.</span></div>
-        <div class="upgrade-benefit"><strong>Understand intent and context</strong><span>Separate questions from updates, acknowledgments and automated traffic.</span></div>
-        <div class="upgrade-benefit"><strong>Prioritise addressable demand</strong><span>Distinguish reusable guidance from requests requiring personal lookup.</span></div>
+        <div class="upgrade-benefit"><strong>Full decision report</strong><span>Semantic findings, methodology, limitations and an evidence-backed priority roadmap.</span></div>
+        <div class="upgrade-benefit"><strong>Copy-ready article drafts</strong><span>Up to three structured articles for the highest-value opportunities, ready for editorial review.</span></div>
+        <div class="upgrade-benefit"><strong>Addressable demand</strong><span>Priorities are based on reusable questions, excluding requests that need personal lookup.</span></div>
       </div>
     </section>
     <table class="comparison">
@@ -24,6 +24,7 @@ def _semantic_upgrade(llm_available, llm_models):
         <tr><td>Topic model</td><td>Pre-set keyword rules</td><td>Discovered from mailbox content</td></tr>
         <tr><td>Understanding</td><td>Literal phrase matching</td><td>Meaning, intent and context</td></tr>
         <tr><td>Opportunity</td><td>All detected questions</td><td>Article-addressable questions</td></tr>
+        <tr><td>Deliverable</td><td>Directional findings</td><td>Full report + drafted articles</td></tr>
         <tr><td>Best use</td><td>Directional baseline</td><td>Content investment decisions</td></tr>
       </tbody>
     </table>
@@ -48,6 +49,42 @@ def _semantic_upgrade(llm_available, llm_models):
         st.session_state.stage = "scoping"
         st.rerun()
     st.caption("No full-mailbox analysis starts here. Scope and estimated spend are confirmed on the next screen.")
+
+
+def _draft_articles():
+    drafts = st.session_state.get("ai_draft_articles", [])
+    st.markdown("### Draft knowledge article pack")
+    st.write("Evidence-grounded first drafts for the leading content opportunities. Review organisation-specific placeholders and policy details before publication.")
+
+    warning = st.session_state.get("ai_draft_warning")
+    if not drafts:
+        if warning:
+            st.warning("The semantic analysis completed, but article drafting could not be completed. The findings and backlog remain available.")
+            with st.expander("Drafting error details"):
+                st.code(warning)
+        else:
+            st.info("No article-addressable topics were available to draft.")
+        return
+
+    combined = ["# Draft Knowledge Article Pack", "", "> AI-assisted drafts. Validate policies, links and procedures before publication.", ""]
+    for index, draft in enumerate(drafts, start=1):
+        title = str(draft.get("title", "Untitled article"))
+        audience = str(draft.get("audience", "General audience"))
+        summary = str(draft.get("summary", ""))
+        body = str(draft.get("body_markdown", ""))
+        topic = str(draft.get("topic", ""))
+        with st.container(border=True):
+            st.caption(f"DRAFT {index:02d}  /  {topic.upper()}")
+            st.markdown(f"## {title}")
+            st.caption(f"Intended audience: {audience}")
+            st.info(summary)
+            st.markdown(body)
+            with st.expander("Copy-ready Markdown"):
+                st.code(f"# {title}\n\n{body}", language="markdown")
+        combined.extend([f"# {title}", "", f"**Audience:** {audience}", "", summary, "", body, "", "---", ""])
+
+    st.download_button("Download complete article pack", "\n".join(combined).encode("utf-8"),
+                       "draft_knowledge_articles.md", "text/markdown", width="stretch")
 
 
 def _priority_backlog(backlog, confidence_band, suggest_format):
@@ -100,8 +137,10 @@ def render_results_page(llm_available, llm_models, confidence_band, suggest_form
 
     st.subheader("Stage 4 — Executive findings")
     tab_names = ["Executive Summary", "Priority Backlog", "Methodology & Export"]
-    if not has_ai:
-        tab_names.append("Semantic Analysis")
+    if active == "ai":
+        tab_names.append("Draft Articles")
+    elif not has_ai:
+        tab_names.append("Full Report & Article Drafting")
     tabs = st.tabs(tab_names)
 
     with tabs[0]:
@@ -180,6 +219,17 @@ def render_results_page(llm_available, llm_models, confidence_band, suggest_form
         st.markdown("\n".join(f"- {item}" for item in limitations))
 
         topic_lines = [f"{int(r['rank'])}. **{r['topic']}** — {int(r['genuine_questions'])} priority questions from {int(r['total_emails'])} topic emails." for _, r in backlog.iterrows()] or ["No topics met the matching criteria."]
+        draft_appendix = ""
+        if active == "ai" and st.session_state.get("ai_draft_articles"):
+            article_sections = []
+            for draft in st.session_state.ai_draft_articles:
+                article_sections.append(
+                    f"### {draft.get('title', 'Draft article')}\n\n"
+                    f"**Audience:** {draft.get('audience', 'General audience')}\n\n"
+                    f"{draft.get('summary', '')}\n\n{draft.get('body_markdown', '')}"
+                )
+            draft_appendix = "\n\n## Draft Knowledge Articles\n\n" + "\n\n---\n\n".join(article_sections)
+
         report = f"""# Mailbox Knowledge Gap Assessment
 
 ## Purpose
@@ -209,9 +259,11 @@ Identify recurring knowledge demand and prioritise help content for genuine, rep
 
 ## Assumptions and Limitations
 {chr(10).join(f'- {item}' for item in limitations)}
+{draft_appendix}
 """
         d1, d2 = st.columns(2)
-        d1.download_button("Download structured report", report.encode("utf-8"), "mailbox_knowledge_gap_report.md", "text/markdown", width="stretch")
+        report_label = "Download full semantic report" if active == "ai" else "Download baseline report"
+        d1.download_button(report_label, report.encode("utf-8"), "mailbox_knowledge_gap_report.md", "text/markdown", width="stretch")
         d2.download_button("Download backlog data", backlog.drop(columns=["examples"]).to_csv(index=False).encode("utf-8"), "knowledge_backlog.csv", "text/csv", width="stretch")
 
         if active == "free":
@@ -224,7 +276,10 @@ Identify recurring knowledge demand and prioritise help content for genuine, rep
                     st.session_state.stage = "analyzing"
                     st.rerun()
 
-    if not has_ai:
+    if active == "ai":
+        with tabs[3]:
+            _draft_articles()
+    elif not has_ai:
         with tabs[3]:
             _semantic_upgrade(llm_available, llm_models)
 

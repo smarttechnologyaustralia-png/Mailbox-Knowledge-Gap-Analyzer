@@ -19,7 +19,7 @@ import streamlit as st
 
 try:
     import anthropic
-    from llm_classifier import discover_topics_with_llm, classify_batch_with_llm, estimate_cost, BATCH_SIZE
+    from llm_classifier import discover_topics_with_llm, classify_batch_with_llm, draft_kb_articles_with_llm, estimate_cost, BATCH_SIZE
     from scoping_logic import quick_keyword_prescan, estimate_time_and_cost, format_time, build_stratified_sample
     LLM_AVAILABLE = True
 except ImportError:
@@ -764,6 +764,7 @@ elif st.session_state.stage == "scoping":
     full_cost, full_secs = estimate_time_and_cost(total_n, BATCH_SIZE, st.session_state.llm_model)
 
     st.markdown(f"**Full dataset: {total_n} emails** — estimated cost **${full_cost}**, estimated time **{format_time(full_secs)}**")
+    st.caption("Estimate includes semantic classification and a draft pack for up to three leading knowledge opportunities. Actual API usage may vary.")
 
     choice = st.radio(
         "How do you want to proceed?",
@@ -824,10 +825,34 @@ elif st.session_state.stage == "analyzing":
                 progress_callback=progress.progress, status_callback=status.text,
                 known_topics=st.session_state.get("scoping_topics"),
             )
+            # Turn the highest-value semantic findings into practical output.
+            # Drafting is deliberately isolated from classification: if the
+            # final writing call fails, the completed analysis remains usable.
+            st.session_state.ai_draft_articles = []
+            st.session_state.pop("ai_draft_warning", None)
+            article_briefs = [
+                {
+                    "topic": row["topic"],
+                    "demand_count": int(row["genuine_questions"]),
+                    "examples": list(row["examples"]),
+                }
+                for _, row in backlog.head(3).iterrows()
+                if int(row["genuine_questions"]) > 0
+            ]
+            if article_briefs:
+                status.text("Drafting copy-ready knowledge articles for the leading opportunities...")
+                try:
+                    drafting_client = anthropic.Anthropic(api_key=st.session_state.api_key)
+                    st.session_state.ai_draft_articles = draft_kb_articles_with_llm(
+                        drafting_client, st.session_state.llm_model, article_briefs)
+                except Exception as draft_error:
+                    st.session_state.ai_draft_warning = str(draft_error)
             st.session_state.sample_size_used = len(data_to_analyze)
             st.session_state.population_size = len(st.session_state.working_df)
             status.empty()
-            st.success("Analysis complete — topics were discovered directly from this mailbox, not from a pre-set list.")
+            draft_count = len(st.session_state.ai_draft_articles)
+            completion_note = f" and {draft_count} knowledge article drafts were prepared" if draft_count else ""
+            st.success(f"Analysis complete — topics were discovered directly from this mailbox{completion_note}.")
         except Exception as e:
             status.empty()
             st.error(f"AI-powered analysis failed: {e}")

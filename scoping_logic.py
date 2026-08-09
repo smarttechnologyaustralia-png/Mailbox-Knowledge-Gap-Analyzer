@@ -36,13 +36,13 @@ def quick_keyword_prescan(df, subject_col, body_col, topics):
 def estimate_time_and_cost(n_emails, batch_size, model, seconds_per_call=6):
     """Rough estimate, not a guarantee -- real latency varies with network
     conditions and response length. n_emails=0 returns zero for both."""
-    from llm_classifier import estimate_cost
+    from llm_classifier import estimate_cost, estimate_article_drafting_cost
     if n_emails == 0:
         return 0.0, 0
     n_batches = math.ceil(n_emails / batch_size)
-    n_calls = n_batches + 1  # +1 for the one-off topic discovery call
+    n_calls = n_batches + 1  # +1 for the final article-pack drafting call
     est_seconds = n_calls * seconds_per_call
-    est_cost = estimate_cost(n_emails, model)
+    est_cost = estimate_cost(n_emails, model) + estimate_article_drafting_cost(model)
     return est_cost, est_seconds
 
 

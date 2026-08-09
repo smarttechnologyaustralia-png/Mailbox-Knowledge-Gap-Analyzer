@@ -3,7 +3,9 @@
 A privacy-first Streamlit app that turns a mailbox export into a ranked,
 evidence-backed backlog of help articles. The free analysis works immediately;
 an optional Anthropic-powered pass discovers topics and separates generic
-questions from case-specific requests.
+questions from case-specific requests. The semantic workflow also produces a
+full assessment report and copy-ready first drafts for up to three priority
+knowledge articles, grounded in redacted mailbox evidence.
 
 ## Run locally
 
