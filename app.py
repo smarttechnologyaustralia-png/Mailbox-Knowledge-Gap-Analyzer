@@ -163,7 +163,7 @@ p { line-height: 1.65; }
 # ============================================================
 from analysis_core import (
     DEFAULT_TOPICS, parse_upload, detect_all_columns, validate_mailbox_dataframe,
-    redact_dataframe, run_analysis, run_llm_analysis,
+    strip_html, strip_quotes, redact_dataframe, run_analysis, run_llm_analysis,
     confidence_band, suggest_format,
 )
 
