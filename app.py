@@ -6,20 +6,19 @@ Column mapping and topic configuration are both hidden by default and
 only surfaced when genuinely needed.
 
 RUN:
-    pip install streamlit pandas openpyxl presidio-analyzer presidio-anonymizer
-    python -m spacy download en_core_web_lg
+    pip install -r requirements.txt   # includes the en_core_web_sm spaCy model
     streamlit run app.py
 """
 import html
 import re
-import time
 
 import pandas as pd
 import streamlit as st
 
 try:
-    import anthropic
-    from llm_classifier import discover_topics_with_llm, classify_batch_with_llm, draft_kb_articles_with_llm, estimate_cost, BATCH_SIZE
+    import anthropic  # noqa: F401 -- presence check for the optional semantic path
+    from llm_classifier import (discover_topics_with_llm, draft_kb_articles_with_llm,
+                                make_client, estimate_cost, BATCH_SIZE)
     from scoping_logic import quick_keyword_prescan, estimate_time_and_cost, format_time, build_stratified_sample
     LLM_AVAILABLE = True
 except ImportError:
@@ -27,7 +26,7 @@ except ImportError:
 
 LLM_MODELS = {
     "Fast & cheap (recommended)": "claude-haiku-4-5-20251001",
-    "More capable, higher cost": "claude-sonnet-5",
+    "More capable, higher cost": "claude-sonnet-4-6",
 }
 
 st.set_page_config(page_title="Smart Technology | Mailbox Knowledge Gap Analyzer", layout="wide", page_icon="◆")
@@ -103,12 +102,7 @@ p { line-height: 1.65; }
 .mission-card { display:flex; align-items:center; justify-content:space-between; gap:18px; background:#ffffff; border:1px solid #dfe6ed; border-left:4px solid #147d76; border-radius:10px; padding:17px 20px; margin:8px 0 22px; }
 .mission-label { color:#147d76; font-size:10px; font-weight:850; letter-spacing:.14em; text-transform:uppercase; }
 .mission-title { color:#173456; font-weight:760; font-size:15px; margin-top:3px; }
-.xp-pill { flex:none; background:#edf3f7; color:#34506d; padding:8px 12px; border-radius:6px; font-size:10px; font-weight:800; letter-spacing:.06em; text-transform:uppercase; }
-.achievement-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin:16px 0 28px; }
-.achievement { display:flex; align-items:center; gap:12px; background:white; border:1px solid #e4e9f0; border-radius:14px; padding:14px 16px; }
-.achievement-icon { display:grid; place-items:center; width:38px; height:38px; flex:none; border-radius:8px; background:#e8f7f5; color:#126b5e; border:1px solid #cde8e3; font-size:10px; font-weight:850; letter-spacing:.05em; }
-.achievement strong { display:block; color:#173456; font-size:12px; }
-.achievement span { color:#78869a; font-size:10px; }
+.stage-pill { flex:none; background:#edf3f7; color:#34506d; padding:8px 12px; border-radius:6px; font-size:10px; font-weight:800; letter-spacing:.06em; text-transform:uppercase; }
 .score-panel { display:flex; align-items:center; gap:22px; background:linear-gradient(135deg,#102b4c,#17516a); color:white; border-radius:18px; padding:22px 26px; margin:22px 0 30px; box-shadow:0 14px 35px rgba(16,43,76,.14); }
 .score-ring { --score:0; width:92px; height:92px; flex:none; border-radius:50%; display:grid; place-items:center; background:conic-gradient(#63d9c7 calc(var(--score)*1%),rgba(255,255,255,.13) 0); position:relative; }
 .score-ring:after { content:""; position:absolute; inset:8px; border-radius:50%; background:#173b59; }
@@ -151,7 +145,6 @@ p { line-height: 1.65; }
   .block-container { padding-top:1.5rem; }
   .hero { padding:26px 22px; border-radius:18px; }
   .feature-grid { grid-template-columns:1fr; }
-  .achievement-grid { grid-template-columns:1fr; }
   .upgrade-grid { grid-template-columns:1fr; }
   .report-cta { grid-template-columns:1fr; }
   .report-cta-status { width:max-content; }
@@ -165,427 +158,22 @@ p { line-height: 1.65; }
 """, unsafe_allow_html=True)
 
 # ============================================================
-# Core logic
+# Core logic lives in analysis_core.py so it can be unit-tested and
+# reused without importing Streamlit. This file is flow and UI only.
 # ============================================================
-DEFAULT_TOPICS = {
-    "Password Reset": r"password|locked out|reset",
-    "VPN / Remote Access": r"\bvpn\b|remote access|certificate",
-    "Software Install / Licensing": r"licen[cs]e|install|software",
-    "Printer / Hardware": r"printer|mouse|keyboard|laptop|monitor|hardware",
-    "New Starter / Access Provisioning": r"new starter|new hire|access request|offboard|provisioning",
-    "Email / Outlook Issues": r"outlook|mailbox|calendar|junk folder|spam",
-    "WiFi / Network": r"wi-?fi|network|internet connection",
-    "Meeting Room / AV": r"conference room|boardroom|\bav\b|screen",
-    "Security / Phishing": r"phishing|suspicious email|security policy",
-}
-
-QUOTE_MARKERS = re.compile(
-    r"(From:\s|Sent:\s|-{3,}\s*Original Message\s*-{3,}|On .{5,80}wrote:|"
-    r"________________________________)", re.I)
-QUESTION_PATTERN = re.compile(
-    r"\?|how do i|how does|what is|what does|where do i|where can i|when is|when do i|"
-    r"who is|who do i|can you|could you|please advise|please confirm|not sure|unsure|"
-    r"clarif|does this mean|do i need|am i required|is it possible|what happens if|"
-    r"could i|can i", re.I)
-ACK_PATTERN = re.compile(
-    r"^(thanks|thank you|noted|no problem|great|perfect|all good|done|sounds good)\b", re.I)
-AUTOMATED_SENDER_MARKERS = ["no-reply", "noreply", "system", "automated", "notification", "service desk"]
-NON_PERSON_TERMS = {
-    "wifi", "wi-fi", "vpn", "outlook", "windows", "microsoft", "teams", "zoom",
-    "printer", "password", "mailbox", "internet", "software", "hardware", "helpdesk",
-    "service desk", "sharepoint", "onedrive", "excel", "word", "powerpoint",
-}
+from analysis_core import (
+    DEFAULT_TOPICS, parse_upload, detect_all_columns, validate_mailbox_dataframe,
+    redact_dataframe, run_analysis, run_llm_analysis,
+    confidence_band, suggest_format,
+)
 
 
-def strip_html(text):
-    """Removes HTML tags and common entities -- many real mailbox exports
-    store the body as HTML, and leaving tags in place corrupts every
-    downstream step (quote detection, question detection, topic matching)."""
-    text = re.sub(r"<[^>]+>", " ", text)
-    text = re.sub(r"&nbsp;|&amp;|&lt;|&gt;|&#\d+;", " ", text)
-    return re.sub(r"\s+", " ", text).strip()
-
-
-def strip_quotes(body_text):
-    """Removes quoted reply history, keeping only the new message.
-    Falls back safely if the quote appears BEFORE the new text instead of
-    after it (common outside Outlook's top-posting convention) -- without
-    this check, that ordering would silently delete the real message,
-    which was found and fixed after testing against a non-Outlook sample."""
-    match = QUOTE_MARKERS.search(body_text)
-    if not match:
-        return body_text
-    before = body_text[:match.start()].strip()
-    after = body_text[match.end():].strip()
-    if len(before) >= 10:
-        return before
-    if len(after) >= 10:
-        return after
-    return body_text
-
-
-def classify_email_type(new_content, sender_name):
-    text = new_content.strip()
-    sender_lc = (sender_name or "").lower()
-    if any(m in sender_lc for m in AUTOMATED_SENDER_MARKERS):
-        return "automated"
-    if not text:
-        return "unclear"
-    if ACK_PATTERN.match(text) and len(text) < 120:
-        return "acknowledgment"
-    if QUESTION_PATTERN.search(text):
-        return "genuine_question"
-    return "status_update"
-
-
-def tag_topics(text, topic_patterns):
-    text_lc = text.lower()
-    return [name for name, pattern in topic_patterns.items() if re.search(pattern, text_lc, re.I)]
-
-
-@st.cache_resource
-def get_presidio_analyzer():
-    from presidio_analyzer import AnalyzerEngine
-    from presidio_analyzer.nlp_engine import NlpEngineProvider
-    configuration = {
-        "nlp_engine_name": "spacy",
-        "models": [{"lang_code": "en", "model_name": "en_core_web_sm"}],
-    }
-    nlp_engine = NlpEngineProvider(nlp_configuration=configuration).create_engine()
-    return AnalyzerEngine(nlp_engine=nlp_engine, supported_languages=["en"])
-
-
-def redact_dataframe(df, text_columns, progress_callback=None):
-    try:
-        analyzer = get_presidio_analyzer()
-    except Exception:
-        analyzer = None
-    pseudonym_map = {}
-    counters = {}
-
-    def get_pseudonym(original_text, entity_type):
-        key = (entity_type, original_text.strip().lower())
-        if key not in pseudonym_map:
-            counters[entity_type] = counters.get(entity_type, 0) + 1
-            pseudonym_map[key] = f"[{entity_type}_{counters[entity_type]}]"
-        return pseudonym_map[key]
-
-    def redact_text(text):
-        if not text:
-            return text
-        if analyzer is None:
-            # Safe deployment fallback when Presidio's NLP model is unavailable.
-            matches = []
-            patterns = {
-                "EMAIL_ADDRESS": r"\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b",
-                "PHONE_NUMBER": r"(?<!\w)(?:\+?\d[\d ()-]{7,}\d)(?!\w)",
-            }
-            for entity_type, pattern in patterns.items():
-                for match in re.finditer(pattern, text, re.I):
-                    matches.append((match.start(), match.end(), entity_type))
-            results = sorted(matches, key=lambda r: r[0], reverse=True)
-            out = text
-            for start, end, entity_type in results:
-                out = out[:start] + get_pseudonym(text[start:end], entity_type) + out[end:]
-            return out
-        results = analyzer.analyze(text=text, entities=["PERSON", "EMAIL_ADDRESS", "PHONE_NUMBER"], language="en")
-        # Named-entity models can confidently mistake product or technology
-        # names (for example "WiFi") for people. Keep email/phone recognizers,
-        # but apply a quality threshold and domain guardrail to PERSON results.
-        filtered_results = []
-        for result in results:
-            candidate = text[result.start:result.end].strip()
-            if result.entity_type == "PERSON":
-                if result.score < 0.70:
-                    continue
-                if candidate.lower() in NON_PERSON_TERMS:
-                    continue
-                if not re.fullmatch(r"[A-Za-z][A-Za-z .'-]{1,79}", candidate):
-                    continue
-                if candidate.isupper() and len(candidate) <= 6:
-                    continue
-            filtered_results.append(result)
-        results = filtered_results
-        results = sorted(results, key=lambda r: r.start, reverse=True)
-        out = text
-        for r in results:
-            placeholder = get_pseudonym(text[r.start:r.end], r.entity_type)
-            out = out[:r.start] + placeholder + out[r.end:]
-        return out
-
-    total = len(df) * len(text_columns)
-    done = 0
-    for col in text_columns:
-        redacted_col = []
-        for val in df[col]:
-            redacted_col.append(redact_text(str(val)))
-            done += 1
-            if progress_callback and done % 5 == 0:
-                progress_callback(done / total)
-        df[col + "_redacted"] = redacted_col
-    if progress_callback:
-        progress_callback(1.0)
-    return df, pseudonym_map
-
-
-def run_analysis(df, topic_patterns, subject_col, body_col, sender_col):
-    df = df.copy()
-    df["new_content"] = df[body_col].fillna("").astype(str).apply(strip_html).apply(strip_quotes)
-    if not sender_col or sender_col not in df.columns:
-        sender_values = pd.Series("", index=df.index)
-    else:
-        sender_values = df[sender_col].fillna("").astype(str)
-    df["email_type"] = [classify_email_type(content, sender) for content, sender in zip(df["new_content"], sender_values)]
-    df["topics"] = (df[subject_col].fillna("").astype(str) + " " + df["new_content"]).apply(
-        lambda t: tag_topics(t, topic_patterns))
-
-    total = len(df)
-    rows = []
-    for topic in topic_patterns:
-        topic_mask = df["topics"].apply(lambda t: topic in t)
-        topic_total = int(topic_mask.sum())
-        if topic_total == 0:
-            continue
-        topic_genuine_mask = topic_mask & (df["email_type"] == "genuine_question")
-        topic_genuine = int(topic_genuine_mask.sum())
-        pct_genuine = round(100 * topic_genuine / topic_total, 1) if topic_total else 0
-        examples = df.loc[topic_genuine_mask, "new_content"].str.strip()
-        examples = [e for e in examples if 15 < len(e) < 220][:3]
-        rows.append(dict(
-            topic=topic, total_emails=topic_total,
-            pct_of_mailbox=round(100 * topic_total / total, 1),
-            genuine_questions=topic_genuine, pct_genuine=pct_genuine,
-            examples=examples,
-        ))
-
-    backlog = pd.DataFrame(rows, columns=["topic", "total_emails", "pct_of_mailbox", "genuine_questions", "pct_genuine", "examples"])
-    backlog = backlog.sort_values("genuine_questions", ascending=False).reset_index(drop=True)
-    if len(backlog):
-        backlog.insert(0, "rank", range(1, len(backlog) + 1))
-
-    type_summary = df["email_type"].value_counts().rename_axis("type").reset_index(name="count")
-    type_summary["pct"] = round(100 * type_summary["count"] / total, 1)
-
-    return df, backlog, type_summary
-
-
-def run_llm_analysis(df, subject_col, body_col, api_key, model, sample_size=40,
-                      batch_size=None, progress_callback=None, status_callback=None,
-                      known_topics=None):
-    """
-    The AI-powered path: no pre-defined topic list needed -- discovers
-    topics from the data itself, then classifies every email with real
-    language understanding rather than keyword matching. This is what
-    lets it work on a dataset from any industry, and what lets it
-    correctly separate generic questions from case-specific ones (the
-    thing the rule-based version got wrong on Printer/Hardware).
-
-    known_topics: pass in topics already discovered during the scoping
-    step, to avoid paying for and waiting on a second discovery call.
-    """
-    batch_size = batch_size or BATCH_SIZE
-    client = anthropic.Anthropic(api_key=api_key)
-
-    df = df.copy()
-    df[subject_col] = df[subject_col].fillna("").astype(str)
-    df[body_col] = df[body_col].fillna("").astype(str).apply(strip_html).apply(strip_quotes)
-    emails = [{"subject": r[subject_col], "body": r[body_col]} for _, r in df.iterrows()]
-
-    if known_topics:
-        topics = known_topics
-    else:
-        if status_callback:
-            status_callback("Reading a sample to discover this mailbox's actual topics...")
-        sample = emails[:min(sample_size, len(emails))]
-        topics = discover_topics_with_llm(client, model, sample)
-
-
-    results = []
-    n = len(emails)
-    for i in range(0, n, batch_size):
-        batch = emails[i:i + batch_size]
-        if status_callback:
-            status_callback(f"Classifying emails {i+1}-{min(i+batch_size, n)} of {n}...")
-        try:
-            batch_results = classify_batch_with_llm(client, model, batch, topics)
-        except Exception:
-            # Don't let one bad batch crash the whole run -- mark it
-            # unclear and keep going, same philosophy as the rest of
-            # this app's error handling.
-            batch_results = [{"type": "unclear", "topic": "Other", "specificity": "not_applicable"}
-                              for _ in batch]
-        results.extend(batch_results)
-        if progress_callback:
-            progress_callback(min(1.0, (i + batch_size) / n))
-
-    df["email_type"] = [r.get("type", "unclear") for r in results]
-    df["topics"] = [[r.get("topic", "Other")] for r in results]
-    df["specificity"] = [r.get("specificity", "not_applicable") for r in results]
-    df["new_content"] = df[body_col]
-
-    total = len(df)
-    rows = []
-    for topic in topics:
-        topic_mask = df["topics"].apply(lambda t: topic in t)
-        topic_total = int(topic_mask.sum())
-        if topic_total == 0:
-            continue
-        genuine_mask = topic_mask & (df["email_type"] == "genuine_question")
-        generic_mask = genuine_mask & (df["specificity"] == "generic")
-        topic_genuine = int(genuine_mask.sum())
-        topic_generic = int(generic_mask.sum())
-        pct_genuine = round(100 * topic_genuine / topic_total, 1) if topic_total else 0
-        examples = df.loc[generic_mask, body_col].str.strip()
-        examples = [e[:220] for e in examples if 15 < len(e)][:3]
-        rows.append(dict(
-            topic=topic, total_emails=topic_total,
-            pct_of_mailbox=round(100 * topic_total / total, 1),
-            genuine_questions=topic_generic,  # ranked by GENERIC questions specifically
-            pct_genuine=pct_genuine, examples=examples,
-        ))
-
-    backlog = pd.DataFrame(rows, columns=["topic", "total_emails", "pct_of_mailbox", "genuine_questions", "pct_genuine", "examples"])
-    backlog = backlog.sort_values("genuine_questions", ascending=False).reset_index(drop=True)
-    if len(backlog):
-        backlog.insert(0, "rank", range(1, len(backlog) + 1))
-
-    type_summary = df["email_type"].value_counts().rename_axis("type").reset_index(name="count")
-    type_summary["pct"] = round(100 * type_summary["count"] / total, 1)
-
-    return df, backlog, type_summary
-
-
-def confidence_band(pct_genuine):
-    if pct_genuine >= 70:
-        return "High", "badge-high", "●"
-    if pct_genuine >= 40:
-        return "Medium", "badge-medium", "●"
-    return "Needs review", "badge-low", "●"
-
-
-def suggest_format(topic):
-    heuristics = {
-        "Password": "Step-by-step guide", "VPN": "Troubleshooting guide", "Software": "FAQ + request form",
-        "Printer": "Troubleshooting guide", "New Starter": "Checklist", "Email": "FAQ",
-        "WiFi": "FAQ", "Meeting": "Booking guide", "Security": "FAQ + reporting guide",
-    }
-    for key, fmt in heuristics.items():
-        if key.lower() in topic.lower():
-            return fmt
-    return "FAQ article"
-
-
-# ============================================================
-# Silent column auto-detection
-# ============================================================
-def auto_detect_column(columns, must_contain_any):
-    """Returns (best_guess, confident) -- confident=True means we found a
-    strong match and don't need to bother the user about it."""
-    cols_lower = {c: c.lower() for c in columns}
-    # Pass 1: exact match on common names
-    for target in must_contain_any:
-        for c, cl in cols_lower.items():
-            if cl == target:
-                return c, True
-    # Pass 2: contains match
-    for target in must_contain_any:
-        for c, cl in cols_lower.items():
-            if target in cl:
-                return c, True
-    # No confident match found
-    return None, False
-
-
-def guess_body_by_content(df, exclude_cols):
-    """When column names give no clues, the body column is reliably the
-    one with the longest average text -- email bodies are almost always
-    longer than subjects, senders, or dates."""
-    candidates = [c for c in df.columns if c not in exclude_cols]
-    if not candidates:
-        return df.columns[0]
-    avg_lengths = {c: df[c].astype(str).str.len().mean() for c in candidates}
-    return max(avg_lengths, key=avg_lengths.get)
-
-
-def guess_sender_by_content(df, exclude_cols):
-    """When column names give no clues, a column where most values contain
-    '@' is very likely a sender/email field."""
-    candidates = [c for c in df.columns if c not in exclude_cols]
-    for c in candidates:
-        vals = df[c].astype(str)
-        if (vals.str.contains("@")).mean() > 0.5:
-            return c
-    return None
-
-
-def detect_all_columns(df):
-    cols = df.columns.tolist()
-    subject_col, subj_conf = auto_detect_column(cols, ["subject", "email subject"])
-    body_col, body_conf = auto_detect_column(cols, ["body", "message", "content"])
-    sender_col, sender_conf = auto_detect_column(cols, ["sender_name", "sender name", "from name", "sender", "from"])
-
-    # Content-based fallback when names give literally no signal at all --
-    # a smarter starting guess than just grabbing the first column.
-    used = set()
-    if body_col is None:
-        body_col = guess_body_by_content(df, used)
-    used.add(body_col)
-    if sender_col is None:
-        sender_col = guess_sender_by_content(df, used)
-    if sender_col is not None:
-        used.add(sender_col)
-    if subject_col is None:
-        remaining = [c for c in cols if c not in used]
-        subject_col = remaining[0] if remaining else cols[0]
-
-    # Sender is optional: a valid export may not contain it at all.
-    all_confident = subj_conf and body_conf
-    return dict(subject=subject_col, body=body_col, sender=sender_col), all_confident
-
-
-def validate_mailbox_dataframe(df, detected, confident):
-    """Rejects readable spreadsheets that do not contain usable email data.
-
-    Named subject/body fields are strong evidence of a mailbox export. When
-    names are unfamiliar and content-based fallback is needed, require a small
-    body of message-like text so templates, trackers and mostly empty sheets do
-    not pass as mailboxes merely because pandas can read them.
-    """
-    if df is None or df.empty or len(df.columns) == 0:
-        return False, "The file does not contain any data rows."
-
-    body_col = detected.get("body")
-    subject_col = detected.get("subject")
-    if body_col not in df.columns:
-        return False, "A usable message-body field could not be identified."
-
-    def clean_value(value):
-        if pd.isna(value):
-            return ""
-        value = re.sub(r"\s+", " ", str(value)).strip()
-        return "" if value.lower() in {"nan", "none", "null"} else value
-
-    body_text = df[body_col].map(clean_value)
-    subject_text = df[subject_col].map(clean_value) if subject_col in df.columns else pd.Series("", index=df.index)
-    usable_mask = (body_text.str.len() > 0) | (subject_text.str.len() > 0)
-    usable_count = int(usable_mask.sum())
-    nonempty_body_count = int((body_text.str.len() > 0).sum())
-
-    if usable_count == 0 or nonempty_body_count == 0:
-        return False, "The file has no usable email subject or message content."
-
-    if not confident:
-        # Unknown column names are allowed, but the fallback body must resemble
-        # a collection of messages rather than headings or spreadsheet labels.
-        message_like_count = int((body_text.str.len() >= 25).sum())
-        substantial_count = int((body_text.str.len() >= 60).sum())
-        if message_like_count < 2 and substantial_count < 1:
-            return False, (
-                "The spreadsheet is readable, but it does not appear to contain mailbox data. "
-                "No subject/body columns were recognised and there is not enough message-like text to analyze."
-            )
-
-    return True, ""
+@st.cache_data(show_spinner="Reading file...")
+def load_upload_cached(file_bytes, filename, read_limit):
+    """Parse once per unique (file, limit) pair. Streamlit reruns the whole
+    script on every widget interaction; without this cache, each click of
+    the large-file radio buttons re-read and re-parsed the entire upload."""
+    return parse_upload(file_bytes, filename, read_limit)
 
 
 # ============================================================
@@ -632,7 +220,7 @@ if st.session_state.stage == "upload":
     st.subheader("Stage 1 — Data intake")
     st.caption("We'll protect personal data first, then find which self-service articles would cut the most repeat emails.")
 
-    st.markdown('<div class="mission-card"><div><div class="mission-label">Engagement brief</div><div class="mission-title">Upload a mailbox export to establish the knowledge-demand baseline</div></div><div class="xp-pill">Stage 1 of 4</div></div>', unsafe_allow_html=True)
+    st.markdown('<div class="mission-card"><div><div class="mission-label">Engagement brief</div><div class="mission-title">Upload a mailbox export to establish the knowledge-demand baseline</div></div><div class="stage-pill">Stage 1 of 4</div></div>', unsafe_allow_html=True)
 
     st.markdown("""
     <div class="feature-grid">
@@ -645,7 +233,7 @@ if st.session_state.stage == "upload":
     st.write("")
     uploaded_file = st.file_uploader(
         "Mailbox export (.xlsx, .xls, or .csv)", type=["xlsx", "xls", "csv"],
-        help="Maximum upload size: 500 MB. Files above 50 MB default to a memory-safe 1,000-row assessment.")
+        help="Maximum upload size: 500 MB. Files above 50 MB default to a 1,000-row assessment. For very large mailboxes, CSV is the most memory-safe format.")
 
     if uploaded_file:
         file_size_mb = uploaded_file.size / (1024 * 1024)
@@ -666,13 +254,13 @@ if st.session_state.stage == "upload":
                 pre_sampled = True
                 source_sample_method = "the first 1,000 rows of a large file"
         try:
-            uploaded_file.seek(0)
-            if uploaded_file.name.lower().endswith(".csv"):
-                df = pd.read_csv(uploaded_file, nrows=read_limit)
-            else:
-                df = pd.read_excel(uploaded_file, nrows=read_limit)
+            df = load_upload_cached(uploaded_file.getvalue(), uploaded_file.name, read_limit)
         except Exception as e:
-            st.error(f"Couldn't read this file: {e}. Check it's a valid, unlocked .xlsx/.xls/.csv export.")
+            # Generic message to the user; raw library errors can echo file
+            # internals and mean nothing to a non-technical audience.
+            st.error("Couldn't read this file. Check it's a valid, unlocked .xlsx/.xls/.csv export.")
+            with st.expander("Technical details"):
+                st.code(str(e))
             st.stop()
 
         # A formatted worksheet can report dozens of rows even when those rows
@@ -757,16 +345,27 @@ elif st.session_state.stage == "cleaning":
         prepared[body_col] = prepared[body_col].fillna("").astype(str).apply(strip_html).apply(strip_quotes)
         prepared[st.session_state.subject_col] = prepared[st.session_state.subject_col].fillna("").astype(str).apply(strip_html)
         progress.progress(0.15)
-        working_df, pseudonym_map = redact_dataframe(
+        working_df, pseudonym_map, name_protection_active = redact_dataframe(
             prepared, [st.session_state.subject_col, body_col],
             progress_callback=lambda p: (progress.progress(0.15 + p * 0.85), status.text(f"Redacting personal details... {int(p*100)}%")))
         st.session_state.working_df = working_df
         st.session_state.pseudonym_count = len(pseudonym_map)
+        st.session_state.name_protection_active = name_protection_active
     working_df = st.session_state.working_df
     status.empty()
     progress.progress(1.0)
-    st.success(f"**Preparation complete:** {st.session_state.pseudonym_count} unique names, emails, and phone numbers protected.")
-    st.markdown('<div class="mission-card"><div><div class="mission-label">Control status</div><div class="mission-title">Personal data protected and reply history safely removed</div></div><div class="xp-pill">Validated</div></div>', unsafe_allow_html=True)
+    if st.session_state.get("name_protection_active", True):
+        st.success(f"**Preparation complete:** {st.session_state.pseudonym_count} unique names, emails, and phone numbers protected.")
+    else:
+        st.warning(
+            f"**Partial protection only:** name detection is unavailable in this deployment, so only "
+            f"email addresses and phone numbers were protected ({st.session_state.pseudonym_count} unique values). "
+            f"Personal names may remain in the text. Review the data before authorising any external analysis."
+        )
+    if st.session_state.get("name_protection_active", True):
+        st.markdown('<div class="mission-card"><div><div class="mission-label">Control status</div><div class="mission-title">Personal data protected and reply history safely removed</div></div><div class="stage-pill">Validated</div></div>', unsafe_allow_html=True)
+    else:
+        st.markdown('<div class="mission-card"><div><div class="mission-label">Privacy safeguard</div><div class="mission-title">Partial protection — semantic analysis disabled</div></div><div class="stage-pill">Standard only</div></div>', unsafe_allow_html=True)
 
     # Show a record where redaction visibly changed the content. The first
     # mailbox row often contains no PII, which made the previous before/after
@@ -818,7 +417,18 @@ elif st.session_state.stage == "cleaning":
     back_col, continue_col = st.columns([1, 2.2])
     with back_col:
         if st.button("Back to upload", width="stretch"):
-            for key in ["raw_df", "working_df", "pseudonym_count", "subject_col", "body_col", "sender_col"]:
+            # Clear EVERY analysis artifact, not just the raw data. Leaving
+            # ai_*/free_* results behind meant a previous file's findings
+            # could silently attach themselves to a newly uploaded file.
+            for key in ["raw_df", "working_df", "pseudonym_count", "subject_col", "body_col", "sender_col",
+                        "name_protection_active",
+                        "free_analyzed_df", "free_backlog", "free_type_summary",
+                        "ai_analyzed_df", "ai_backlog", "ai_type_summary", "active_result",
+                        "scoping_topics", "chosen_scope", "chosen_sample_size",
+                        "population_size", "sample_size_used",
+                        "ai_draft_articles", "ai_draft_warning", "ai_failed_batches", "use_llm",
+                        "source_was_sampled", "source_population_size",
+                        "source_sample_method", "source_file_size_mb"]:
                 st.session_state.pop(key, None)
             st.session_state.stage = "upload"
             st.rerun()
@@ -833,6 +443,12 @@ elif st.session_state.stage == "cleaning":
 # stratified sample instead, with live-updating cost/time as they adjust.
 # ============================================================
 elif st.session_state.stage == "scoping":
+    if not st.session_state.get("name_protection_active", False):
+        st.session_state.use_llm = False
+        st.session_state.stage = "results" if "free_backlog" in st.session_state else "analyzing"
+        st.warning("Semantic analysis was blocked because full name protection could not be verified. Continuing with privacy-safe standard analysis.")
+        st.rerun()
+
     st.subheader("Stage 3 — Analysis scope")
     working_df = st.session_state.working_df
     subj_col = st.session_state.subject_col + "_redacted"
@@ -841,7 +457,7 @@ elif st.session_state.stage == "scoping":
 
     if "scoping_topics" not in st.session_state:
         with st.spinner("Reading a small sample to see what topics are actually in this mailbox..."):
-            client = anthropic.Anthropic(api_key=st.session_state.api_key)
+            client = make_client(st.session_state.api_key)
             sample_emails = [
                 {"subject": r[subj_col], "body": r[body_col]}
                 for _, r in working_df.head(40).iterrows()
@@ -929,13 +545,14 @@ elif st.session_state.stage == "analyzing":
             st.caption(f"Analyzing all {len(data_to_analyze)} emails, as chosen in the previous step.")
 
         try:
-            analyzed_df, backlog, type_summary = run_llm_analysis(
+            analyzed_df, backlog, type_summary, failed_batches = run_llm_analysis(
                 data_to_analyze,
                 st.session_state.subject_col + "_redacted", st.session_state.body_col + "_redacted",
                 st.session_state.api_key, st.session_state.llm_model,
                 progress_callback=progress.progress, status_callback=status.text,
                 known_topics=st.session_state.get("scoping_topics"),
             )
+            st.session_state.ai_failed_batches = failed_batches
             # Turn the highest-value semantic findings into practical output.
             # Drafting is deliberately isolated from classification: if the
             # final writing call fails, the completed analysis remains usable.
@@ -953,7 +570,7 @@ elif st.session_state.stage == "analyzing":
             if article_briefs:
                 status.text("Drafting copy-ready knowledge articles for the leading opportunities...")
                 try:
-                    drafting_client = anthropic.Anthropic(api_key=st.session_state.api_key)
+                    drafting_client = make_client(st.session_state.api_key)
                     st.session_state.ai_draft_articles = draft_kb_articles_with_llm(
                         drafting_client, st.session_state.llm_model, article_briefs)
                 except Exception as draft_error:
@@ -964,22 +581,17 @@ elif st.session_state.stage == "analyzing":
             draft_count = len(st.session_state.ai_draft_articles)
             completion_note = f" and {draft_count} knowledge article drafts were prepared" if draft_count else ""
             st.success(f"Analysis complete — topics were discovered directly from this mailbox{completion_note}.")
+            if failed_batches:
+                st.warning(f"{failed_batches} classification batch(es) could not be completed and were "
+                           f"recorded as 'unclear'. Affected counts are minimums; this is disclosed in the report.")
         except Exception as e:
             status.empty()
             st.error(f"AI-powered analysis failed: {e}")
             st.caption("Check your API key is valid and has available credit, or switch back to fast/rule-based mode by starting over.")
             st.stop()
     else:
-        stages = [
-            (0.25, "Separating new messages from quoted reply history..."),
-            (0.50, "Classifying each email — question, status update, or acknowledgment..."),
-            (0.75, "Grouping into topics using a general-purpose starting taxonomy..."),
-            (1.00, "Ranking by genuine, answerable question volume..."),
-        ]
-        for pct, msg in stages:
-            status.text(msg)
-            progress.progress(pct)
-            time.sleep(0.5)
+        status.text("Classifying messages and ranking topic demand...")
+        progress.progress(0.5)
 
         analyzed_df, backlog, type_summary = run_analysis(
             st.session_state.working_df, st.session_state.topic_patterns,
@@ -1006,246 +618,3 @@ elif st.session_state.stage == "results":
     from results_view import render_results_page
     render_results_page(LLM_AVAILABLE, LLM_MODELS, confidence_band, suggest_format)
     st.stop()
-
-    has_ai = "ai_backlog" in st.session_state
-    if has_ai:
-        view_choice = st.radio(
-            "Which results to view?",
-            ["AI-powered (more accurate)", "Fast / keyword-based"],
-            horizontal=True,
-            index=0 if st.session_state.get("active_result") == "ai" else 1,
-        )
-        active = "ai" if view_choice.startswith("AI-powered") else "free"
-    else:
-        active = "free"
-
-    analyzed_df = st.session_state[f"{active}_analyzed_df"]
-    backlog = st.session_state[f"{active}_backlog"]
-    type_summary = st.session_state[f"{active}_type_summary"]
-    total = len(analyzed_df)
-    genuine_total = int((analyzed_df["email_type"] == "genuine_question").sum())
-    opportunity_score = round(100 * genuine_total / total)
-
-    st.subheader("Stage 4 — Executive findings")
-
-    analysis_method = "AI-powered semantic classification" if active == "ai" else "Local keyword and rule-based classification"
-    is_sample = active == "ai" and st.session_state.get("chosen_scope") == "sample"
-    population_size = st.session_state.get("population_size", total) if is_sample else total
-
-    st.markdown("## Purpose")
-    st.write(
-        "To identify recurring knowledge demand in the mailbox and prioritise the help content "
-        "most likely to address genuine, repeatable questions."
-    )
-
-    st.markdown("## Scope of Analysis")
-    scope_c1, scope_c2, scope_c3 = st.columns(3)
-    scope_c1.metric("Mailbox population", population_size)
-    scope_c2.metric("Records assessed", total)
-    scope_c3.metric("Analysis method", "Semantic AI" if active == "ai" else "Rules-based")
-    if is_sample:
-        st.info(f"**Sample-based assessment:** {total} of {population_size} emails were classified. Findings are directional estimates, not exact whole-mailbox counts.")
-    else:
-        st.caption(f"The assessment covered all {total} records selected during data intake using {analysis_method.lower()}.")
-
-    included_col, excluded_col = st.columns(2)
-    with included_col:
-        st.markdown("## Included in the Analysis")
-        st.markdown(
-            "- Redacted subject lines and current-message content\n"
-            "- Classification of questions, acknowledgments, updates and automated messages\n"
-            "- Topic demand, supporting examples and content priorities\n"
-            + ("- Generic versus case-specific question assessment" if active == "ai" else "- Editable topic taxonomy and keyword patterns")
-        )
-    with excluded_col:
-        st.markdown("## Excluded from the Analysis")
-        excluded_items = [
-            "Personal identifiers removed during preparation",
-            "Quoted reply history and HTML formatting",
-            "Attachments and information outside the uploaded export",
-        ]
-        if is_sample:
-            excluded_items.append(f"Individual classification of {population_size - total} non-sampled emails")
-        if active == "free":
-            excluded_items.append("Semantic meaning and case-specificity assessment")
-        st.markdown("\n".join(f"- {item}" for item in excluded_items))
-
-    st.markdown("## Key Findings")
-
-    c1, c2, c3, c4 = st.columns(4)
-    c1.metric("Emails analyzed", total)
-    c2.metric("Genuine questions found", genuine_total, f"{100*genuine_total/total:.0f}% of mailbox")
-    c3.metric("Topics identified", len(backlog))
-    c4.metric("Names/emails/phones protected", st.session_state.pseudonym_count)
-
-    st.markdown("### Knowledge Demand Summary")
-    st.markdown(f"""
-    <div class="achievement-grid">
-      <div class="achievement"><div class="achievement-icon">PII</div><div><strong>Privacy control</strong><span>Identifiers protected before analysis</span></div></div>
-      <div class="achievement"><div class="achievement-icon">MAP</div><div><strong>Demand profile</strong><span>{len(backlog)} knowledge gaps identified</span></div></div>
-      <div class="achievement"><div class="achievement-icon">KB</div><div><strong>Content priorities</strong><span>Backlog supported by source evidence</span></div></div>
-    </div>
-    <div class="score-panel">
-      <div class="score-ring" style="--score:{opportunity_score}"><div class="score-value">{opportunity_score}</div></div>
-      <div class="score-copy"><strong>Self-Service Opportunity Score</strong><span>The share of this mailbox that looks like a genuine, answerable question. Treat this as the opportunity ceiling—not a promise that every email will disappear.</span></div>
-    </div>
-    """, unsafe_allow_html=True)
-
-    st.write("")
-    st.markdown("#### Mailbox composition")
-    st.bar_chart(type_summary.set_index("type")["count"])
-
-    st.write("")
-    st.markdown("#### Prioritised knowledge article backlog")
-    st.caption("Ranked by genuine, answerable question volume per topic — not raw email count.")
-
-    if len(backlog) == 0:
-        st.warning(
-            "**No topics matched this mailbox.** The starting topic list is tuned for an IT "
-            "Helpdesk mailbox (password resets, VPN, etc.) — if this is a different kind of "
-            "mailbox, open **'Refine topic categories and re-run'** below and replace the "
-            "topic list with keywords that match what this mailbox is actually about, then "
-            "re-run the analysis."
-        )
-
-    medals = {1: "01", 2: "02", 3: "03"}
-    for _, row in backlog.iterrows():
-        label, cls, dot = confidence_band(row["pct_genuine"])
-        medal = medals.get(row["rank"], f'{row["rank"]}')
-        fmt = suggest_format(row["topic"])
-
-        st.markdown(f"""
-        <div class="article-card {'rank-one' if row['rank'] == 1 else ''}">
-            <span style="font-size:22px;">{medal}</span>
-            <span style="font-size:18px; font-weight:700;"> {row['topic']}</span>
-            <span class="rank-badge {cls}" style="width:auto; border-radius:20px; padding:4px 12px; margin-left:10px;">{dot} {label} confidence</span>
-            <br><br>
-            <b>{row['genuine_questions']}</b> genuine questions out of <b>{row['total_emails']}</b> emails on this topic
-            ({row['pct_genuine']}% of this topic's volume) &nbsp;·&nbsp; suggested format: <b>{fmt}</b>
-        </div>
-        """, unsafe_allow_html=True)
-
-        with st.expander(f"See supporting evidence for '{row['topic']}'"):
-            if row["examples"]:
-                for ex in row["examples"]:
-                    st.markdown(f'<div class="evidence-box">{html.escape(str(ex))}</div>', unsafe_allow_html=True)
-            else:
-                st.caption("No clean example snippets available for this topic.")
-
-    st.markdown("## Assumptions and Limitations")
-    limitations = [
-        "Results reflect only the content and data quality of the uploaded mailbox export.",
-        "Rule-based results depend on the configured topic terms and may miss context, synonyms or unfamiliar domains.",
-        "Redaction and quoted-reply removal are automated controls; representative records should be reviewed before decisions are finalised.",
-        "The opportunity score is an indicator of potentially answerable demand, not a forecast of contact reduction.",
-    ]
-    if is_sample:
-        limitations.append("Sample-based topic volumes are estimates and should not be presented as exact full-mailbox counts.")
-    if active == "ai":
-        limitations.append("AI classifications may contain errors and should be validated by a subject-matter owner.")
-    st.markdown("\n".join(f"- {item}" for item in limitations))
-
-    topic_report_lines = [
-        f"{int(row['rank'])}. **{row['topic']}** — {int(row['genuine_questions'])} priority questions from {int(row['total_emails'])} topic emails."
-        for _, row in backlog.iterrows()
-    ] or ["No topic demand met the configured matching criteria."]
-    report_markdown = f"""# Mailbox Knowledge Gap Assessment
-
-## Purpose
-To identify recurring knowledge demand in the mailbox and prioritise help content most likely to address genuine, repeatable questions.
-
-## Scope of Analysis
-- Mailbox population: {population_size}
-- Records assessed: {total}
-- Method: {analysis_method}
-- Scope basis: {'Stratified sample; findings are directional estimates' if is_sample else 'All records selected during data intake'}
-
-## Included in the Analysis
-- Redacted subject lines and current-message content
-- Email type and topic classification
-- Knowledge-demand ranking and supporting evidence
-
-## Excluded from the Analysis
-{chr(10).join(f'- {item}' for item in excluded_items)}
-
-## Key Findings
-- Genuine questions identified: {genuine_total} ({100*genuine_total/total:.0f}% of assessed records)
-- Topics identified: {len(backlog)}
-- Self-Service Opportunity Score: {opportunity_score}/100
-
-### Knowledge Demand Summary
-{chr(10).join(topic_report_lines)}
-
-## Assumptions and Limitations
-{chr(10).join(f'- {item}' for item in limitations)}
-"""
-
-    dl1, dl2 = st.columns(2)
-    dl1.download_button("Download structured report", report_markdown.encode("utf-8"), "mailbox_knowledge_gap_report.md", "text/markdown", width="stretch")
-    dl2.download_button("Download backlog data", backlog.drop(columns=["examples"]).to_csv(index=False).encode("utf-8"), "knowledge_backlog.csv", "text/csv", width="stretch")
-
-    if not has_ai:
-        st.write("")
-        st.divider()
-        st.markdown("""
-        <section class="upgrade-panel">
-          <div class="upgrade-eyebrow">Semantic intelligence</div>
-          <div class="upgrade-title">Move from keyword matches to decision-grade insight</div>
-          <div class="upgrade-copy">The baseline identifies obvious patterns. Semantic analysis reads the meaning of each message, discovers the mailbox's own topic structure and isolates the questions a knowledge article can genuinely resolve.</div>
-          <div class="upgrade-grid">
-            <div class="upgrade-benefit"><strong>Discover topics automatically</strong><span>No fixed taxonomy. The model derives themes from the actual mailbox.</span></div>
-            <div class="upgrade-benefit"><strong>Understand intent and context</strong><span>Distinguishes real questions from updates, acknowledgments and automated traffic.</span></div>
-            <div class="upgrade-benefit"><strong>Prioritise addressable demand</strong><span>Separates reusable guidance from requests that require a personal case lookup.</span></div>
-          </div>
-        </section>
-        <table class="comparison">
-          <thead><tr><th>Capability</th><th>Baseline analysis</th><th>Semantic analysis</th></tr></thead>
-          <tbody>
-            <tr><td>Topic model</td><td>Pre-set keyword rules</td><td>Discovered from mailbox content</td></tr>
-            <tr><td>Message understanding</td><td>Literal phrase matching</td><td>Meaning, intent and context</td></tr>
-            <tr><td>Knowledge opportunity</td><td>All detected questions</td><td>Generic, article-addressable questions</td></tr>
-            <tr><td>Best use</td><td>Immediate directional baseline</td><td>Defensible content investment decisions</td></tr>
-          </tbody>
-        </table>
-        """, unsafe_allow_html=True)
-        if not LLM_AVAILABLE:
-            st.info("Semantic analysis is unavailable in this deployment because the Anthropic client is not installed.")
-        else:
-            st.markdown('<div class="commercial-note"><strong>Controlled spend:</strong> the next step makes one small discovery call on approximately 40 redacted emails. You will then see the estimated full-run cost and time, with a lower-cost sample option, before authorising classification.</div>', unsafe_allow_html=True)
-            setup_c1, setup_c2 = st.columns([1.35, 1])
-            with setup_c1:
-                api_key_input = st.text_input("Anthropic API key", type="password",
-                                               placeholder="sk-ant-...",
-                                               help="Used only for this browser session and never written to the repository.")
-            with setup_c2:
-                model_choice = st.selectbox("Analysis model", list(LLM_MODELS.keys()))
-            if st.button("Preview semantic topics and cost", type="primary", disabled=not api_key_input, width="stretch"):
-                st.session_state.api_key = api_key_input
-                st.session_state.llm_model = LLM_MODELS[model_choice]
-                st.session_state.use_llm = True
-                st.session_state.pop("scoping_topics", None)
-                st.session_state.stage = "scoping"
-                st.rerun()
-            st.caption("No full-mailbox analysis starts from this button. Scope and estimated spend are confirmed on the next screen.")
-
-    # Topic refinement remains available as a secondary baseline control.
-    st.write("")
-    if active == "free":
-        with st.expander("Advanced: refine baseline topic rules"):
-            st.caption("Adjust keyword rules, add a missing topic or remove one that does not apply, then re-run without uploading or redacting the data again.")
-            topics_df = pd.DataFrame([{"topic": k, "keyword_pattern": v} for k, v in st.session_state.topic_patterns.items()])
-            edited = st.data_editor(topics_df, num_rows="dynamic", width="stretch", key="topic_editor")
-            if st.button("Re-run baseline analysis"):
-                st.session_state.topic_patterns = {r["topic"]: r["keyword_pattern"] for _, r in edited.iterrows()
-                                                    if r["topic"] and r["keyword_pattern"]}
-                st.session_state.use_llm = False
-                st.session_state.stage = "analyzing"
-                st.rerun()
-    else:
-        st.caption("Semantic topics were discovered from this mailbox; no fixed keyword taxonomy was used.")
-
-    st.write("")
-    if st.button("Start over with a new file"):
-        for key in list(st.session_state.keys()):
-            st.session_state.pop(key, None)
-        st.rerun()

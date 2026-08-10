@@ -35,8 +35,16 @@ browser session and is not committed to the repository.
 ## Accepted input
 
 `.csv`, `.xlsx`, and `.xls` mailbox exports. Subject and body columns are
-auto-detected; sender is optional. The included
-`Sample_IT_Helpdesk_Mailbox_500.xlsx` is ready for a demo.
+auto-detected; sender is optional. Any export with a subject and a
+message/body column works; sender is optional.
+
+## Run the tests
+
+The analysis core is fully unit-tested without Streamlit or any API access:
+
+```
+python -m unittest discover -s tests -v
+```
 
 The original Smart Technology visual identity is documented in `BRAND.md` and
 the reusable vector mark is stored in `assets/smart-technology-mark.svg`.

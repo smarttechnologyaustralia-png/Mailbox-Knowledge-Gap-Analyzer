@@ -5,6 +5,8 @@ import html
 import pandas as pd
 import streamlit as st
 
+from analysis_core import sanitize_for_csv
+
 
 def _semantic_upgrade(llm_available, llm_models, key_prefix="semantic"):
     st.markdown("""
@@ -34,6 +36,14 @@ def _semantic_upgrade(llm_available, llm_models, key_prefix="semantic"):
         st.info("Semantic analysis is unavailable because the Anthropic client is not installed in this deployment.")
         return
 
+    if not st.session_state.get("name_protection_active", True):
+        st.warning(
+            "Semantic analysis is unavailable because full name protection could not be verified. "
+            "To protect staff and customer privacy, continue using the standard analysis, which runs "
+            "locally and does not send mailbox content to an external service."
+        )
+        st.caption("Restore the Presidio and spaCy name-detection components, then upload the file again to enable semantic analysis.")
+        return
     st.markdown('<div class="commercial-note"><strong>Controlled spend:</strong> first, one small discovery call reviews approximately 40 redacted emails. Full-run cost and time are shown before classification is authorised.</div>', unsafe_allow_html=True)
     c1, c2 = st.columns([1.35, 1])
     with c1:
@@ -105,7 +115,7 @@ def _priority_backlog(backlog, confidence_band, suggest_format):
           <span style="font-size:18px;font-weight:700;color:#173456;">&nbsp; {topic}</span>
           <span class="rank-badge {cls}" style="width:auto;border-radius:20px;padding:4px 12px;margin-left:10px;">{dot} {label} confidence</span>
           <br><br><b>{int(row['genuine_questions'])}</b> priority questions from <b>{int(row['total_emails'])}</b> emails on this topic
-          ({row['pct_genuine']}% question concentration) &nbsp;&middot;&nbsp; recommended format: <b>{suggested_format}</b>
+          ({row['pct_genuine']}% of this topic's volume) &nbsp;&middot;&nbsp; recommended format: <b>{suggested_format}</b>
         </div>
         """, unsafe_allow_html=True)
         with st.expander(f"Supporting evidence — {row['topic']}"):
@@ -122,14 +132,6 @@ def render_results_page(llm_available, llm_models, confidence_band, suggest_form
         choice = st.radio("Result set", ["AI-powered", "Fast / keyword-based"], horizontal=True,
                           index=0 if st.session_state.get("active_result") == "ai" else 1)
         active = "ai" if choice == "AI-powered" else "free"
-    elif has_ai:
-        st.markdown("""
-        <div class="guided-strip">
-          <div class="guided-step"><b>1. Compare the baseline</b>Review the original directional findings.</div>
-          <div class="guided-step"><b>2. Inspect rule matches</b>Check how keyword priorities were formed.</div>
-          <div class="guided-step recommended"><b>3. View AI-powered results</b>Use the result-set control above to return to the full report.</div>
-        </div>
-        """, unsafe_allow_html=True)
     else:
         active = "free"
 
@@ -189,6 +191,10 @@ def render_results_page(llm_available, llm_models, confidence_band, suggest_form
         if source_sampled:
             source_context = f" from {source_population} detected rows" if source_population else " from a large source file whose complete row count was not loaded"
             st.warning(f"File-level sample: this assessment uses {source_sample_method}{source_context}. Findings are directional, not exact whole-file counts.")
+        if active == "ai" and st.session_state.get("ai_failed_batches"):
+            failed = st.session_state.ai_failed_batches
+            st.warning(f"{failed} classification batch(es) could not be completed during the semantic run and were "
+                       f"recorded as 'unclear'. Question counts for affected topics are minimums, not totals.")
 
         c1, c2, c3, c4 = st.columns(4)
         c1.metric("Records assessed", total)
@@ -282,6 +288,9 @@ def render_results_page(llm_available, llm_models, confidence_band, suggest_form
             limitations.append("The source file was sampled during ingestion; findings cannot be treated as exact whole-file totals.")
         if active == "ai":
             limitations.append("AI classifications require subject-matter validation.")
+            failed = st.session_state.get("ai_failed_batches", 0)
+            if failed:
+                limitations.append(f"{failed} classification batch(es) failed during the semantic run and were recorded as 'unclear'; affected counts are minimums.")
         st.markdown("\n".join(f"- {item}" for item in limitations))
 
         topic_lines = [f"{int(r['rank'])}. **{r['topic']}** — {int(r['genuine_questions'])} priority questions from {int(r['total_emails'])} topic emails." for _, r in backlog.iterrows()] or ["No topics met the matching criteria."]
@@ -334,7 +343,7 @@ Identify recurring knowledge demand and prioritise help content for genuine, rep
         d1, d2 = st.columns(2)
         report_label = "Download full semantic report" if active == "ai" else "Download baseline report"
         d1.download_button(report_label, report.encode("utf-8"), "mailbox_knowledge_gap_report.md", "text/markdown", width="stretch")
-        d2.download_button("Download backlog data", backlog.drop(columns=["examples"]).to_csv(index=False).encode("utf-8"), "knowledge_backlog.csv", "text/csv", width="stretch")
+        d2.download_button("Download backlog data", sanitize_for_csv(backlog.drop(columns=["examples"])).to_csv(index=False).encode("utf-8"), "knowledge_backlog.csv", "text/csv", width="stretch")
 
         if not has_ai:
             compact_report_cta("open_full_report_from_methodology")
