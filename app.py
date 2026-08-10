@@ -154,6 +154,32 @@ p { line-height: 1.65; }
   .score-panel { align-items:flex-start; }
   .steps { margin-bottom:30px; }
 }
+
+/* Results workspace — restrained executive-report treatment */
+.results-hero {
+  background:linear-gradient(125deg,#102f52 0%,#164c67 68%,#147d76 100%);
+  border-radius:22px; padding:30px 34px; color:#fff; margin:8px 0 22px;
+  box-shadow:0 18px 44px rgba(12,34,61,.16); position:relative; overflow:hidden;
+}
+.results-hero:after { content:""; position:absolute; width:210px; height:210px; border-radius:50%; right:-80px; top:-105px; background:rgba(255,255,255,.08); }
+.results-hero .eyebrow { color:#70eadb; font-size:11px; font-weight:800; letter-spacing:1.8px; text-transform:uppercase; }
+.results-hero h2 { color:#fff!important; font-size:31px!important; line-height:1.18!important; margin:10px 0 8px!important; max-width:760px; }
+.results-hero p { margin:0; color:#dcebf1; max-width:780px; font-size:15px; line-height:1.65; }
+.results-kpis { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin:0 0 24px; }
+.result-kpi { background:#fff; border:1px solid #dce5ec; border-radius:14px; padding:17px 18px; box-shadow:0 5px 16px rgba(12,34,61,.045); }
+.result-kpi span { display:block; color:#66798c; font-size:11px; font-weight:750; letter-spacing:.65px; text-transform:uppercase; margin-bottom:7px; }
+.result-kpi strong { display:block; color:#102f52; font-size:25px; line-height:1.1; }
+.result-kpi small { display:block; color:#738398; font-size:12px; margin-top:5px; }
+.results-guide { display:flex; align-items:center; justify-content:space-between; gap:16px; border:1px solid #d8e3ea; background:#f8fbfc; border-radius:12px; padding:12px 16px; margin:0 0 18px; color:#52697e; font-size:13px; }
+.results-guide strong { color:#102f52; }
+.article-library-head { display:flex; justify-content:space-between; align-items:flex-end; gap:18px; padding:4px 0 16px; border-bottom:1px solid #dce5ec; margin-bottom:16px; }
+.article-library-head h3 { margin:0!important; }
+.article-library-head span { color:#66798c; font-size:13px; }
+.draft-summary { background:#fff; border:1px solid #dce5ec; border-left:4px solid #147d76; border-radius:12px; padding:16px 18px; margin:10px 0 6px; }
+.draft-summary .draft-meta { color:#147d76; font-size:10px; font-weight:800; letter-spacing:1.2px; text-transform:uppercase; }
+.draft-summary strong { display:block; color:#102f52; font-size:18px; margin:5px 0 4px; }
+.draft-summary p { color:#5f7184; font-size:13px; margin:0; line-height:1.55; }
+@media(max-width:800px){ .results-kpis{grid-template-columns:repeat(2,1fr)} .results-hero{padding:24px 22px} .results-guide{display:block} }
 </style>
 """, unsafe_allow_html=True)
 

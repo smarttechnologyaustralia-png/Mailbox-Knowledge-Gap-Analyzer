@@ -63,11 +63,9 @@ def _semantic_upgrade(llm_available, llm_models, key_prefix="semantic"):
 
 def _draft_articles():
     drafts = st.session_state.get("ai_draft_articles", [])
-    st.markdown("### Draft knowledge article pack")
-    st.write("Evidence-grounded first drafts for the leading content opportunities. Review organisation-specific placeholders and policy details before publication.")
-
     warning = st.session_state.get("ai_draft_warning")
     if not drafts:
+        st.markdown("### Draft knowledge article pack")
         if warning:
             st.warning("The semantic analysis completed, but article drafting could not be completed. The findings and backlog remain available.")
             with st.expander("Drafting error details"):
@@ -77,24 +75,39 @@ def _draft_articles():
         return
 
     combined = ["# Smart Technology", "", "## Draft Knowledge Article Pack", "", "> Clear insight. Better service.", "", "> AI-assisted drafts. Validate policies, links and procedures before publication.", ""]
+    for draft in drafts:
+        combined.extend([
+            f"# {draft.get('title', 'Untitled article')}", "",
+            f"**Audience:** {draft.get('audience', 'General audience')}", "",
+            str(draft.get("summary", "")), "", str(draft.get("body_markdown", "")), "", "---", "",
+        ])
+
+    st.markdown(f"""
+    <div class="article-library-head">
+      <div><h3>Draft knowledge article library</h3><span>{len(drafts)} evidence-grounded drafts ready for editorial review</span></div>
+    </div>
+    """, unsafe_allow_html=True)
+    st.download_button("Download complete article pack", "\n".join(combined).encode("utf-8"),
+                       "draft_knowledge_articles.md", "text/markdown", type="primary", width="stretch")
+    st.caption("Review organisation-specific placeholders, policies and links before publishing. Open only the drafts you want to inspect.")
+
     for index, draft in enumerate(drafts, start=1):
         title = str(draft.get("title", "Untitled article"))
         audience = str(draft.get("audience", "General audience"))
         summary = str(draft.get("summary", ""))
         body = str(draft.get("body_markdown", ""))
         topic = str(draft.get("topic", ""))
-        with st.container(border=True):
-            st.caption(f"DRAFT {index:02d}  /  {topic.upper()}")
-            st.markdown(f"## {title}")
-            st.caption(f"Intended audience: {audience}")
-            st.info(summary)
+        st.markdown(f"""
+        <div class="draft-summary">
+          <div class="draft-meta">Draft {index:02d} &nbsp;·&nbsp; {html.escape(topic)} &nbsp;·&nbsp; {html.escape(audience)}</div>
+          <strong>{html.escape(title)}</strong>
+          <p>{html.escape(summary)}</p>
+        </div>
+        """, unsafe_allow_html=True)
+        with st.expander(f"Open draft {index:02d} — {title}"):
             st.markdown(body)
             with st.expander("Copy-ready Markdown"):
                 st.code(f"# {title}\n\n{body}", language="markdown")
-        combined.extend([f"# {title}", "", f"**Audience:** {audience}", "", summary, "", body, "", "---", ""])
-
-    st.download_button("Download complete article pack", "\n".join(combined).encode("utf-8"),
-                       "draft_knowledge_articles.md", "text/markdown", width="stretch")
 
 
 def _priority_backlog(backlog, confidence_band, suggest_format):
@@ -148,23 +161,23 @@ def render_results_page(llm_available, llm_models, confidence_band, suggest_form
     source_population = st.session_state.get("source_population_size")
     source_sample_method = st.session_state.get("source_sample_method") or "a 1,000-row file-level sample"
 
-    st.subheader("Stage 4 — Executive findings")
-    if active == "ai":
-        st.markdown("""
-        <div class="guided-strip">
-          <div class="guided-step"><b>1. Review findings</b>Confirm the opportunity and leading demand.</div>
-          <div class="guided-step"><b>2. Validate priorities</b>Inspect the evidence behind each recommendation.</div>
-          <div class="guided-step recommended"><b>3. Review article drafts</b>Complete placeholders before publishing.</div>
-        </div>
-        """, unsafe_allow_html=True)
-    else:
-        st.markdown("""
-        <div class="guided-strip">
-          <div class="guided-step"><b>1. Review the baseline</b>Understand volume and obvious demand patterns.</div>
-          <div class="guided-step"><b>2. Inspect priorities</b>Check the evidence in the backlog.</div>
-          <div class="guided-step recommended"><b>3. Build the full report</b>Unlock semantic findings and drafted articles.</div>
-        </div>
-        """, unsafe_allow_html=True)
+    leading_topic = html.escape(str(backlog.iloc[0]["topic"])) if not backlog.empty else "No dominant topic identified"
+    result_label = "Semantic assessment complete" if active == "ai" else "Baseline assessment complete"
+    result_copy = (
+        f"{genuine_total} reusable questions were identified across {len(backlog)} knowledge areas. "
+        "Use the ranked evidence to decide what your knowledge team should publish first."
+        if active == "ai" else
+        f"The local assessment found {genuine_total} potential questions across {len(backlog)} matched areas. "
+        "Use this directional baseline to review obvious demand patterns."
+    )
+    st.markdown(f"""
+    <section class="results-hero">
+      <div class="eyebrow">{result_label}</div>
+      <h2>{leading_topic} is the leading knowledge opportunity</h2>
+      <p>{result_copy}</p>
+    </section>
+    <div class="results-guide"><span><strong>Recommended path</strong> &nbsp; Review the summary → validate ranked evidence → open the draft article library</span><span>{'Decision-ready semantic view' if active == 'ai' else 'Directional baseline view'}</span></div>
+    """, unsafe_allow_html=True)
 
     if not has_ai:
         @st.dialog("Build the full semantic report", width="large")
@@ -184,8 +197,6 @@ def render_results_page(llm_available, llm_models, confidence_band, suggest_form
     tabs = st.tabs(tab_names)
 
     with tabs[0]:
-        st.markdown("### Purpose")
-        st.write("Identify recurring knowledge demand and prioritise the help content most likely to address genuine, repeatable questions.")
         if is_sample:
             st.info(f"Directional assessment based on a stratified sample of {total} from {population} mailbox records.")
         if source_sampled:
@@ -196,24 +207,18 @@ def render_results_page(llm_available, llm_models, confidence_band, suggest_form
             st.warning(f"{failed} classification batch(es) could not be completed during the semantic run and were "
                        f"recorded as 'unclear'. Question counts for affected topics are minimums, not totals.")
 
-        c1, c2, c3, c4 = st.columns(4)
-        c1.metric("Records assessed", total)
-        c2.metric("Genuine questions", genuine_total, f"{100*genuine_total/total:.0f}% of assessed" if total else None)
-        c3.metric("Knowledge topics", len(backlog))
-        c4.metric("PII entities protected", st.session_state.get("pseudonym_count", 0))
-
         st.markdown(f"""
-        <div class="score-panel">
-          <div class="score-ring" style="--score:{opportunity_score}"><div class="score-value">{opportunity_score}</div></div>
-          <div class="score-copy"><strong>Self-Service Opportunity Score</strong><span>Share of assessed records that appear to be genuine, answerable questions. This is an opportunity indicator, not a contact-reduction forecast.</span></div>
+        <div class="results-kpis">
+          <div class="result-kpi"><span>Records assessed</span><strong>{total:,}</strong><small>{'Sample-based view' if is_sample or source_sampled else 'Selected mailbox population'}</small></div>
+          <div class="result-kpi"><span>Reusable questions</span><strong>{genuine_total:,}</strong><small>{100*genuine_total/total:.0f}% of assessed records</small></div>
+          <div class="result-kpi"><span>Knowledge areas</span><strong>{len(backlog)}</strong><small>Ranked content opportunities</small></div>
+          <div class="result-kpi"><span>Opportunity indicator</span><strong>{opportunity_score}/100</strong><small>Not a reduction forecast</small></div>
         </div>
         """, unsafe_allow_html=True)
 
         if not backlog.empty:
             leading = backlog.iloc[0]
-            st.markdown('<div class="mission-label">Primary finding</div>', unsafe_allow_html=True)
-            st.markdown(f"#### {html.escape(str(leading['topic']))} is the leading content opportunity")
-            st.write(f"It contains {int(leading['genuine_questions'])} priority questions across {int(leading['total_emails'])} topic emails in the assessed dataset.")
+            st.info(f"**Recommended first action:** validate the {int(leading['genuine_questions'])} reusable questions supporting **{leading['topic']}**, then move its draft article into editorial review.")
 
         left, right = st.columns([1.1, 1])
         with left:
