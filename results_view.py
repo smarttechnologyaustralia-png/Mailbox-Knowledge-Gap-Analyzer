@@ -42,13 +42,19 @@ def _post_lead(payload):
     endpoint = ""
     try:
         endpoint = st.secrets.get("FORMSPREE_ENDPOINT", "")
+        if not endpoint:
+            lead_email = st.secrets.get("LEAD_EMAIL", "")
+            if lead_email:
+                # FormSubmit: free, no-signup form-to-email relay. First
+                # submission triggers a one-time activation email to LEAD_EMAIL.
+                endpoint = f"https://formsubmit.co/ajax/{lead_email}"
     except Exception:
         pass
     if not endpoint:
         return False
     try:
         import requests
-        requests.post(endpoint, data=payload, timeout=5)
+        requests.post(endpoint, data=payload, timeout=8)
         return True
     except Exception:
         return False
