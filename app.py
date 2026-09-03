@@ -1,5 +1,5 @@
 """
-Mailbox Knowledge Gap Analyzer — Streamlit demo app (v3)
+Mailbox Knowledge Gap Analyzer — Smart Technology Inbox Audit tool
 -----------------------------------------------------------
 Upload -> Clean -> Analyze (smart defaults) -> Results (refine & re-run).
 Column mapping and topic configuration are both hidden by default and
@@ -28,6 +28,31 @@ LLM_MODELS = {
     "Fast & cheap (recommended)": "claude-haiku-4-5-20251001",
     "More capable, higher cost": "claude-sonnet-4-6",
 }
+
+
+def _server_api_key():
+    """Analysis runs on Smart Techno's key (Streamlit secrets or env),
+    never a customer-supplied one."""
+    import os
+    key = ""
+    try:
+        key = st.secrets.get("ANTHROPIC_API_KEY", "")
+    except Exception:
+        pass
+    return key or os.environ.get("ANTHROPIC_API_KEY", "")
+
+
+def _confidence_label(coverage):
+    if coverage >= 0.999:
+        return "Complete — every email verified"
+    if coverage >= 0.35:
+        return "High confidence — smart-sampled, all topics covered"
+    if coverage >= 0.12:
+        return "Good confidence — representative sample"
+    return "Directional — small sample"
+
+TIER_49_MAX = 500
+
 
 st.set_page_config(page_title="Smart Technology | Mailbox Knowledge Gap Analyzer", layout="wide", page_icon="◆")
 
@@ -188,7 +213,7 @@ p { line-height: 1.65; }
 # reused without importing Streamlit. This file is flow and UI only.
 # ============================================================
 from analysis_core import (
-    DEFAULT_TOPICS, parse_upload, detect_all_columns, validate_mailbox_dataframe,
+    DEFAULT_TOPICS, INDUSTRY_PACKS, patterns_for_industry, parse_upload, detect_all_columns, validate_mailbox_dataframe,
     strip_html, strip_quotes, redact_dataframe, run_analysis, run_llm_analysis,
     confidence_band, suggest_format,
 )
@@ -257,9 +282,41 @@ if st.session_state.stage == "upload":
     """, unsafe_allow_html=True)
 
     st.write("")
+
+    class _LocalUpload:
+        """Duck-typed stand-in for a Streamlit UploadedFile, used by the
+        one-click sample so prospects can see results without providing data."""
+        def __init__(self, path):
+            with open(path, "rb") as fh:
+                self._bytes = fh.read()
+            self.name = path.split("/")[-1]
+            self.size = len(self._bytes)
+        def getvalue(self):
+            return self._bytes
+
+    industry_label = st.selectbox(
+        "What kind of inbox is this?",
+        list(INDUSTRY_PACKS.keys()),
+        help="Tunes the free analysis to your industry's common question types. You can refine topics later.")
+    st.session_state.topic_patterns = patterns_for_industry(industry_label)
+    st.session_state.industry_label = industry_label
+
+    demo_col, _ = st.columns([1, 2])
+    with demo_col:
+        if st.button("See it work on sample data", help="Loads a fictional 500-email helpdesk mailbox. Nothing is uploaded."):
+            st.session_state.demo_upload = True
+    st.caption("No mailbox export handy? The sample run uses a fictional helpdesk dataset — nothing leaves your browser session either way.")
+
     uploaded_file = st.file_uploader(
         "Mailbox export (.xlsx, .xls, or .csv)", type=["xlsx", "xls", "csv"],
         help="Maximum upload size: 500 MB. Files above 50 MB default to a 1,000-row assessment. For very large mailboxes, CSV is the most memory-safe format.")
+
+    if not uploaded_file and st.session_state.get("demo_upload"):
+        try:
+            uploaded_file = _LocalUpload("Sample_IT_Helpdesk_Mailbox_500.xlsx")
+        except OSError:
+            st.error("Sample dataset is missing from this deployment.")
+            st.session_state.demo_upload = False
 
     if uploaded_file:
         file_size_mb = uploaded_file.size / (1024 * 1024)
@@ -303,10 +360,10 @@ if st.session_state.stage == "upload":
         MAX_ROWS_DEFAULT = 1000
         source_population_size = None
         if len(df) > MAX_ROWS_DEFAULT:
-            st.warning(f"This file has {len(df)} rows. For a live demo, analyzing a sample of "
+            st.warning(f"This file has {len(df)} rows. For a fast first pass, analyzing a sample of "
                        f"the first {MAX_ROWS_DEFAULT} is much faster.")
             use_sample = st.radio("How much to analyze?",
-                                   [f"Sample the first {MAX_ROWS_DEFAULT} rows (fast, good for a demo)",
+                                   [f"Sample the first {MAX_ROWS_DEFAULT} rows (fast first pass)",
                                     f"Analyze all {len(df)} rows (accurate, may take a while)"])
             if use_sample.startswith("Sample"):
                 source_population_size = len(df)
@@ -483,7 +540,11 @@ elif st.session_state.stage == "scoping":
 
     if "scoping_topics" not in st.session_state:
         with st.spinner("Reading a small sample to see what topics are actually in this mailbox..."):
-            client = make_client(st.session_state.api_key)
+            server_key = _server_api_key()
+            if not server_key:
+                st.error("Verified analysis is temporarily unavailable — please contact hello@smarttechno.com.au and we'll run it for you.")
+                st.stop()
+            client = make_client(server_key)
             sample_emails = [
                 {"subject": r[subj_col], "body": r[body_col]}
                 for _, r in working_df.head(40).iterrows()
@@ -507,25 +568,41 @@ elif st.session_state.stage == "scoping":
     st.caption("This breakdown is a free, instant keyword estimate — not the final AI classification. It's only here to size the cost/time choice below.")
 
     st.write("")
-    full_cost, full_secs = estimate_time_and_cost(total_n, BATCH_SIZE, st.session_state.llm_model)
+    tier = st.session_state.get("tier", "49")
+    tier_cap = total_n if tier == "99" else min(total_n, TIER_49_MAX)
+    _, full_secs = estimate_time_and_cost(total_n, BATCH_SIZE, st.session_state.llm_model)
 
-    st.markdown(f"**Full dataset: {total_n} emails** — estimated cost **${full_cost}**, estimated time **{format_time(full_secs)}**")
-    st.caption("Estimate includes semantic classification and a draft pack for up to three leading knowledge opportunities. Actual API usage may vary.")
+    if tier == "99":
+        st.markdown(f"**Full Verification: {total_n} emails available** — estimated time **{format_time(full_secs)}**")
+    else:
+        st.markdown(f"**Verified Analysis: up to {tier_cap} of {total_n} emails** — smart-sampled so every topic gets fair coverage.")
+        if total_n > TIER_49_MAX:
+            st.caption(f"Want all {total_n} verified? Full Verification covers the whole export — contact hello@smarttechno.com.au to upgrade and we'll apply your $49.")
+    st.caption("Verification includes semantic classification and a draft pack for up to three leading knowledge opportunities.")
 
-    choice = st.radio(
-        "How do you want to proceed?",
-        [f"Analyze all {total_n} emails (most accurate, takes longest)",
-         "Analyze a smaller, representative sample (faster, cheaper — every topic still gets fair coverage)"],
-    )
+    if tier == "99":
+        choice = st.radio(
+            "How much do you want verified?",
+            [f"Verify all {total_n} emails (complete)",
+             "Verify a smaller, representative sample (faster — every topic still gets fair coverage)"],
+        )
+    else:
+        choice = "Verify a smaller, representative sample"
 
-    if choice.startswith("Analyze a smaller"):
-        default_sample = min(total_n, max(100, int(total_n * 0.15)))
-        slider_min = min(total_n, max(1, len(topics) * 5))
+    if choice.startswith("Verify a smaller"):
+        default_sample = min(tier_cap, max(100, int(total_n * 0.15)))
+        slider_min = min(tier_cap, max(1, len(topics) * 5))
         default_sample = max(slider_min, default_sample)
-        sample_size = st.slider("Sample size", min_value=slider_min, max_value=total_n,
-                                 value=default_sample, step=1 if total_n < 100 else 10)
-        sample_cost, sample_secs = estimate_time_and_cost(sample_size, BATCH_SIZE, st.session_state.llm_model)
-        st.markdown(f"**Selected: {sample_size} emails** — estimated cost **${sample_cost}**, estimated time **{format_time(sample_secs)}**")
+        if tier_cap <= slider_min:
+            sample_size = tier_cap
+            st.caption(f"Verifying {sample_size} emails.")
+        else:
+            sample_size = st.slider("How many emails to verify", min_value=slider_min, max_value=tier_cap,
+                                     value=default_sample, step=1 if tier_cap < 100 else 10)
+        _, sample_secs = estimate_time_and_cost(sample_size, BATCH_SIZE, st.session_state.llm_model)
+        coverage = sample_size / max(total_n, 1)
+        st.markdown(f"**Selected: {sample_size} of {total_n} emails ({coverage:.0%} coverage)** — "
+                    f"{_confidence_label(coverage)} — estimated time **{format_time(sample_secs)}**")
 
         preview_sample = build_stratified_sample(working_df, "_rough_topic", sample_size, min_per_topic=8)
         with st.expander("See how this sample would be split across topics"):
@@ -574,7 +651,7 @@ elif st.session_state.stage == "analyzing":
             analyzed_df, backlog, type_summary, failed_batches = run_llm_analysis(
                 data_to_analyze,
                 st.session_state.subject_col + "_redacted", st.session_state.body_col + "_redacted",
-                st.session_state.api_key, st.session_state.llm_model,
+                _server_api_key(), st.session_state.llm_model,
                 progress_callback=progress.progress, status_callback=status.text,
                 known_topics=st.session_state.get("scoping_topics"),
             )
@@ -596,7 +673,7 @@ elif st.session_state.stage == "analyzing":
             if article_briefs:
                 status.text("Drafting copy-ready knowledge articles for the leading opportunities...")
                 try:
-                    drafting_client = make_client(st.session_state.api_key)
+                    drafting_client = make_client(_server_api_key())
                     st.session_state.ai_draft_articles = draft_kb_articles_with_llm(
                         drafting_client, st.session_state.llm_model, article_briefs)
                 except Exception as draft_error:

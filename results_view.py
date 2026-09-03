@@ -5,60 +5,78 @@ import html
 import pandas as pd
 import streamlit as st
 
+
+def _post_lead(payload):
+    """Best-effort lead/intake POST to Formspree. Never blocks the user:
+    endpoint unset or request failure just means the lead stays session-only."""
+    endpoint = ""
+    try:
+        endpoint = st.secrets.get("FORMSPREE_ENDPOINT", "")
+    except Exception:
+        pass
+    if not endpoint:
+        return False
+    try:
+        import requests
+        requests.post(endpoint, data=payload, timeout=5)
+        return True
+    except Exception:
+        return False
+
 from analysis_core import sanitize_for_csv
 
 
 def _semantic_upgrade(llm_available, llm_models, key_prefix="semantic"):
-    st.markdown("""
-    <section class="upgrade-panel">
-      <div class="upgrade-eyebrow">Semantic intelligence</div>
-      <div class="upgrade-title">From mailbox evidence to a publishable knowledge programme</div>
-      <div class="upgrade-copy">Semantic analysis converts recurring demand into a complete decision report and professionally structured article drafts that can move directly into editorial review.</div>
-      <div class="upgrade-grid">
-        <div class="upgrade-benefit"><strong>Full decision report</strong><span>Semantic findings, methodology, limitations and an evidence-backed priority roadmap.</span></div>
-        <div class="upgrade-benefit"><strong>Copy-ready article drafts</strong><span>Up to three structured articles for the highest-value opportunities, ready for editorial review.</span></div>
-        <div class="upgrade-benefit"><strong>Addressable demand</strong><span>Priorities are based on reusable questions, excluding requests that need personal lookup.</span></div>
-      </div>
-    </section>
-    <table class="comparison">
-      <thead><tr><th>Capability</th><th>Baseline</th><th>Semantic</th></tr></thead>
-      <tbody>
-        <tr><td>Topic model</td><td>Pre-set keyword rules</td><td>Discovered from mailbox content</td></tr>
-        <tr><td>Understanding</td><td>Literal phrase matching</td><td>Meaning, intent and context</td></tr>
-        <tr><td>Opportunity</td><td>All detected questions</td><td>Article-addressable questions</td></tr>
-        <tr><td>Deliverable</td><td>Directional findings</td><td>Full report + drafted articles</td></tr>
-        <tr><td>Best use</td><td>Directional baseline</td><td>Content investment decisions</td></tr>
-      </tbody>
-    </table>
-    """, unsafe_allow_html=True)
-
+    """Paid verification paywall. Replaces the old bring-your-own-API-key form:
+    the customer buys an unlock code via Stripe (shown on the payment
+    confirmation page), enters it here, and the analysis runs on our key."""
     if not llm_available:
-        st.info("Semantic analysis is unavailable because the Anthropic client is not installed in this deployment.")
+        st.warning("Verified analysis is temporarily unavailable in this deployment.")
         return
 
-    if not st.session_state.get("name_protection_active", True):
-        st.warning(
-            "Semantic analysis is unavailable because full name protection could not be verified. "
-            "To protect staff and customer privacy, continue using the standard analysis, which runs "
-            "locally and does not send mailbox content to an external service."
-        )
-        st.caption("Restore the Presidio and spaCy name-detection components, then upload the file again to enable semantic analysis.")
-        return
-    st.markdown('<div class="commercial-note"><strong>Controlled spend:</strong> first, one small discovery call reviews approximately 40 redacted emails. Full-run cost and time are shown before classification is authorised.</div>', unsafe_allow_html=True)
-    c1, c2 = st.columns([1.35, 1])
+    TIER_49_LINK = st.secrets.get("STRIPE_LINK_49", "#")   # set in Streamlit secrets
+    TIER_99_LINK = st.secrets.get("STRIPE_LINK_99", "#")
+    AUDIT_LINK = "mailto:hello@smarttechno.com.au?subject=Inbox%20Audit%20enquiry"
+
+    st.markdown("#### Choose how deep to go")
+    c1, c2, c3 = st.columns(3)
     with c1:
-        api_key = st.text_input("Anthropic API key", type="password", placeholder="sk-ant-...", key=f"{key_prefix}_api_key",
-                                help="Used only in this browser session and never written to the repository.")
+        with st.container(border=True):
+            st.markdown("**Verified Analysis — $49**")
+            st.caption("AI verification of up to 500 emails (smart-sampled so every topic gets fair coverage), full ranked evidence, and up to 3 machine-drafted knowledge articles.")
+            st.link_button("Buy — $49", TIER_49_LINK, width="stretch")
     with c2:
-        model_label = st.selectbox("Analysis model", list(llm_models.keys()), key=f"{key_prefix}_model")
-    if st.button("Preview semantic topics and cost", type="primary", disabled=not api_key, width="stretch", key=f"{key_prefix}_submit"):
-        st.session_state.api_key = api_key
-        st.session_state.llm_model = llm_models[model_label]
-        st.session_state.use_llm = True
-        st.session_state.pop("scoping_topics", None)
-        st.session_state.stage = "scoping"
-        st.rerun()
-    st.caption("No full-mailbox analysis starts here. Scope and estimated spend are confirmed on the next screen.")
+        with st.container(border=True):
+            st.markdown("**Full Verification — $99**")
+            st.caption("Every email in your export verified, complete ranked evidence, and the full draft article pack.")
+            st.link_button("Buy — $99", TIER_99_LINK, width="stretch")
+    with c3:
+        with st.container(border=True):
+            st.markdown("**Inbox Audit — $490**")
+            st.caption("Everything above plus consultant review, the fix recommendation, and our guarantee: 5+ recoverable hours/week found or the fee comes back.")
+            st.link_button("Talk to us", AUDIT_LINK, width="stretch")
+
+    st.caption("After payment, your unlock code is shown on the confirmation page and emailed with your receipt.")
+    u1, u2 = st.columns([2, 1])
+    code = u1.text_input("Unlock code", key=f"{key_prefix}_unlock", placeholder="e.g. ST-XXXX",
+                         label_visibility="collapsed")
+    if u2.button("Unlock & continue", type="primary", width="stretch", key=f"{key_prefix}_submit"):
+        code_norm = (code or "").strip().upper()
+        tier = None
+        if code_norm and code_norm == str(st.secrets.get("UNLOCK_CODE_99", "")).upper():
+            tier = "99"
+        elif code_norm and code_norm == str(st.secrets.get("UNLOCK_CODE_49", "")).upper():
+            tier = "49"
+        if tier is None:
+            st.error("That code isn't valid. Check the confirmation page or receipt email, or contact hello@smarttechno.com.au.")
+        else:
+            st.session_state.tier = tier
+            st.session_state.llm_model = "claude-haiku-4-5-20251001"
+            st.session_state.use_llm = True
+            st.session_state.pop("scoping_topics", None)
+            st.session_state.stage = "scoping"
+            st.rerun()
+    st.caption("No full-mailbox analysis starts here. Scope is confirmed on the next screen.")
 
 
 def _draft_articles():
@@ -179,6 +197,46 @@ def render_results_page(llm_available, llm_models, confidence_band, suggest_form
     <div class="results-guide"><span><strong>Recommended path</strong> &nbsp; Review the summary → validate ranked evidence → open the draft article library</span><span>{'Decision-ready semantic view' if active == 'ai' else 'Directional baseline view'}</span></div>
     """, unsafe_allow_html=True)
 
+    # ---------- Lead capture (light gate before full results) ----------
+    # NOTE: session-only until a webhook is wired (Formspree / Apps Script).
+    # Persisting to local CSV is unreliable on Streamlit Community Cloud.
+    if not st.session_state.get("lead_email"):
+        with st.container(border=True):
+            st.markdown("**Where should we send your summary?** The full results open straight after — no verification step.")
+            lc1, lc2 = st.columns([2, 1])
+            candidate = lc1.text_input("Work email", key="lead_email_input",
+                                       label_visibility="collapsed", placeholder="you@company.com.au")
+            phone = st.text_input("Phone (optional)", key="lead_phone_input", label_visibility="collapsed",
+                                  placeholder="Phone (optional) — add it if you'd like a free 15-min walkthrough of your results")
+            if lc2.button("Open my results", type="primary", width="stretch"):
+                import re as _re
+                if _re.fullmatch(r"[^@\s]+@[^@\s]+\.[^@\s]+", (candidate or "").strip()):
+                    st.session_state.lead_email = candidate.strip()
+                    st.session_state.lead_phone = (phone or "").strip()
+                    _post_lead({"email": st.session_state.lead_email,
+                                "phone": st.session_state.lead_phone, "source": "inbox-scan"})
+                    st.rerun()
+                else:
+                    st.warning("That doesn't look like a valid email address.")
+            st.caption("Used once, to send this summary. No mailing list.")
+        st.stop()
+
+    # ---------- Audit economics: the numbers that matter ----------
+    with st.expander("Adjust cost assumptions", expanded=False):
+        e1, e2, e3 = st.columns(3)
+        export_weeks = e1.number_input("Weeks this export covers", min_value=1, max_value=104,
+                                       value=int(st.session_state.get("eco_weeks", 4)), key="eco_weeks")
+        mins_per_reply = e2.number_input("Avg minutes per reply", min_value=1, max_value=60,
+                                         value=int(st.session_state.get("eco_mins", 6)), key="eco_mins")
+        hourly_cost = e3.number_input("Loaded hourly cost (AUD)", min_value=20, max_value=250,
+                                      value=int(st.session_state.get("eco_rate", 45)), key="eco_rate")
+        st.caption("Defaults are deliberately conservative. Every derived figure below recalculates from these three inputs and is labelled as an estimate.")
+
+    handled_hours_total = (genuine_total * mins_per_reply) / 60.0
+    hours_per_week = handled_hours_total / max(export_weeks, 1)
+    weekly_cost = hours_per_week * hourly_cost
+    annual_cost = weekly_cost * 48
+
     if not has_ai:
         @st.dialog("Build the full semantic report", width="large")
         def full_report_dialog():
@@ -214,6 +272,11 @@ def render_results_page(llm_available, llm_models, confidence_band, suggest_form
           <div class="result-kpi"><span>Knowledge areas</span><strong>{len(backlog)}</strong><small>Ranked content opportunities</small></div>
           <div class="result-kpi"><span>Opportunity indicator</span><strong>{opportunity_score}/100</strong><small>Not a reduction forecast</small></div>
         </div>
+        <div class="results-kpis" style="grid-template-columns:repeat(3,1fr);">
+          <div class="result-kpi"><span>Estimated handling time</span><strong>{hours_per_week:.1f} hrs/week</strong><small>Answering these questions manually</small></div>
+          <div class="result-kpi"><span>Estimated weekly cost</span><strong>${weekly_cost:,.0f}</strong><small>At ${hourly_cost}/hr loaded cost</small></div>
+          <div class="result-kpi"><span>Estimated annual cost</span><strong>${annual_cost:,.0f}</strong><small>48 working weeks — adjust assumptions above</small></div>
+        </div>
         """, unsafe_allow_html=True)
 
         if not backlog.empty:
@@ -239,8 +302,8 @@ def render_results_page(llm_available, llm_models, confidence_band, suggest_form
               <div>
                 <div class="report-cta-label">Full semantic deliverable</div>
                 <div class="report-cta-title">Turn this baseline into a publishable knowledge plan</div>
-                <div class="report-cta-copy">Your mailbox is already cleaned and protected. Continue from the current analysis to produce the decision-ready deliverable without uploading or preparing the data again.</div>
-                <div class="deliverable-line"><span>Full executive report</span><span>Semantic priority model</span><span>Up to 3 drafted articles</span><span>Copy-ready Markdown</span></div>
+                <div class="report-cta-copy">The free scan showed you the cost. The verified analysis shows you the fix: every question ranked with evidence, AI-verified topic coverage, and drafted knowledge articles your team can publish. From $49 — your mailbox is already cleaned and protected, nothing to re-upload.</div>
+                <div class="deliverable-line"><span>Every question ranked, with evidence</span><span>AI-verified coverage</span><span>Up to 3 drafted articles</span><span>From $49 — or the $490 guaranteed audit</span></div>
               </div>
               <div class="report-cta-status">Dataset ready</div>
             </section>
@@ -310,8 +373,17 @@ def render_results_page(llm_available, llm_models, confidence_band, suggest_form
                 )
             draft_appendix = "\n\n## Draft Knowledge Articles\n\n" + "\n\n---\n\n".join(article_sections)
 
+        eco_line = ""
+        if st.session_state.get("eco_weeks"):
+            _w = int(st.session_state.eco_weeks); _m = int(st.session_state.eco_mins); _r = int(st.session_state.eco_rate)
+            _hrs = (genuine_total * _m) / 60.0 / max(_w, 1)
+            eco_line = (f"\n**Estimated manual handling: {_hrs:.1f} hours/week "
+                        f"(~${_hrs * _r:,.0f}/week, ~${_hrs * _r * 48:,.0f}/year) "
+                        f"at {_m} min/reply and ${_r}/hr over a {_w}-week export. "
+                        f"Figures are estimates from stated assumptions, not measurements.**\n")
         report = f"""# Smart Technology
 
+{eco_line}
 *Clear insight. Better service.*
 
 ## Mailbox Knowledge Gap Assessment
@@ -369,6 +441,24 @@ Identify recurring knowledge demand and prioritise help content for genuine, rep
     elif not has_ai:
         with tabs[3]:
             _semantic_upgrade(llm_available, llm_models, key_prefix="semantic_tab")
+
+    # ---------- Pain-point intake: the Offer B funnel ----------
+    st.write("")
+    with st.container(border=True):
+        st.markdown("**What's the most manual, annoying process in your business right now?**")
+        st.caption("Inbox or not — describe it in a sentence or two. We'll tell you straight whether it's fixable, and whether AI is even the right tool.")
+        pain = st.text_area("Describe the problem", key="pain_point_input", label_visibility="collapsed",
+                            placeholder="e.g. Every month-end we spend two days copying numbers between systems...")
+        if st.button("Send it to us", key="pain_point_submit"):
+            if (pain or "").strip():
+                sent = _post_lead({"email": st.session_state.get("lead_email", ""),
+                                   "phone": st.session_state.get("lead_phone", ""),
+                                   "pain_point": pain.strip(), "source": "pain-point-intake"})
+                st.success("Got it — we'll come back to you within one business day."
+                           if sent else
+                           "Got it — noted for this session. (Direct line: hello@smarttechno.com.au)")
+            else:
+                st.warning("Tell us the problem first — one sentence is enough.")
 
     st.write("")
     back_col, restart_col = st.columns([1.25, 1])

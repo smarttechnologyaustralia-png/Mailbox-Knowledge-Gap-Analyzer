@@ -33,6 +33,81 @@ DEFAULT_TOPICS = {
     "Security / Phishing": r"phishing|suspicious email|security policy",
 }
 
+# Industry starter packs: the free keyword tier is only as good as its
+# patterns, so each inbox type gets a tuned starting set. "IT / Internal
+# helpdesk" preserves the original DEFAULT_TOPICS behaviour.
+INDUSTRY_PACKS = {
+    "IT / Internal helpdesk": None,  # falls back to DEFAULT_TOPICS
+    "Accounting / Tax": {
+        "BAS / Activity Statements": r"\bbas\b|activity statement|lodg",
+        "Invoices / Fees": r"invoice|fee|bill",
+        "Tax Returns / Documents": r"tax return|group certificate|document|deduction",
+        "Software Access (Xero/MYOB)": r"xero|myob|access|file",
+        "ATO / Payment Plans": r"\bato\b|payment plan|tax debt",
+    },
+    "Bookkeeping / Payroll": {
+        "Payroll": r"payroll|underpaid|pay run|wages",
+        "Receipts / Records": r"receipt|record|shoebox|document",
+        "Super": r"\bsuper\b|superannuation",
+        "Software / Bank Feeds": r"bank feed|xero|myob|sync",
+        "Reports": r"report|p&l|profit|statement",
+    },
+    "Property Management": {
+        "Maintenance / Repairs": r"maintenance|repair|leak|broken|fix",
+        "Rent / Payments": r"\brent\b|payment|arrears",
+        "Lease / Renewals": r"lease|renewal|vacat",
+        "Inspections": r"inspection|entry notice",
+        "Bond": r"\bbond\b",
+    },
+    "Conveyancing / Legal": {
+        "Settlement": r"settlement|settle",
+        "Contract Review": r"contract|section 32|review",
+        "Deposits / Trust": r"deposit|trust account",
+        "Title / Transfer": r"title|transfer",
+        "Stamp Duty / Concessions": r"stamp duty|concession|first home",
+    },
+    "Health / Allied Health Clinic": {
+        "Appointments / Rescheduling": r"appointment|reschedul|availab|book",
+        "Referrals / Care Plans": r"referral|care plan|epc",
+        "Receipts / Claims": r"receipt|invoice|claim|health fund",
+        "Cancellations": r"cancel",
+        "New Patient / Forms": r"form|new patient|first appointment",
+    },
+    "NDIS / Disability Services": {
+        "Service Agreements": r"service agreement|terms|sign",
+        "Billing / Plan Managers": r"invoice|billing|plan manager|claim",
+        "Plan Hours / Budget": r"hours|budget|remaining|quarter",
+        "Support Workers / Rosters": r"support worker|roster|shift",
+        "Plan Reviews": r"review|report|documents",
+    },
+    "E-commerce / Retail": {
+        "Order Status / Tracking": r"order|tracking|arrived|where is",
+        "Returns / Refunds": r"return|refund|exchange",
+        "Sizing / Product Questions": r"size|fit|material|colour",
+        "Discounts / Codes": r"code|discount|promo",
+        "Delivery / Address": r"delivery|address|dispatch|shipping",
+    },
+    "Training / RTO": {
+        "Enrolments": r"enrol|prerequisite|intake",
+        "Fees / Payment Plans": r"fee|payment|instalment",
+        "Assessments / Extensions": r"assessment|extension|due",
+        "Certificates": r"certificate|reissue|transcript",
+        "RPL / Credit": r"\brpl\b|recognition|credit transfer",
+    },
+    "Manufacturing / Trade Ops": {
+        "Lead Times / Orders": r"lead time|order|confirmed date",
+        "Quality / Claims": r"quality|defect|claim|batch",
+        "Safety / SDS": r"\bsds\b|safety data|compliance",
+        "Deliveries / Dockets": r"delivery|docket|receipt",
+        "Quotes": r"quote|pricing|units",
+    },
+}
+
+
+def patterns_for_industry(label):
+    pack = INDUSTRY_PACKS.get(label)
+    return dict(DEFAULT_TOPICS) if pack is None else dict(pack)
+
 QUOTE_MARKERS = re.compile(
     r"(From:\s|Sent:\s|-{3,}\s*Original Message\s*-{3,}|On .{5,80}wrote:|"
     r"________________________________)", re.I)
@@ -223,7 +298,11 @@ def redact_dataframe(df, text_columns, progress_callback=None):
             for start, end, entity_type in results:
                 out = out[:start] + get_pseudonym(text[start:end], entity_type) + out[end:]
             return out
-        results = analyzer.analyze(text=text, entities=["PERSON", "EMAIL_ADDRESS", "PHONE_NUMBER"], language="en")
+        results = analyzer.analyze(
+            text=text,
+            entities=["PERSON", "EMAIL_ADDRESS", "PHONE_NUMBER",
+                      "AU_TFN", "AU_MEDICARE", "AU_ABN", "AU_ACN"],
+            language="en")
         # Named-entity models can confidently mistake product or technology
         # names (for example "WiFi") for people. Keep email/phone recognizers,
         # but apply a quality threshold and domain guardrail to PERSON results.
