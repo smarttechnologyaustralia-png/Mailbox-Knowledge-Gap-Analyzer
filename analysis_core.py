@@ -37,6 +37,14 @@ DEFAULT_TOPICS = {
 # patterns, so each inbox type gets a tuned starting set. "IT / Internal
 # helpdesk" preserves the original DEFAULT_TOPICS behaviour.
 INDUSTRY_PACKS = {
+    "General business (not sure? pick this)": {
+        "Invoices / Payments": r"invoice|payment|bill|paid|owing|account",
+        "Bookings / Appointments": r"book|appointment|reschedul|availab|time slot",
+        "Orders / Deliveries": r"order|delivery|dispatch|tracking|arrived",
+        "Quotes / Pricing": r"quote|pricing|how much|cost of",
+        "Complaints / Issues": r"complaint|unhappy|wrong|issue|problem|refund",
+        "General questions": r"how do i|can you|what is|where do|when is|do you",
+    },
     "IT / Internal helpdesk": None,  # falls back to DEFAULT_TOPICS
     "Accounting / Tax": {
         "BAS / Activity Statements": r"\bbas\b|activity statement|lodg",

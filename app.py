@@ -297,7 +297,7 @@ if st.session_state.stage == "upload":
     industry_label = st.selectbox(
         "What kind of inbox is this?",
         list(INDUSTRY_PACKS.keys()),
-        help="Tunes the free analysis to your industry's common question types. You can refine topics later.")
+        help="Tunes the free analysis to your industry. Not on the list? Pick General business - it covers most companies. The paid verification discovers your topics automatically either way.")
     st.session_state.topic_patterns = patterns_for_industry(industry_label)
     st.session_state.industry_label = industry_label
 
