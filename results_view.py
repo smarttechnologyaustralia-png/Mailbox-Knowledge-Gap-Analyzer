@@ -311,6 +311,15 @@ def render_results_page(llm_available, llm_models, confidence_band, suggest_form
 
             if st.button("Build the full report", type="primary", width="stretch", key="open_full_report_dialog"):
                 full_report_dialog()
+
+            try:
+                with open("SAMPLE_REPORT.md", "r", encoding="utf-8") as fh:
+                    st.download_button("See a sample report first (free)", fh.read().encode("utf-8"),
+                                       file_name="SmartTechno_Sample_Inbox_Audit.md", mime="text/markdown",
+                                       width="stretch", key="sample_report_dl")
+                st.caption("Fictional demonstration data — shows exactly what the paid report contains.")
+            except OSError:
+                pass
             st.caption("One controlled API workflow. Topic preview, estimated cost and analysis scope are confirmed before the full run.")
 
     with tabs[1]:
