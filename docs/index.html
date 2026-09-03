@@ -3,135 +3,170 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Smart Techno — Process, AI &amp; Transformation Consulting | Melbourne</title>
-<meta name="description" content="Smart Technology Australia is a Melbourne consulting studio. Process improvement, AI solutions, discovery workshops and capability building — fixed prices, honest advice, working outcomes.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300..700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<title>Smart Techno — Process, AI &amp; Delivery Consulting | Melbourne</title>
+<meta name="description" content="Your team is losing hours to work a system should be doing. We find where, prove the fix, and build it. Fixed prices, published. Melbourne.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..600;1,9..144,300..400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-:root{--ink:#17171B;--paper:#FAF9F6;--navy:#14304A;--bronze:#A88A4C;--grey:#5b5b57;--hair:#E2E0D9;--max:1140px}
+:root{--ink:#14161A;--paper:#FBFAF7;--sand:#F2EFE8;--navy:#11304C;--bronze:#A6864A;--grey:#5D5F5C;--hair:#E3E0D8;--max:1140px}
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
-@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
-body{font-family:'Inter',system-ui,sans-serif;background:var(--paper);color:var(--ink);font-size:16.5px;line-height:1.6;-webkit-font-smoothing:antialiased}
-.wrap{max-width:var(--max);margin:0 auto;padding:0 28px}
-.serif{font-family:'Fraunces',Georgia,serif;font-variation-settings:'opsz' 100}
-.kicker{font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;font-weight:600;color:var(--navy);display:flex;align-items:center;gap:14px}
-.kicker::before{content:"";width:34px;height:1px;background:var(--bronze)}
-a{color:inherit}
-a:focus-visible,button:focus-visible{outline:2px solid var(--navy);outline-offset:3px}
-
-header{position:sticky;top:0;z-index:20;background:rgba(250,249,246,.94);backdrop-filter:blur(8px);border-bottom:1px solid var(--hair)}
-.head{display:flex;justify-content:space-between;align-items:center;padding:20px 0}
-.wordmark{font-family:'Fraunces',serif;font-weight:600;font-size:1.25rem;letter-spacing:-.01em;text-decoration:none}
-.wordmark span{color:var(--navy)}
-nav{display:flex;gap:30px;align-items:center}
-nav a{text-decoration:none;font-size:.86rem;font-weight:500;color:var(--ink)}
-nav a:hover{color:var(--navy)}
-nav a.cta{border:1px solid var(--ink);padding:9px 18px}
-nav a.cta:hover{background:var(--ink);color:var(--paper)}
-@media(max-width:820px){nav a:not(.cta){display:none}}
-
-.hero{padding:110px 0 90px;border-bottom:1px solid var(--hair)}
-.hero h1{font-family:'Fraunces',serif;font-weight:400;font-size:clamp(2.4rem,5.6vw,4.3rem);line-height:1.08;letter-spacing:-.015em;max-width:19ch;margin-top:26px}
-.hero h1 em{font-style:italic;color:var(--navy)}
-.hero p{margin-top:30px;max-width:56ch;font-size:1.1rem;color:var(--grey)}
-.hero-actions{margin-top:40px;display:flex;gap:16px;flex-wrap:wrap}
-.btn{display:inline-block;font-size:.92rem;font-weight:600;text-decoration:none;padding:15px 30px;border:1px solid var(--ink);transition:background .15s,color .15s}
-.btn-solid{background:var(--ink);color:var(--paper)}
-.btn-solid:hover{background:var(--navy)}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important;animation:none!important}}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--paper);color:var(--ink);font-size:16.5px;line-height:1.62;-webkit-font-smoothing:antialiased}
+.wrap{max-width:var(--max);margin:0 auto;padding:0 30px}
+h1,h2,h3,blockquote,.fr{font-family:'Fraunces',Georgia,serif;font-weight:400;letter-spacing:-.015em}
+.kicker{font-size:.7rem;letter-spacing:.24em;text-transform:uppercase;font-weight:600;color:var(--bronze);display:block;margin-bottom:18px}
+a{color:inherit}a:focus-visible,button:focus-visible{outline:2px solid var(--navy);outline-offset:3px}
+.btn{display:inline-block;font-size:.9rem;font-weight:600;text-decoration:none;padding:15px 28px;border:1px solid var(--ink);transition:background .18s,color .18s,border-color .18s}
+.btn-solid{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.btn-solid:hover{background:var(--navy);border-color:var(--navy)}
 .btn-ghost:hover{background:var(--ink);color:var(--paper)}
+.btn-light{border-color:rgba(251,250,247,.5);color:var(--paper)}
+.btn-light:hover{background:var(--paper);color:var(--navy)}
 
-section{padding:96px 0;border-bottom:1px solid var(--hair)}
-h2{font-family:'Fraunces',serif;font-weight:400;font-size:clamp(1.7rem,3.2vw,2.5rem);letter-spacing:-.012em;line-height:1.12;margin-top:22px;max-width:24ch}
-.intro{margin-top:20px;max-width:60ch;color:var(--grey)}
+/* header */
+header{position:sticky;top:0;z-index:30;background:rgba(251,250,247,.93);backdrop-filter:blur(10px);border-bottom:1px solid var(--hair)}
+.head{display:flex;justify-content:space-between;align-items:center;padding:19px 0;gap:20px}
+.mark{font-family:'Fraunces',serif;font-weight:600;font-size:1.22rem;text-decoration:none;white-space:nowrap}
+.mark em{font-style:normal;color:var(--navy)}
+nav{display:flex;gap:28px;align-items:center}
+nav a{text-decoration:none;font-size:.855rem;font-weight:500}
+nav a:not(.navcta):hover{color:var(--navy)}
+.navcta{border:1px solid var(--ink);padding:9px 17px}
+.navcta:hover{background:var(--ink);color:var(--paper)}
+@media(max-width:900px){nav a:not(.navcta){display:none}}
 
-.practice{display:grid;grid-template-columns:110px 1fr 1.15fr;gap:36px;padding:44px 0;border-top:1px solid var(--hair)}
-.practice:first-of-type{border-top:none;margin-top:48px;border-top:1px solid var(--ink)}
-.pnum{font-family:'Fraunces',serif;font-size:1.05rem;color:var(--bronze)}
-.practice h3{font-family:'Fraunces',serif;font-weight:500;font-size:1.45rem;letter-spacing:-.01em;line-height:1.2}
-.practice .desc{color:var(--grey);margin-top:12px;font-size:.98rem}
-.plist{list-style:none;columns:1;font-size:.95rem}
-.plist li{padding:9px 0;border-bottom:1px solid var(--hair)}
-.plist li:last-child{border-bottom:none}
-@media(max-width:860px){.practice{grid-template-columns:1fr;gap:14px}.pnum{font-size:.95rem}}
+/* hero */
+.hero{padding:104px 0 84px;position:relative;overflow:hidden}
+.hero::after{content:"";position:absolute;right:-140px;top:-90px;width:520px;height:520px;border-radius:50%;background:var(--sand);z-index:-1}
+.hero h1{font-size:clamp(2.35rem,5.3vw,4.15rem);line-height:1.07;max-width:20ch}
+.hero h1 i{font-style:italic;color:var(--navy)}
+.hero .sub{margin-top:28px;max-width:54ch;font-size:1.11rem;color:var(--grey)}
+.hero-actions{margin-top:38px;display:flex;gap:14px;flex-wrap:wrap;align-items:center}
+.hero-meta{margin-top:30px;font-size:.85rem;color:var(--grey)}
+.hero-meta strong{color:var(--ink);font-weight:600}
 
-.model-table{margin-top:52px;width:100%;border-collapse:collapse}
-.model-table th{font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;font-weight:600;text-align:left;color:var(--grey);padding:0 20px 14px 0;border-bottom:1px solid var(--ink)}
-.model-table td{padding:26px 20px 26px 0;border-bottom:1px solid var(--hair);vertical-align:top;font-size:.97rem}
-.model-table td:first-child{font-family:'Fraunces',serif;font-size:1.15rem;white-space:nowrap}
-.model-table .price{font-weight:600;white-space:nowrap}
-.model-table .price small{display:block;font-weight:400;color:var(--grey);font-size:.8rem;margin-top:4px}
-.model-note{margin-top:26px;font-size:.92rem;color:var(--grey);max-width:70ch}
-.model-note strong{color:var(--ink)}
-@media(max-width:760px){.model-table thead{display:none}.model-table td{display:block;border:none;padding:6px 0}.model-table tr{display:block;border-bottom:1px solid var(--hair);padding:20px 0}}
+/* generic section */
+section{padding:92px 0;border-top:1px solid var(--hair)}
+h2{font-size:clamp(1.65rem,3.1vw,2.4rem);line-height:1.14;max-width:26ch}
+.lede{margin-top:18px;max-width:60ch;color:var(--grey)}
+.foot-note{margin-top:26px;font-size:.88rem;color:var(--grey);max-width:72ch}
 
-.perspective{background:var(--navy);color:var(--paper);border-bottom:none}
-.perspective .kicker{color:var(--bronze)}
-.perspective blockquote{font-family:'Fraunces',serif;font-weight:300;font-size:clamp(1.6rem,3.4vw,2.6rem);line-height:1.25;letter-spacing:-.01em;max-width:26ch;margin-top:30px}
-.perspective p{margin-top:26px;max-width:58ch;color:#c8cfd6;font-size:1rem}
+/* problem list */
+.symptoms{display:grid;grid-template-columns:1fr 1fr;gap:0;margin-top:46px;border-top:1px solid var(--ink)}
+.sym{padding:26px 30px 26px 0;border-bottom:1px solid var(--hair);display:flex;gap:16px}
+.sym:nth-child(even){padding-left:30px;border-left:1px solid var(--hair)}
+.sym span{color:var(--bronze);font-family:'Fraunces',serif;font-size:.95rem;padding-top:2px}
+.sym p{font-size:.99rem}
+@media(max-width:780px){.symptoms{grid-template-columns:1fr}.sym:nth-child(even){padding-left:0;border-left:none}}
 
-.tools-grid{display:grid;grid-template-columns:1fr 1fr;gap:0;margin-top:52px;border:1px solid var(--ink)}
-.tool{padding:40px 36px}
-.tool+.tool{border-left:1px solid var(--ink)}
-.tool h3{font-family:'Fraunces',serif;font-weight:500;font-size:1.35rem}
-.tool .tag{display:inline-block;font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;font-weight:600;color:var(--bronze);margin-bottom:14px}
-.tool p{color:var(--grey);margin-top:12px;font-size:.96rem}
-.tool a{display:inline-block;margin-top:22px;font-weight:600;font-size:.92rem;text-decoration:none;border-bottom:2px solid var(--bronze);padding-bottom:2px}
-@media(max-width:960px){.tools-grid{grid-template-columns:1fr!important}.tool+.tool{border-left:none;border-top:1px solid var(--ink)}}
-
-.about-grid{display:grid;grid-template-columns:1.25fr 1fr;gap:64px;margin-top:52px}
-.about-grid p+p{margin-top:18px}
-.about-grid .lede{font-family:'Fraunces',serif;font-size:1.3rem;line-height:1.4}
-.about-grid p{color:var(--grey)}
-.facts{border-top:1px solid var(--ink)}
-.fact{display:flex;justify-content:space-between;gap:18px;padding:15px 0;border-bottom:1px solid var(--hair);font-size:.93rem}
-.fact span:first-child{color:var(--grey)}
-.fact span:last-child{font-weight:600;text-align:right}
-@media(max-width:820px){.about-grid{grid-template-columns:1fr;gap:36px}}
-
-.contact{border-bottom:none;padding-bottom:110px}
-.contact-inner{display:grid;grid-template-columns:1.3fr 1fr;gap:60px;align-items:center;margin-top:10px}
-.contact h2{max-width:none}
-.contact p{margin-top:20px;color:var(--grey);max-width:46ch}
-.contact-actions{display:flex;flex-direction:column;gap:14px}
-.contact-actions .btn{text-align:center}
-.contact-note{font-size:.85rem;color:var(--grey);text-align:center}
-@media(max-width:820px){.contact-inner{grid-template-columns:1fr}}
-
-
-.cycle{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-top:52px;border:1px solid var(--ink)}
-.cstep{padding:32px 26px;border-left:1px solid var(--hair)}
+/* method cycle */
+.cycle{display:grid;grid-template-columns:repeat(4,1fr);margin-top:46px;border:1px solid var(--ink)}
+.cstep{padding:30px 24px;border-left:1px solid var(--hair)}
 .cstep:first-child{border-left:none}
-.cnum{font-family:'Fraunces',serif;color:var(--bronze);font-size:1.1rem}
-.cstep h3{font-family:'Fraunces',serif;font-weight:500;font-size:1.25rem;margin-top:10px}
-.cstep p{color:var(--grey);font-size:.92rem;margin-top:10px}
-@media(max-width:900px){.cycle{grid-template-columns:1fr 1fr}.cstep{border-top:1px solid var(--hair)}.cstep:nth-child(-n+2){border-top:none}}
-@media(max-width:560px){.cycle{grid-template-columns:1fr}.cstep{border-left:none}}
-.results-band{display:grid;grid-template-columns:repeat(3,1fr);gap:40px;margin-top:56px;padding-top:36px;border-top:1px solid var(--ink)}
-.rstat strong{font-family:'Fraunces',serif;font-weight:500;font-size:2.4rem;display:block;letter-spacing:-.02em}
-.rstat span{color:var(--grey);font-size:.9rem;display:block;margin-top:8px;max-width:34ch}
-@media(max-width:820px){.results-band{grid-template-columns:1fr;gap:26px}}
-.values-strip{display:flex;gap:0;border-top:1px solid var(--hair);border-bottom:1px solid var(--hair);margin-top:0}
-.values-strip span{flex:1;text-align:center;padding:20px 10px;font-size:.78rem;letter-spacing:.16em;text-transform:uppercase;font-weight:600;color:var(--navy);border-left:1px solid var(--hair)}
-.values-strip span:first-child{border-left:none}
-@media(max-width:700px){.values-strip{flex-wrap:wrap}.values-strip span{flex:1 1 50%}}
-footer{border-top:1px solid var(--hair);padding:34px 0 48px;font-size:.84rem;color:var(--grey)}
-.foot{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.cstep .cn{font-family:'Fraunces',serif;color:var(--bronze);font-size:1rem}
+.cstep h3{font-size:1.2rem;margin-top:8px}
+.cstep p{color:var(--grey);font-size:.9rem;margin-top:9px}
+@media(max-width:900px){.cycle{grid-template-columns:1fr 1fr}.cstep{border-top:1px solid var(--hair)}.cstep:nth-child(-n+2){border-top:none}.cstep:nth-child(odd){border-left:none}}
+@media(max-width:520px){.cycle{grid-template-columns:1fr}.cstep{border-left:none!important}}
+.dims{margin-top:34px;display:flex;flex-wrap:wrap;gap:8px}
+.dims span{font-size:.78rem;letter-spacing:.06em;padding:7px 14px;border:1px solid var(--hair);background:var(--sand);color:var(--grey)}
+
+/* cases */
+.cases{display:grid;grid-template-columns:repeat(3,1fr);gap:28px;margin-top:48px}
+.case{border-top:2px solid var(--ink);padding-top:22px}
+.case .co{font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;font-weight:600;color:var(--navy)}
+.case .num{font-family:'Fraunces',serif;font-size:2.7rem;line-height:1;margin:14px 0 4px;letter-spacing:-.03em}
+.case .numlbl{font-size:.86rem;color:var(--grey);display:block;margin-bottom:18px}
+.case dl{font-size:.92rem}
+.case dt{font-weight:600;font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;color:var(--bronze);margin-top:13px}
+.case dd{color:var(--grey);margin-top:4px}
+@media(max-width:900px){.cases{grid-template-columns:1fr;gap:34px}}
+
+/* capabilities */
+.caps{display:grid;grid-template-columns:1fr 1fr;gap:0;margin-top:46px;border-top:1px solid var(--ink)}
+.cap{padding:32px 34px 32px 0;border-bottom:1px solid var(--hair)}
+.cap:nth-child(even){padding-left:34px;border-left:1px solid var(--hair)}
+.cap h3{font-size:1.28rem}
+.cap p{color:var(--grey);font-size:.94rem;margin-top:10px}
+.cap ul{list-style:none;margin-top:16px;font-size:.9rem;color:var(--grey)}
+.cap li{padding:6px 0 6px 16px;position:relative}
+.cap li::before{content:"—";position:absolute;left:0;color:var(--bronze)}
+@media(max-width:820px){.caps{grid-template-columns:1fr}.cap:nth-child(even){padding-left:0;border-left:none}}
+
+/* engagement */
+.eng{margin-top:46px;border-top:1px solid var(--ink)}
+.tier{display:grid;grid-template-columns:130px 1.15fr 1.9fr auto;gap:26px;padding:28px 0;border-bottom:1px solid var(--hair);align-items:start}
+.tier .st{font-family:'Fraunces',serif;font-size:.95rem;color:var(--bronze);letter-spacing:.1em;text-transform:uppercase;padding-top:4px}
+.tier h3{font-size:1.2rem}
+.tier .dur{font-size:.85rem;color:var(--grey);margin-top:3px}
+.tier .what{color:var(--grey);font-size:.94rem}
+.tier .amt{text-align:right;white-space:nowrap;font-weight:600;font-size:1.12rem}
+.tier .amt small{display:block;font-weight:400;font-size:.78rem;color:var(--grey);margin-top:5px;white-space:normal;max-width:22ch;margin-left:auto}
+@media(max-width:860px){.tier{grid-template-columns:1fr;gap:8px}.tier .amt{text-align:left}.tier .amt small{margin-left:0}}
+
+/* perspective */
+.persp{background:var(--navy);color:var(--paper);border-top:none}
+.persp .kicker{color:var(--bronze)}
+.persp blockquote{font-size:clamp(1.65rem,3.6vw,2.7rem);line-height:1.22;max-width:27ch;font-weight:300}
+.persp p{margin-top:26px;max-width:60ch;color:#C3CCD6}
+.persp .vals{margin-top:44px;display:flex;flex-wrap:wrap;gap:0;border-top:1px solid rgba(251,250,247,.22)}
+.persp .vals span{flex:1;min-width:150px;padding:18px 4px 0;font-size:.76rem;letter-spacing:.18em;text-transform:uppercase;font-weight:600}
+
+/* tools */
+.tools{display:grid;grid-template-columns:1.5fr 1fr;gap:0;margin-top:46px;border:1px solid var(--ink)}
+.tool{padding:38px 34px}
+.tool+.tool{border-left:1px solid var(--ink);background:var(--sand)}
+.tool .tg{font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;font-weight:600;color:var(--bronze)}
+.tool h3{font-size:1.4rem;margin-top:12px}
+.tool p{color:var(--grey);font-size:.95rem;margin-top:12px}
+.tool .lk{display:inline-block;margin-top:22px;font-weight:600;font-size:.9rem;text-decoration:none;border-bottom:2px solid var(--bronze);padding-bottom:2px}
+@media(max-width:820px){.tools{grid-template-columns:1fr}.tool+.tool{border-left:none;border-top:1px solid var(--ink)}}
+
+/* firm */
+.firm{display:grid;grid-template-columns:1.3fr 1fr;gap:60px;margin-top:44px}
+.firm .big{font-family:'Fraunces',serif;font-size:1.3rem;line-height:1.42}
+.firm p+p{margin-top:16px;color:var(--grey)}
+.facts{border-top:1px solid var(--ink)}
+.f{display:flex;justify-content:space-between;gap:16px;padding:14px 0;border-bottom:1px solid var(--hair);font-size:.9rem}
+.f span:first-child{color:var(--grey)}
+.f span:last-child{font-weight:600;text-align:right}
+@media(max-width:860px){.firm{grid-template-columns:1fr;gap:34px}}
+
+/* faq */
+.faq{margin-top:44px;border-top:1px solid var(--ink)}
+details{border-bottom:1px solid var(--hair);padding:20px 0}
+summary{cursor:pointer;font-weight:600;font-size:1.02rem;list-style:none;display:flex;justify-content:space-between;gap:20px}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";color:var(--bronze);font-family:'Fraunces',serif;font-size:1.3rem;line-height:1}
+details[open] summary::after{content:"–"}
+details p{margin-top:12px;color:var(--grey);font-size:.96rem;max-width:74ch}
+
+/* contact */
+.contact{background:var(--sand)}
+.cin{display:grid;grid-template-columns:1.25fr 1fr;gap:56px;align-items:center}
+.contact p{margin-top:18px;color:var(--grey);max-width:46ch}
+.cact{display:flex;flex-direction:column;gap:13px}
+.cact .btn{text-align:center}
+.cnote{font-size:.84rem;color:var(--grey);text-align:center}
+@media(max-width:860px){.cin{grid-template-columns:1fr}}
+
+footer{padding:32px 0 44px;font-size:.83rem;color:var(--grey)}
+.fr2{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
 </style>
 </head>
 <body>
 
 <header>
   <div class="wrap head">
-    <a class="wordmark" href="#top">Smart<span> Techno</span></a>
+    <a class="mark" href="#top">Smart <em>Techno</em></a>
     <nav aria-label="Main">
+      <a href="#problem">The problem</a>
+      <a href="#method">Method</a>
+      <a href="#results">Results</a>
       <a href="#capabilities">Capabilities</a>
-      <a href="#method-cycle">Method</a>
-      <a href="#model">Engagement model</a>
-      <a href="#tools">Tools</a>
-      <a href="#about">Firm</a>
-      <a class="cta" href="#contact">Start a conversation</a>
+      <a href="#engagement">Pricing</a>
+      <a class="navcta" href="#contact">Start</a>
     </nav>
   </div>
 </header>
@@ -140,232 +175,278 @@ footer{border-top:1px solid var(--hair);padding:34px 0 48px;font-size:.84rem;col
 
 <div class="hero">
   <div class="wrap">
-    <div class="kicker">Process · AI · Transformation — Melbourne</div>
-    <h1>From business problem to <em>working solution.</em></h1>
-    <p>Smart Technology Australia is a consulting studio for organisations whose operations have outgrown their processes. We bring fifteen years of process improvement across telecommunications, energy, FMCG and medical research — combined with the ability to design, prototype and ship AI-enabled solutions in weeks. We stay end to end — from problem statement to tested, adopted solution — at fixed prices, with senior attention on every engagement, and the honest answer even when it's "don't buy anything."</p>
+    <span class="kicker">Process · AI · Delivery — Melbourne</span>
+    <h1>Your team is losing hours to work a system should be doing. <i>We find where — and build the fix.</i></h1>
+    <p class="sub">Smart Techno is a Melbourne consulting studio for organisations whose operations have outgrown their processes. We map how the work really happens, prove where technology genuinely helps, and deliver working solutions in weeks — not slide decks.</p>
     <div class="hero-actions">
       <a class="btn btn-solid" href="#contact">Bring us a problem</a>
-      <a class="btn btn-ghost" href="#capabilities">Explore capabilities</a>
+      <a class="btn btn-ghost" href="https://mailbox-knowledge-gap-analyzer.streamlit.app">Run the free diagnostic</a>
     </div>
+    <p class="hero-meta"><strong>15+ years</strong> across Telstra · NBN · EnergyAustralia · Asahi Beverages &nbsp;·&nbsp; <strong>Fixed prices, published below</strong></p>
   </div>
 </div>
 
+<section id="problem">
+  <div class="wrap">
+    <span class="kicker">Sound familiar?</span>
+    <h2>The work isn't broken in one place. It's leaking everywhere.</h2>
+    <p class="lede">Most organisations don't have a technology problem or a people problem. They have work that grew organically, was never designed, and now depends on the handful of people who remember how it's meant to go.</p>
+    <div class="symptoms">
+      <div class="sym"><span>01</span><p>The same questions arrive in your inbox every week, and your best people answer them again by hand.</p></div>
+      <div class="sym"><span>02</span><p>Nobody can say how a process actually runs end to end — only their part of it.</p></div>
+      <div class="sym"><span>03</span><p>Month-end means days of copying numbers between spreadsheets and slide decks.</p></div>
+      <div class="sym"><span>04</span><p>Critical rules live in one person's head, and they're about to take leave.</p></div>
+      <div class="sym"><span>05</span><p>Someone bought an AI tool, and now the search is on for something to use it for.</p></div>
+      <div class="sym"><span>06</span><p>Improvement projects produce recommendations, then quietly stop before anything ships.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="method">
+  <div class="wrap">
+    <span class="kicker">The method</span>
+    <h2>Simple, repeatable, evidence-led — and the same on every engagement.</h2>
+    <p class="lede">The hardest problems organisations face are rarely just process problems. They are system problems seen as process problems. So we look across the whole system first, then move in four disciplined steps.</p>
+    <div class="cycle">
+      <div class="cstep"><span class="cn">01</span><h3>Discover</h3><p>Understand how the work really happens — workshops, interviews, process walk-throughs, voice of the user.</p></div>
+      <div class="cstep"><span class="cn">02</span><h3>Analyse</h3><p>Use data and evidence to establish what's working, what isn't and why — time &amp; motion studies, root-cause analysis, mapping.</p></div>
+      <div class="cstep"><span class="cn">03</span><h3>Design</h3><p>Co-create practical, human-centred solutions — future-state design, a North Star with an MVP pathway, prioritisation.</p></div>
+      <div class="cstep"><span class="cn">04</span><h3>Deliver &amp; improve</h3><p>Test, implement, embed — pilot with real users, measure outcomes, iterate. This is where most engagements stop. Ours don't.</p></div>
+    </div>
+    <p class="lede" style="margin-top:36px;">Performance exists everywhere, not just in processes. Every engagement looks through these lenses before recommending anything:</p>
+    <div class="dims"><span>Customer</span><span>People &amp; capability</span><span>Culture</span><span>Leadership</span><span>Structure</span><span>Systems &amp; technology</span><span>Data &amp; measurement</span><span>Process</span></div>
+  </div>
+</section>
+
+<section id="results">
+  <div class="wrap">
+    <span class="kicker">Track record</span>
+    <h2>Measured outcomes, not activity reports.</h2>
+    <p class="lede">Three engagements from the principal's fifteen years inside large Australian organisations. Same method, different industries.</p>
+    <div class="cases">
+      <div class="case">
+        <span class="co">EnergyAustralia</span>
+        <div class="num">~30%</div><span class="numlbl">reduction in exception handling</span>
+        <dl>
+          <dt>Challenge</dt><dd>High exception rates in customer onboarding and smart metering caused delays and poor first-bill outcomes.</dd>
+          <dt>Approach</dt><dd>Time &amp; motion studies and operational data analysis to locate bottlenecks and root causes; validation and business rules strengthened; workflow redesigned.</dd>
+          <dt>Outcome</dt><dd>Materially fewer exceptions, better first-bill outcomes and improved customer experience.</dd>
+        </dl>
+      </div>
+      <div class="case">
+        <span class="co">Asahi Beverages</span>
+        <div class="num">~15%</div><span class="numlbl">reduction in manual HR intervention</span>
+        <dl>
+          <dt>Challenge</dt><dd>Three payroll systems after multiple acquisitions produced inconsistent workforce processes and heavy manual effort.</dd>
+          <dt>Approach</dt><dd>Facilitated discovery across HR, payroll, operations and technology; mapped as-is processes; separated policy issues from system issues; designed a consolidated to-be model on SAP SuccessFactors.</dd>
+          <dt>Outcome</dt><dd>Simplified, standardised processes with materially less manual HR handling.</dd>
+        </dl>
+      </div>
+      <div class="case">
+        <span class="co">NBN</span>
+        <div class="num">National</div><span class="numlbl">field-ops remediation capability</span>
+        <dl>
+          <dt>Challenge</dt><dd>Fragmented hand-offs and inconsistent practices across national field operations affected technician performance and customer outcomes.</dd>
+          <dt>Approach</dt><dd>As capability and product owner, redesigned quality management and remediation with field teams, owned the improvement backlog, and designed the interface with UX aligned to how crews actually work — tested with frontline users before release.</dd>
+          <dt>Outcome</dt><dd>A national remediation capability that improved workforce utilisation and service outcomes.</dd>
+        </dl>
+      </div>
+    </div>
+    <p class="foot-note">Outcomes delivered by the principal in prior roles. Smart Techno client engagements are described only in anonymised terms — your work is treated the same way.</p>
+  </div>
+</section>
+
 <section id="capabilities">
   <div class="wrap">
-    <div class="kicker">Capabilities</div>
-    <h2>Four practices. One standard: outcomes you can use.</h2>
-    <p class="intro">Everything we offer sits on the same foundation — understand the work as it actually happens, fix the process first, and apply technology only where it earns its keep.</p>
-
-    <div class="practice">
-      <div class="pnum">01</div>
-      <div>
-        <h3>Process &amp; Operational Excellence</h3>
-        <p class="desc">The discipline the firm was built on: seeing how work really flows, and where the hours, errors and frustration actually go.</p>
+    <span class="kicker">Capabilities</span>
+    <h2>Problem statement to tested solution. One firm, no hand-offs.</h2>
+    <p class="lede">Consultancies typically stop at the recommendation. Development shops start at the code. The gap between them is where transformations fail — and it's exactly where we work.</p>
+    <div class="caps">
+      <div class="cap">
+        <h3>Discovery &amp; process excellence</h3>
+        <p>Seeing the work as it actually is, and where the hours, errors and frustration really go.</p>
+        <ul>
+          <li>Problem statement definition &amp; documentation</li>
+          <li>Discovery &amp; pain-point workshops</li>
+          <li>Current-state process mapping (BPMN)</li>
+          <li>Process excellence reviews — process, people, systems &amp; data</li>
+          <li>Time &amp; motion studies, root-cause analysis</li>
+          <li>Future-state design — North Star &amp; MVP pathway</li>
+          <li>Lean Six Sigma continuous improvement</li>
+        </ul>
       </div>
-      <ul class="plist">
-        <li>Problem statement definition &amp; documentation</li>
-        <li>Current-state process mapping &amp; analysis</li>
-        <li>Pain-point identification workshops</li>
-        <li>Process excellence reviews — process, people, systems &amp; data</li>
-        <li>Future-state design — North Star vision and MVP pathway</li>
-        <li>Lean Six Sigma continuous improvement</li>
-        <li>Standard operating procedures &amp; documentation</li>
-        <li>Operational reporting &amp; performance metrics</li>
-      </ul>
-    </div>
-
-    <div class="practice">
-      <div class="pnum">02</div>
-      <div>
-        <h3>AI &amp; Intelligent Automation</h3>
-        <p class="desc">Solutions that once needed a development team, delivered in weeks — designed around your rules, your risk appetite, and human oversight where it matters.</p>
+      <div class="cap">
+        <h3>AI &amp; intelligent automation</h3>
+        <p>Solutions that once needed a development team, built around your rules and your risk appetite.</p>
+        <ul>
+          <li>AI opportunity &amp; suitability assessment</li>
+          <li>Prototype sprints &amp; MVP builds</li>
+          <li>Knowledge &amp; answer systems built from your own material</li>
+          <li>Document review, extraction &amp; intake automation</li>
+          <li>Automated operational reporting</li>
+          <li>Payment &amp; entitlement assurance registers</li>
+          <li>Human-in-the-loop design &amp; guardrails</li>
+        </ul>
       </div>
-      <ul class="plist">
-        <li>AI opportunity &amp; suitability assessment</li>
-        <li>Prototype sprints &amp; MVP builds — working software in weeks</li>
-        <li>Production solution builds, documented &amp; handed over</li>
-        <li>Knowledge &amp; answer systems built from your own material</li>
-        <li>Document review, extraction &amp; intake automation</li>
-        <li>Payment &amp; entitlement assurance registers</li>
-      </ul>
-    </div>
-
-    <div class="practice">
-      <div class="pnum">03</div>
-      <div>
-        <h3>Delivery &amp; Transformation</h3>
-        <p class="desc">We don't hand over a deck and leave. We stay through requirements, build, testing and adoption — the phase where most transformations quietly fail.</p>
+      <div class="cap">
+        <h3>Delivery &amp; transformation</h3>
+        <p>Staying through the unglamorous phase where value is actually realised.</p>
+        <ul>
+          <li>Business requirements &amp; user stories</li>
+          <li>Agile delivery — scrum team leadership</li>
+          <li>Test strategy, test cases &amp; testing lifecycle leadership</li>
+          <li>Business walkthroughs &amp; user acceptance testing</li>
+          <li>Executive communications &amp; stakeholder management</li>
+          <li>Vendor evaluation &amp; proposal support</li>
+          <li>Benefits, ROI &amp; business-case development</li>
+        </ul>
       </div>
-      <ul class="plist">
-        <li>Business requirements &amp; user stories</li>
-        <li>Agile delivery — scrum team leadership</li>
-        <li>Test strategy, test cases &amp; testing lifecycle leadership</li>
-        <li>Business walkthroughs &amp; user acceptance testing</li>
-        <li>Executive communications &amp; stakeholder management</li>
-        <li>Vendor evaluation &amp; proposal support</li>
-        <li>Benefits, ROI &amp; business-case development</li>
-      </ul>
-    </div>
-
-    <div class="practice">
-      <div class="pnum">04</div>
-      <div>
-        <h3>Capability Building</h3>
-        <p class="desc">Your team, made self-sufficient — practical training drawn from real engagements, never slideware.</p>
+      <div class="cap">
+        <h3>Capability building</h3>
+        <p>Leaving your team able to do this without us.</p>
+        <ul>
+          <li>Practical AI workshops for operations &amp; analyst teams</li>
+          <li>Process improvement training &amp; facilitation</li>
+          <li>Playbooks, templates &amp; internal methods</li>
+          <li>Coaching and knowledge transfer through delivery</li>
+        </ul>
       </div>
-      <ul class="plist">
-        <li>Practical AI workshops for operations &amp; analyst teams</li>
-        <li>Process improvement training &amp; facilitation</li>
-        <li>Playbooks, templates &amp; internal methods</li>
-      </ul>
     </div>
   </div>
 </section>
 
-<section id="method-cycle">
+<section id="engagement">
   <div class="wrap">
-    <div class="kicker">The method</div>
-    <h2>Simple, repeatable, and the same on every engagement.</h2>
-    <p class="intro">The hardest problems organisations face are rarely just process problems — they live across people, culture, leadership, structure, technology and measurement. Our method looks at the whole system, then moves in four disciplined steps.</p>
-    <div class="cycle">
-      <div class="cstep"><span class="cnum">1</span><h3>Discover</h3><p>Understand how work really happens — workshops, interviews, process walk-throughs, voice of the user.</p></div>
-      <div class="cstep"><span class="cnum">2</span><h3>Analyse</h3><p>Use data and evidence to identify what's working, what's not, and why — time &amp; motion studies, root cause analysis, process mapping.</p></div>
-      <div class="cstep"><span class="cnum">3</span><h3>Design</h3><p>Co-create practical, human-centred solutions — future-state design, North Star and MVP pathways, prioritisation.</p></div>
-      <div class="cstep"><span class="cnum">4</span><h3>Deliver &amp; Improve</h3><p>Test, implement and embed — pilot, measure outcomes, iterate. The cycle never really ends.</p></div>
+    <span class="kicker">Engagement model</span>
+    <h2>Our prices are published. Every stage earns the next one.</h2>
+    <p class="lede">Most firms quote on request, which costs you weeks to find out whether you can afford a conversation. We publish, cap every scope, and start small enough that saying yes is easy.</p>
+    <div class="eng">
+      <div class="tier">
+        <div class="st">Assess</div>
+        <div><h3>Opportunity Assessment</h3><div class="dur">5 business days</div></div>
+        <div class="what">A written, honest answer on one problem: what's actually causing it, whether AI or automation genuinely fits, the recommended fix and what it would cost — including the case for changing nothing.</div>
+        <div class="amt">$490<small>Guaranteed: 5+ recoverable hours/week identified, or fully refunded</small></div>
+      </div>
+      <div class="tier">
+        <div class="st">Prove</div>
+        <div><h3>Prototype Sprint</h3><div class="dur">2 weeks</div></div>
+        <div class="what">A working prototype your team tests with real work, measured against success criteria agreed up front. Results reported plainly — what passed, what didn't, what it would take to finish.</div>
+        <div class="amt">$3,500<small>Assessment fee credited in full</small></div>
+      </div>
+      <div class="tier">
+        <div class="st">Build</div>
+        <div><h3>Solution Build</h3><div class="dur">4–6 weeks</div></div>
+        <div class="what">The solution deployed where your team works, documented and handed over. You own everything we build — no lock-in, no licence trap. Thirty days of post-handover support included.</div>
+        <div class="amt">from $8,000<small>Scoped precisely during the sprint</small></div>
+      </div>
+      <div class="tier">
+        <div class="st">Assure</div>
+        <div><h3>Ongoing Assurance</h3><div class="dur">Month to month</div></div>
+        <div class="what">Accuracy monitoring, knowledge updates as your business changes, and a monthly report. Entirely optional — plenty of clients self-manage after handover.</div>
+        <div class="amt">from $450/mo<small>Cancel anytime</small></div>
+      </div>
+      <div class="tier">
+        <div class="st">Workshops</div>
+        <div><h3>Discovery &amp; training</h3><div class="dur">Half or full day</div></div>
+        <div class="what">A facilitated session with your team to surface the manual work eating their week and rank where technology would genuinely pay off — or practical AI training for analysts and operations staff.</div>
+        <div class="amt">from $1,500<small>Scoped per engagement</small></div>
+      </div>
     </div>
-    <div class="results-band">
-      <div class="rstat"><strong>~30%</strong><span>reduction in exception handling — customer onboarding &amp; smart metering, EnergyAustralia</span></div>
-      <div class="rstat"><strong>~15%</strong><span>reduction in manual HR intervention — consolidated payroll processes, Asahi Beverages</span></div>
-      <div class="rstat"><strong>National</strong><span>quality &amp; remediation capability for field operations — NBN, as Capability/Product Owner</span></div>
-    </div>
-    <p class="model-note">Results delivered by the principal across prior roles. Client engagements through Smart Techno are described only in anonymised terms unless clients consent otherwise.</p>
+    <p class="foot-note">All prices AUD, exclusive of GST. Larger transformation and delivery engagements are quoted on scope.</p>
   </div>
 </section>
 
-<section id="model">
+<section class="persp">
   <div class="wrap">
-    <div class="kicker">Engagement model</div>
-    <h2>Fixed prices, published. Every engagement earns the next step.</h2>
-    <p class="intro">Large firms quote on request. We publish our prices, cap every scope, and let the work justify continuing — starting small enough that saying yes is easy.</p>
-
-    <table class="model-table">
-      <thead><tr><th>Stage</th><th>Engagement</th><th>You receive</th><th>Investment</th></tr></thead>
-      <tbody>
-        <tr>
-          <td>Assess</td>
-          <td>Opportunity Assessment<br><small style="color:var(--grey)">5 business days</small></td>
-          <td>A written, honest answer on one problem: root cause, whether AI or automation genuinely fits, the recommended fix and its cost — or the case for doing nothing.</td>
-          <td class="price">$490<small>Guaranteed — 5+ recoverable hrs/week identified or fully refunded</small></td>
-        </tr>
-        <tr>
-          <td>Prove</td>
-          <td>Prototype Sprint<br><small style="color:var(--grey)">2 weeks</small></td>
-          <td>A working prototype your team tests against agreed success criteria, with results reported plainly — what passed, what didn't.</td>
-          <td class="price">$3,500<small>Assessment fee credited in full</small></td>
-        </tr>
-        <tr>
-          <td>Build</td>
-          <td>Solution Build<br><small style="color:var(--grey)">4–6 weeks</small></td>
-          <td>The solution deployed where your team works, documented and handed over. You own everything — no lock-in. Thirty days of support included.</td>
-          <td class="price">from $8,000<small>Scoped precisely in the sprint</small></td>
-        </tr>
-        <tr>
-          <td>Assure</td>
-          <td>Ongoing Assurance<br><small style="color:var(--grey)">Month to month</small></td>
-          <td>Accuracy monitoring, knowledge updates as your business changes, and a monthly report. Optional — self-manage if you prefer.</td>
-          <td class="price">from $450/mo<small>Cancel anytime</small></td>
-        </tr>
-      </tbody>
-    </table>
-    <p class="model-note"><strong>Workshops and training</strong> are scoped per engagement — a half-day discovery workshop for a leadership or operations team typically ranges from $1,500. All prices AUD, exclusive of GST.</p>
-  </div>
-</section>
-
-<section class="perspective">
-  <div class="wrap">
-    <div class="kicker">Our perspective</div>
+    <span class="kicker">Our perspective</span>
     <blockquote>Sometimes the right advice is: don't buy AI.</blockquote>
-    <p>Much of what presents as a technology problem is a process problem. If a redesigned form, a clearer handoff or a checklist resolves it, that is what we will recommend — because our model depends on you returning with the next problem, not regretting this one. Fifteen years of process improvement taught us that the tool is the last decision, not the first.</p>
+    <p>A great deal of what presents as a technology problem is a process problem, and some of it is a leadership or measurement problem wearing a process costume. If a redesigned form, a clearer hand-off or a single checklist resolves it, that is what we will recommend — because this practice depends on you returning with the next problem, not regretting this one. Fifteen years of improvement work teaches you that the tool is the last decision, never the first.</p>
+    <div class="vals"><span>People centric</span><span>Evidence led</span><span>Outcome focused</span><span>Always improving</span></div>
   </div>
 </section>
 
 <section id="tools">
   <div class="wrap">
-    <div class="kicker">Tools &amp; products</div>
-    <h2>Try the thinking before you spend a dollar.</h2>
-    <p class="intro">We productise what we learn. Each tool below began as a client problem — and each one lets you evaluate our approach free, on your own data, before any engagement.</p>
-    <div class="tools-grid" style="grid-template-columns:1fr 1fr 1fr;">
+    <span class="kicker">Tools we've built</span>
+    <h2>Evaluate how we think before you spend anything.</h2>
+    <p class="lede">We productise what we learn. Each tool below started as a client problem — and each one lets you test our approach on your own work, free.</p>
+    <div class="tools">
       <div class="tool">
-        <span class="tag">Live — free</span>
+        <span class="tg">Live · free</span>
         <h3>Inbox Intelligence Scanner</h3>
-        <p>Upload a redacted export of any busy shared mailbox. In two minutes: the questions your team answers repeatedly, their share of volume, and the estimated hours and dollars they cost each week. Personal information is redacted before analysis — including Australian identifiers.</p>
-        <a href="https://mailbox-knowledge-gap-analyzer.streamlit.app">Run the free scan</a>
+        <p>Upload a redacted export of any busy shared mailbox — accounts, admin, support, enquiries. In two minutes you'll see the questions your team answers over and over, what share of the inbox they represent, and the estimated hours and dollars they cost every week. Personal information, including Australian identifiers, is redacted before anything is analysed. No account, no commitment.</p>
+        <a class="lk" href="https://mailbox-knowledge-gap-analyzer.streamlit.app">Run the free scan →</a>
       </div>
       <div class="tool">
-        <span class="tag">Engagement platform</span>
-        <h3>Evolve Process Engine</h3>
-        <p>The platform we run engagements through — problem statements, process maps, pain points, requirements, test coverage and status in one place, visible to you throughout. Our method, built into software.</p>
-        <a href="#contact">See it in a conversation</a>
-      </div>
-      <div class="tool">
-        <span class="tag">Sample deliverable</span>
-        <h3>See a full report first</h3>
-        <p>A complete demonstration report on a fictional accounting firm — the cost figures, the ranked evidence, a drafted knowledge article, and the honest recommendation. Exactly what a paid analysis contains.</p>
-        <a href="sample-report.html">Read the sample report</a>
+        <span class="tg">Sample deliverable</span>
+        <h3>See a real report first</h3>
+        <p>A complete demonstration report on a fictional accounting firm: the cost numbers, the ranked evidence, a drafted knowledge article and the honest recommendation — including what a template can't fix.</p>
+        <a class="lk" href="sample-report.html">Read the sample →</a>
       </div>
     </div>
   </div>
 </section>
 
-<section id="about">
+<section id="firm">
   <div class="wrap">
-    <div class="kicker">The firm</div>
-    <h2>Boutique by design. Senior on every engagement.</h2>
-    <div class="about-grid">
+    <span class="kicker">The firm</span>
+    <h2>Boutique by design. The person who analyses your problem is the person who fixes it.</h2>
+    <div class="firm">
       <div>
-        <p class="lede">Smart Technology Australia is led by Abhishek Arora — a senior business analyst and process improvement specialist with more than fifteen years inside large Australian organisations — including Telstra, NBN, EnergyAustralia and Asahi Beverages — across telecommunications, energy, FMCG, education and medical research.</p>
-        <p>The premise of the firm is simple: the person who analyses your problem is the person who designs and delivers the fix. No leverage model, no handoffs to juniors, no forty-page decks where four pages of plain language will do.</p>
-        <p>What has changed is what can now be built. Answer systems, document analysers, assurance registers and automated reporting — work that once required a development team — can be delivered in weeks at a fraction of the historical cost. We pair traditional process analysis with that capability, end to end.</p>
+        <p class="big">Smart Techno is led by Abhishek Arora, a senior business analyst and process improvement specialist with more than fifteen years inside large Australian organisations — Telstra, NBN, EnergyAustralia, Asahi Beverages — across telecommunications, energy, FMCG, education and medical research.</p>
+        <p>There is no leverage model here. No pitch team that disappears after signing, no handover to juniors, no forty-page deck where four pages of plain language will do. You get senior attention from discovery through to the tested solution.</p>
+        <p>What has changed is what one experienced practitioner can now build. Answer systems, document analysers, assurance registers, automated reporting — work that once required a development team — can be delivered in weeks at a fraction of historical cost. We pair traditional process analysis with that capability, end to end.</p>
         <p>Every deliverable is written in plain language. If a report needs a glossary, we've failed.</p>
       </div>
       <div class="facts">
-        <div class="fact"><span>Founded</span><span>Melbourne, Australia</span></div>
-        <div class="fact"><span>Experience</span><span>15+ years, enterprise &amp; SME</span></div>
-        <div class="fact"><span>Sectors</span><span>Telco · Energy · FMCG · Research · Education</span></div>
-        <div class="fact"><span>Method</span><span>Lean Six Sigma, process-first</span></div>
-        <div class="fact"><span>Commercials</span><span>Fixed price, fixed scope, published</span></div>
-        <div class="fact"><span>Ownership</span><span>Clients own everything we build</span></div>
-        <div class="fact"><span>Privacy</span><span>Personal data redacted before analysis</span></div>
+        <div class="f"><span>Entity</span><span>Smart Technology Australia</span></div>
+        <div class="f"><span>Based in</span><span>Melbourne, Victoria</span></div>
+        <div class="f"><span>Experience</span><span>15+ years, enterprise &amp; SME</span></div>
+        <div class="f"><span>Sectors</span><span>Telco · Energy · FMCG · Research · Education</span></div>
+        <div class="f"><span>Method</span><span>Lean Six Sigma, process-first</span></div>
+        <div class="f"><span>Commercials</span><span>Fixed price, published</span></div>
+        <div class="f"><span>Ownership</span><span>Clients own everything we build</span></div>
+        <div class="f"><span>Privacy</span><span>Personal data redacted before analysis</span></div>
       </div>
+    </div>
+  </div>
+</section>
+
+<section id="faq">
+  <div class="wrap">
+    <span class="kicker">Before you ask</span>
+    <h2>The questions we get in the first call.</h2>
+    <div class="faq">
+      <details><summary>We're small. Is this only for big organisations?</summary><p>No. The assessment is deliberately priced so a five-person business can use it. The one honest qualifier: the inbox audit guarantee assumes a shared mailbox handling roughly 400+ emails a month — below that, the numbers won't justify the work, and we'll tell you so rather than take the fee.</p></details>
+      <details><summary>What happens to our data?</summary><p>For inbox work you provide an export, not access to your live mail. Personal information — names, emails, phone numbers and Australian identifiers including TFNs, Medicare and ABNs — is redacted automatically before any content is analysed. Your data is never used to train AI models, and we delete exports and working copies within fourteen days of delivery, confirmed in writing on request. All of this is in the engagement letter, not just on this page.</p></details>
+      <details><summary>What if the assessment says we shouldn't do anything?</summary><p>Then that's the deliverable, and it's a good one — you've avoided a much larger bill. If the assessment doesn't identify at least five recoverable hours a week, the fee is refunded in full.</p></details>
+      <details><summary>Do we own what you build?</summary><p>Yes, outright, documented and handed over. You own your data and the delivered solution; we retain only our own methods, templates and tooling. No lock-in, no ongoing licence required to keep using what you paid for.</p></details>
+      <details><summary>Can you work alongside our existing team or vendor?</summary><p>Regularly. Much of the work is defining requirements clearly enough for an internal team or external vendor to deliver well — and then leading the testing that proves they did. We're just as comfortable handing designs to your developers as building it ourselves.</p></details>
+      <details><summary>How quickly can you start?</summary><p>Assessments usually begin within a week of engagement and deliver five business days later. Sprints and builds are scheduled around a small number of concurrent clients — deliberately, so senior attention stays genuine.</p></details>
     </div>
   </div>
 </section>
 
 <section id="contact" class="contact">
-  <div class="wrap contact-inner">
+  <div class="wrap cin">
     <div>
-      <div class="kicker">Start a conversation</div>
+      <span class="kicker">Start a conversation</span>
       <h2>What's the problem costing your team hours every week?</h2>
-      <p>Describe it in a few sentences. We respond within one business day with an honest view of whether it's a fit — and if it is, the assessment begins when you're ready.</p>
+      <p>Describe it in a few sentences — no formal brief needed. You'll get an honest view within one business day of whether it's a fit, and what we'd suggest doing first.</p>
     </div>
-    <div class="contact-actions">
+    <div class="cact">
       <a class="btn btn-solid" href="mailto:hello@smarttechno.com.au?subject=Engagement%20enquiry&body=The%20problem%20in%20a%20few%20sentences%3A%0A%0AWhat%20it%20costs%20us%20(time%2C%20money%2C%20frustration)%3A%0A%0ABest%20way%20to%20reach%20me%3A">Email the problem</a>
-      <a class="btn btn-ghost" href="https://mailbox-knowledge-gap-analyzer.streamlit.app">Start with the free scan</a>
-      <span class="contact-note">hello@smarttechno.com.au · Melbourne, Victoria</span>
+      <a class="btn btn-ghost" href="https://mailbox-knowledge-gap-analyzer.streamlit.app">Or start with the free diagnostic</a>
+      <span class="cnote">hello@smarttechno.com.au · Melbourne, Victoria</span>
     </div>
   </div>
 </section>
 
 </main>
 
-<div class="values-strip wrap" style="max-width:var(--max);">
-  <span>People centric</span><span>Evidence led</span><span>Outcome focused</span><span>Always improving</span>
-</div>
-
-
 <footer>
-  <div class="wrap foot">
-    <span>© 2026 Smart Technology Australia Pty Ltd, trading as Smart Techno. ABN on request.</span>
+  <div class="wrap fr2">
+    <span>© 2026 Smart Technology Australia, trading as Smart Techno. ABN on request.</span>
     <span>Melbourne, Victoria, Australia</span>
   </div>
 </footer>
