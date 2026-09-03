@@ -3,513 +3,317 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Smart Technology Australia — We fix slow, manual business processes</title>
-<meta name="description" content="Fixed-price AI and process solutions for Australian businesses. Inbox audits, answer systems, payment assurance. Honest assessments — including when AI isn't the answer.">
+<title>Smart Techno — Process, AI &amp; Transformation Consulting | Melbourne</title>
+<meta name="description" content="Smart Technology Australia is a Melbourne consulting studio. Process improvement, AI solutions, discovery workshops and capability building — fixed prices, honest advice, working outcomes.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300..700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --ink: #000000;
-    --paper: #FCFBF8;
-    --grey: #5c5c56;
-    --line: #d8d6cf;
-    --yellow: #F5C400;
-    --max: 1080px;
-  }
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  html { scroll-behavior: smooth; }
-  @media (prefers-reduced-motion: reduce) {
-    html { scroll-behavior: auto; }
-    * { animation: none !important; transition: none !important; }
-  }
-  body {
-    font-family: 'Archivo', system-ui, sans-serif;
-    font-variation-settings: 'wdth' 100;
-    background: var(--paper);
-    color: var(--ink);
-    font-size: 17px;
-    line-height: 1.55;
-    -webkit-font-smoothing: antialiased;
-  }
-  .wrap { max-width: var(--max); margin: 0 auto; padding: 0 24px; }
+:root{--ink:#17171B;--paper:#FAF9F6;--navy:#14304A;--bronze:#A88A4C;--grey:#5b5b57;--hair:#E2E0D9;--max:1140px}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--paper);color:var(--ink);font-size:16.5px;line-height:1.6;-webkit-font-smoothing:antialiased}
+.wrap{max-width:var(--max);margin:0 auto;padding:0 28px}
+.serif{font-family:'Fraunces',Georgia,serif;font-variation-settings:'opsz' 100}
+.kicker{font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;font-weight:600;color:var(--navy);display:flex;align-items:center;gap:14px}
+.kicker::before{content:"";width:34px;height:1px;background:var(--bronze)}
+a{color:inherit}
+a:focus-visible,button:focus-visible{outline:2px solid var(--navy);outline-offset:3px}
 
-  header {
-    border-bottom: 2px solid var(--ink);
-    background: var(--paper);
-    position: sticky; top: 0; z-index: 10;
-  }
-  .head-row {
-    display: flex; align-items: baseline; justify-content: space-between;
-    padding: 18px 0; gap: 16px;
-  }
-  .logo {
-    font-weight: 800; font-variation-settings: 'wdth' 125;
-    font-size: 1.05rem; letter-spacing: -0.01em;
-    text-decoration: none; color: var(--ink); white-space: nowrap;
-  }
-  .logo span { background: var(--yellow); padding: 0 4px; }
-  nav { display: flex; gap: 22px; flex-wrap: wrap; }
-  nav a {
-    color: var(--ink); text-decoration: none; font-size: 0.92rem; font-weight: 500;
-    border-bottom: 2px solid transparent; padding-bottom: 2px;
-  }
-  nav a:hover, nav a:focus-visible { border-bottom-color: var(--ink); }
-  a:focus-visible, button:focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; }
+header{position:sticky;top:0;z-index:20;background:rgba(250,249,246,.94);backdrop-filter:blur(8px);border-bottom:1px solid var(--hair)}
+.head{display:flex;justify-content:space-between;align-items:center;padding:20px 0}
+.wordmark{font-family:'Fraunces',serif;font-weight:600;font-size:1.25rem;letter-spacing:-.01em;text-decoration:none}
+.wordmark span{color:var(--navy)}
+nav{display:flex;gap:30px;align-items:center}
+nav a{text-decoration:none;font-size:.86rem;font-weight:500;color:var(--ink)}
+nav a:hover{color:var(--navy)}
+nav a.cta{border:1px solid var(--ink);padding:9px 18px}
+nav a.cta:hover{background:var(--ink);color:var(--paper)}
+@media(max-width:820px){nav a:not(.cta){display:none}}
 
-  .hero { padding: 88px 0 72px; border-bottom: 1px solid var(--line); }
-  .hero h1 {
-    font-weight: 800; font-variation-settings: 'wdth' 118;
-    font-size: clamp(2.1rem, 5.4vw, 4rem);
-    line-height: 1.04; letter-spacing: -0.02em; max-width: 17ch;
-  }
-  .hero h1 em { font-style: normal; box-shadow: inset 0 -0.42em var(--yellow); }
-  .hero p { margin-top: 28px; max-width: 54ch; font-size: 1.12rem; color: var(--grey); }
-  .hero-actions { margin-top: 36px; display: flex; gap: 14px; flex-wrap: wrap; }
-  .btn {
-    display: inline-block; font-family: inherit; font-weight: 700; font-size: 1rem;
-    text-decoration: none; padding: 14px 26px; border: 2px solid var(--ink);
-    color: var(--ink); background: transparent; cursor: pointer;
-  }
-  .btn-solid { background: var(--ink); color: var(--paper); }
-  .btn-solid:hover { background: transparent; color: var(--ink); }
-  .btn-outline:hover { background: var(--ink); color: var(--paper); }
+.hero{padding:110px 0 90px;border-bottom:1px solid var(--hair)}
+.hero h1{font-family:'Fraunces',serif;font-weight:400;font-size:clamp(2.4rem,5.6vw,4.3rem);line-height:1.08;letter-spacing:-.015em;max-width:19ch;margin-top:26px}
+.hero h1 em{font-style:italic;color:var(--navy)}
+.hero p{margin-top:30px;max-width:56ch;font-size:1.1rem;color:var(--grey)}
+.hero-actions{margin-top:40px;display:flex;gap:16px;flex-wrap:wrap}
+.btn{display:inline-block;font-size:.92rem;font-weight:600;text-decoration:none;padding:15px 30px;border:1px solid var(--ink);transition:background .15s,color .15s}
+.btn-solid{background:var(--ink);color:var(--paper)}
+.btn-solid:hover{background:var(--navy)}
+.btn-ghost:hover{background:var(--ink);color:var(--paper)}
 
-  section { padding: 72px 0; border-bottom: 1px solid var(--line); }
-  h2 {
-    font-weight: 800; font-variation-settings: 'wdth' 118;
-    font-size: clamp(1.5rem, 3vw, 2.1rem);
-    letter-spacing: -0.015em; line-height: 1.1; max-width: 26ch;
-  }
-  .section-intro { margin-top: 16px; max-width: 58ch; color: var(--grey); }
+section{padding:96px 0;border-bottom:1px solid var(--hair)}
+h2{font-family:'Fraunces',serif;font-weight:400;font-size:clamp(1.7rem,3.2vw,2.5rem);letter-spacing:-.012em;line-height:1.12;margin-top:22px;max-width:24ch}
+.intro{margin-top:20px;max-width:60ch;color:var(--grey)}
 
-  /* ---------- inbox audit product ---------- */
-  .hookline {
-    font-weight: 800; font-variation-settings: 'wdth' 116;
-    font-size: clamp(1.5rem, 3.4vw, 2.4rem);
-    line-height: 1.12; letter-spacing: -0.018em; max-width: 24ch;
-  }
-  .hookline em { font-style: normal; box-shadow: inset 0 -0.4em var(--yellow); }
-  .product-grid {
-    margin-top: 44px; display: grid; grid-template-columns: 1.15fr 1fr; gap: 56px;
-    align-items: start;
-  }
-  .product-grid h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 10px; }
-  .product-grid p { color: var(--grey); }
-  .product-grid p + h3 { margin-top: 28px; }
-  .stage-table { border-top: 2px solid var(--ink); }
-  .stage {
-    display: grid; grid-template-columns: auto 1fr; gap: 18px;
-    padding: 18px 0; border-bottom: 1px solid var(--line);
-  }
-  .stage-badge {
-    font-weight: 800; font-variation-settings: 'wdth' 122; font-size: 0.85rem;
-    background: var(--ink); color: var(--paper);
-    padding: 4px 10px; height: fit-content; white-space: nowrap;
-  }
-  .stage div strong { display: block; font-weight: 700; font-size: 0.98rem; }
-  .stage div span { color: var(--grey); font-size: 0.92rem; }
-  .guarantee {
-    margin-top: 32px; border: 2px solid var(--ink); background: var(--yellow);
-    padding: 20px 24px; font-weight: 600; font-size: 1.02rem; line-height: 1.4;
-  }
-  .guarantee small { display: block; font-weight: 500; font-size: 0.85rem; margin-top: 6px; }
-  @media (max-width: 760px) { .product-grid { grid-template-columns: 1fr; gap: 36px; } }
+.practice{display:grid;grid-template-columns:110px 1fr 1.15fr;gap:36px;padding:44px 0;border-top:1px solid var(--hair)}
+.practice:first-of-type{border-top:none;margin-top:48px;border-top:1px solid var(--ink)}
+.pnum{font-family:'Fraunces',serif;font-size:1.05rem;color:var(--bronze)}
+.practice h3{font-family:'Fraunces',serif;font-weight:500;font-size:1.45rem;letter-spacing:-.01em;line-height:1.2}
+.practice .desc{color:var(--grey);margin-top:12px;font-size:.98rem}
+.plist{list-style:none;columns:1;font-size:.95rem}
+.plist li{padding:9px 0;border-bottom:1px solid var(--hair)}
+.plist li:last-child{border-bottom:none}
+@media(max-width:860px){.practice{grid-template-columns:1fr;gap:14px}.pnum{font-size:.95rem}}
 
-  /* ---------- problems ---------- */
-  .problem-list { margin-top: 40px; border-top: 1px solid var(--ink); }
-  .problem {
-    display: grid; grid-template-columns: minmax(180px, 1fr) 2fr; gap: 20px;
-    padding: 22px 0; border-bottom: 1px solid var(--line);
-  }
-  .problem strong { font-weight: 700; font-size: 1.02rem; }
-  .problem p { color: var(--grey); font-size: 0.98rem; }
-  @media (max-width: 640px) { .problem { grid-template-columns: 1fr; gap: 6px; } }
+.model-table{margin-top:52px;width:100%;border-collapse:collapse}
+.model-table th{font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;font-weight:600;text-align:left;color:var(--grey);padding:0 20px 14px 0;border-bottom:1px solid var(--ink)}
+.model-table td{padding:26px 20px 26px 0;border-bottom:1px solid var(--hair);vertical-align:top;font-size:.97rem}
+.model-table td:first-child{font-family:'Fraunces',serif;font-size:1.15rem;white-space:nowrap}
+.model-table .price{font-weight:600;white-space:nowrap}
+.model-table .price small{display:block;font-weight:400;color:var(--grey);font-size:.8rem;margin-top:4px}
+.model-note{margin-top:26px;font-size:.92rem;color:var(--grey);max-width:70ch}
+.model-note strong{color:var(--ink)}
+@media(max-width:760px){.model-table thead{display:none}.model-table td{display:block;border:none;padding:6px 0}.model-table tr{display:block;border-bottom:1px solid var(--hair);padding:20px 0}}
 
-  /* ---------- job card ---------- */
-  #method { background: var(--ink); color: var(--paper); }
-  #method h2 { color: var(--paper); }
-  #method .section-intro { color: #b9b8b2; }
-  .jobcard { margin-top: 44px; background: var(--paper); color: var(--ink); border: 2px solid var(--ink); }
-  .jobcard-head {
-    display: flex; justify-content: space-between; align-items: center; gap: 12px;
-    padding: 16px 24px; background: var(--yellow); border-bottom: 2px solid var(--ink);
-    font-weight: 800; font-variation-settings: 'wdth' 120; font-size: 0.98rem;
-  }
-  .jobcard-head span:last-child { font-weight: 500; font-variation-settings: 'wdth' 100; font-size: 0.88rem; }
-  .tier {
-    display: grid; grid-template-columns: 110px 1.3fr 2fr auto; gap: 20px;
-    align-items: start; padding: 26px 24px; border-bottom: 1px solid var(--line);
-  }
-  .tier:last-of-type { border-bottom: none; }
-  .tier-step {
-    font-weight: 800; font-variation-settings: 'wdth' 122; font-size: 1.05rem;
-    line-height: 1.2; padding-top: 2px;
-  }
-  .tier h3 { font-size: 1.08rem; font-weight: 700; }
-  .tier .time { color: var(--grey); font-size: 0.9rem; margin-top: 4px; }
-  .tier .desc { color: var(--grey); font-size: 0.96rem; }
-  .tier .desc ul { margin: 8px 0 0 18px; }
-  .tier .desc li { margin-bottom: 4px; }
-  .tier-price {
-    font-weight: 800; font-variation-settings: 'wdth' 118; font-size: 1.35rem;
-    white-space: nowrap; text-align: right;
-  }
-  .tier-price small { display: block; font-weight: 500; font-size: 0.78rem; color: var(--grey); }
-  .jobcard-foot {
-    padding: 18px 24px; border-top: 2px solid var(--ink);
-    font-size: 0.94rem; background: #f4f2ec;
-  }
-  .jobcard-foot strong { box-shadow: inset 0 -0.38em var(--yellow); font-weight: 700; }
-  @media (max-width: 760px) {
-    .tier { grid-template-columns: 1fr; gap: 8px; }
-    .tier-price { text-align: left; margin-top: 4px; }
-  }
+.perspective{background:var(--navy);color:var(--paper);border-bottom:none}
+.perspective .kicker{color:var(--bronze)}
+.perspective blockquote{font-family:'Fraunces',serif;font-weight:300;font-size:clamp(1.6rem,3.4vw,2.6rem);line-height:1.25;letter-spacing:-.01em;max-width:26ch;margin-top:30px}
+.perspective p{margin-top:26px;max-width:58ch;color:#c8cfd6;font-size:1rem}
 
-  /* ---------- assurance ---------- */
-  .assure-grid { margin-top: 40px; display: grid; grid-template-columns: 1.2fr 1fr; gap: 48px; }
-  .assure-grid p + p { margin-top: 16px; }
-  .assure-grid p { color: var(--grey); }
-  .assure-grid p.lead { color: var(--ink); font-weight: 600; font-size: 1.08rem; }
-  .assure-list { border-top: 1px solid var(--ink); }
-  .assure-item { padding: 14px 0; border-bottom: 1px solid var(--line); font-size: 0.95rem; }
-  .assure-item strong { font-weight: 700; }
-  @media (max-width: 760px) { .assure-grid { grid-template-columns: 1fr; gap: 32px; } }
+.tools-grid{display:grid;grid-template-columns:1fr 1fr;gap:0;margin-top:52px;border:1px solid var(--ink)}
+.tool{padding:40px 36px}
+.tool+.tool{border-left:1px solid var(--ink)}
+.tool h3{font-family:'Fraunces',serif;font-weight:500;font-size:1.35rem}
+.tool .tag{display:inline-block;font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;font-weight:600;color:var(--bronze);margin-bottom:14px}
+.tool p{color:var(--grey);margin-top:12px;font-size:.96rem}
+.tool a{display:inline-block;margin-top:22px;font-weight:600;font-size:.92rem;text-decoration:none;border-bottom:2px solid var(--bronze);padding-bottom:2px}
+@media(max-width:760px){.tools-grid{grid-template-columns:1fr}.tool+.tool{border-left:none;border-top:1px solid var(--ink)}}
 
-  /* ---------- honesty ---------- */
-  .honesty blockquote {
-    margin-top: 40px; border-left: 6px solid var(--yellow);
-    padding: 8px 0 8px 28px;
-    font-size: clamp(1.2rem, 2.4vw, 1.6rem);
-    font-weight: 600; line-height: 1.3; max-width: 30ch; letter-spacing: -0.01em;
-  }
-  .honesty .after { margin-top: 24px; max-width: 58ch; color: var(--grey); }
+.about-grid{display:grid;grid-template-columns:1.25fr 1fr;gap:64px;margin-top:52px}
+.about-grid p+p{margin-top:18px}
+.about-grid .lede{font-family:'Fraunces',serif;font-size:1.3rem;line-height:1.4}
+.about-grid p{color:var(--grey)}
+.facts{border-top:1px solid var(--ink)}
+.fact{display:flex;justify-content:space-between;gap:18px;padding:15px 0;border-bottom:1px solid var(--hair);font-size:.93rem}
+.fact span:first-child{color:var(--grey)}
+.fact span:last-child{font-weight:600;text-align:right}
+@media(max-width:820px){.about-grid{grid-template-columns:1fr;gap:36px}}
 
-  /* ---------- about ---------- */
-  .about-grid { margin-top: 40px; display: grid; grid-template-columns: 1.2fr 1fr; gap: 48px; }
-  .about-grid p + p { margin-top: 16px; }
-  .about-facts { border-top: 1px solid var(--ink); }
-  .fact {
-    display: flex; justify-content: space-between; gap: 16px;
-    padding: 14px 0; border-bottom: 1px solid var(--line); font-size: 0.95rem;
-  }
-  .fact span:first-child { color: var(--grey); }
-  .fact span:last-child { font-weight: 600; text-align: right; }
-  @media (max-width: 760px) { .about-grid { grid-template-columns: 1fr; gap: 32px; } }
+.contact{border-bottom:none;padding-bottom:110px}
+.contact-inner{display:grid;grid-template-columns:1.3fr 1fr;gap:60px;align-items:center;margin-top:10px}
+.contact h2{max-width:none}
+.contact p{margin-top:20px;color:var(--grey);max-width:46ch}
+.contact-actions{display:flex;flex-direction:column;gap:14px}
+.contact-actions .btn{text-align:center}
+.contact-note{font-size:.85rem;color:var(--grey);text-align:center}
+@media(max-width:820px){.contact-inner{grid-template-columns:1fr}}
 
-  /* ---------- contact ---------- */
-  #contact { border-bottom: none; padding-bottom: 96px; }
-  .contact-box {
-    margin-top: 40px; border: 2px solid var(--ink); padding: 40px 32px;
-    display: grid; grid-template-columns: 1.4fr 1fr; gap: 40px; align-items: center;
-  }
-  .contact-box h3 {
-    font-weight: 800; font-variation-settings: 'wdth' 118;
-    font-size: clamp(1.3rem, 2.6vw, 1.8rem);
-    line-height: 1.15; letter-spacing: -0.015em;
-  }
-  .contact-box p { margin-top: 12px; color: var(--grey); max-width: 44ch; }
-  .contact-actions { display: flex; flex-direction: column; gap: 12px; }
-  .contact-actions .btn { text-align: center; }
-  .contact-note { font-size: 0.85rem; color: var(--grey); text-align: center; }
-  @media (max-width: 760px) { .contact-box { grid-template-columns: 1fr; } }
-
-  footer { padding: 28px 0 40px; font-size: 0.85rem; color: var(--grey); }
-  .foot-row { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+footer{border-top:1px solid var(--hair);padding:34px 0 48px;font-size:.84rem;color:var(--grey)}
+.foot{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
 </style>
 </head>
 <body>
 
 <header>
-  <div class="wrap head-row">
-    <a class="logo" href="#top">SMART <span>TECHNO</span></a>
+  <div class="wrap head">
+    <a class="wordmark" href="#top">Smart<span> Techno</span></a>
     <nav aria-label="Main">
-      <a href="#services">Services</a>
-      <a href="#method">How we work</a>
-      <a href="#tools">Free tools</a>
-      <a href="#about">Who we are</a>
-      <a href="#contact">Start</a>
+      <a href="#capabilities">Capabilities</a>
+      <a href="#model">Engagement model</a>
+      <a href="#tools">Tools</a>
+      <a href="#about">Firm</a>
+      <a class="cta" href="#contact">Start a conversation</a>
     </nav>
   </div>
 </header>
 
 <main id="top">
 
-  <div class="hero">
-    <div class="wrap">
-      <h1>Bring us a business problem. <em>We'll build you the fix.</em></h1>
-      <p>Smart Technology Australia is a Melbourne consulting and solutions studio. We map broken processes, work out where technology genuinely helps, and build working solutions your team can use in weeks — at fixed prices, with the honest option of "don't buy anything" always on the table. Fifteen years of process improvement, now paired with what AI makes buildable.</p>
-      <div class="hero-actions">
-        <a class="btn btn-solid" href="#contact">Tell us your problem</a>
-        <a class="btn btn-outline" href="https://mailbox-knowledge-gap-analyzer.streamlit.app">Try a free tool first</a>
+<div class="hero">
+  <div class="wrap">
+    <div class="kicker">Process · AI · Transformation — Melbourne</div>
+    <h1>From business problem to <em>working solution.</em></h1>
+    <p>Smart Technology Australia is a consulting studio for organisations whose operations have outgrown their processes. We bring fifteen years of process improvement across telecommunications, energy, FMCG and medical research — combined with the ability to design, prototype and ship AI-enabled solutions in weeks. Fixed prices. Senior attention on every engagement. And the honest answer, even when it's "don't buy anything."</p>
+    <div class="hero-actions">
+      <a class="btn btn-solid" href="#contact">Bring us a problem</a>
+      <a class="btn btn-ghost" href="#capabilities">Explore capabilities</a>
+    </div>
+  </div>
+</div>
+
+<section id="capabilities">
+  <div class="wrap">
+    <div class="kicker">Capabilities</div>
+    <h2>Four practices. One standard: outcomes you can use.</h2>
+    <p class="intro">Everything we offer sits on the same foundation — understand the work as it actually happens, fix the process first, and apply technology only where it earns its keep.</p>
+
+    <div class="practice">
+      <div class="pnum">01</div>
+      <div>
+        <h3>Process &amp; Operational Excellence</h3>
+        <p class="desc">The discipline the firm was built on: seeing how work really flows, and where the hours, errors and frustration actually go.</p>
+      </div>
+      <ul class="plist">
+        <li>Current-state process mapping &amp; analysis</li>
+        <li>Lean Six Sigma continuous improvement</li>
+        <li>Workflow &amp; service redesign</li>
+        <li>Standard operating procedures &amp; documentation</li>
+        <li>Operational reporting &amp; performance metrics</li>
+      </ul>
+    </div>
+
+    <div class="practice">
+      <div class="pnum">02</div>
+      <div>
+        <h3>AI &amp; Intelligent Automation</h3>
+        <p class="desc">Solutions that once needed a development team, delivered in weeks — designed around your rules, your risk appetite, and human oversight where it matters.</p>
+      </div>
+      <ul class="plist">
+        <li>AI opportunity &amp; suitability assessment</li>
+        <li>Prototype sprints — working proof in two weeks</li>
+        <li>Production solution builds, documented &amp; handed over</li>
+        <li>Knowledge &amp; answer systems built from your own material</li>
+        <li>Document review, extraction &amp; intake automation</li>
+        <li>Payment &amp; entitlement assurance registers</li>
+      </ul>
+    </div>
+
+    <div class="practice">
+      <div class="pnum">03</div>
+      <div>
+        <h3>Advisory &amp; Transformation</h3>
+        <p class="desc">Senior analysis for decisions that are expensive to get wrong — grounded in delivery experience inside large Australian organisations.</p>
+      </div>
+      <ul class="plist">
+        <li>Business analysis &amp; requirements definition</li>
+        <li>Discovery &amp; prioritisation workshops</li>
+        <li>Digital transformation advisory</li>
+        <li>Vendor evaluation &amp; proposal support</li>
+        <li>Change &amp; stakeholder engagement</li>
+        <li>Benefits, ROI &amp; business-case development</li>
+      </ul>
+    </div>
+
+    <div class="practice">
+      <div class="pnum">04</div>
+      <div>
+        <h3>Capability Building</h3>
+        <p class="desc">Your team, made self-sufficient — practical training drawn from real engagements, never slideware.</p>
+      </div>
+      <ul class="plist">
+        <li>Practical AI workshops for operations &amp; analyst teams</li>
+        <li>Process improvement training &amp; facilitation</li>
+        <li>Playbooks, templates &amp; internal methods</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section id="model">
+  <div class="wrap">
+    <div class="kicker">Engagement model</div>
+    <h2>Fixed prices, published. Every engagement earns the next step.</h2>
+    <p class="intro">Large firms quote on request. We publish our prices, cap every scope, and let the work justify continuing — starting small enough that saying yes is easy.</p>
+
+    <table class="model-table">
+      <thead><tr><th>Stage</th><th>Engagement</th><th>You receive</th><th>Investment</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>Assess</td>
+          <td>Opportunity Assessment<br><small style="color:var(--grey)">5 business days</small></td>
+          <td>A written, honest answer on one problem: root cause, whether AI or automation genuinely fits, the recommended fix and its cost — or the case for doing nothing.</td>
+          <td class="price">$490<small>Guaranteed — 5+ recoverable hrs/week identified or fully refunded</small></td>
+        </tr>
+        <tr>
+          <td>Prove</td>
+          <td>Prototype Sprint<br><small style="color:var(--grey)">2 weeks</small></td>
+          <td>A working prototype your team tests against agreed success criteria, with results reported plainly — what passed, what didn't.</td>
+          <td class="price">$3,500<small>Assessment fee credited in full</small></td>
+        </tr>
+        <tr>
+          <td>Build</td>
+          <td>Solution Build<br><small style="color:var(--grey)">4–6 weeks</small></td>
+          <td>The solution deployed where your team works, documented and handed over. You own everything — no lock-in. Thirty days of support included.</td>
+          <td class="price">from $8,000<small>Scoped precisely in the sprint</small></td>
+        </tr>
+        <tr>
+          <td>Assure</td>
+          <td>Ongoing Assurance<br><small style="color:var(--grey)">Month to month</small></td>
+          <td>Accuracy monitoring, knowledge updates as your business changes, and a monthly report. Optional — self-manage if you prefer.</td>
+          <td class="price">from $450/mo<small>Cancel anytime</small></td>
+        </tr>
+      </tbody>
+    </table>
+    <p class="model-note"><strong>Workshops and training</strong> are scoped per engagement — a half-day discovery workshop for a leadership or operations team typically ranges from $1,500. All prices AUD, exclusive of GST.</p>
+  </div>
+</section>
+
+<section class="perspective">
+  <div class="wrap">
+    <div class="kicker">Our perspective</div>
+    <blockquote>Sometimes the right advice is: don't buy AI.</blockquote>
+    <p>Much of what presents as a technology problem is a process problem. If a redesigned form, a clearer handoff or a checklist resolves it, that is what we will recommend — because our model depends on you returning with the next problem, not regretting this one. Fifteen years of process improvement taught us that the tool is the last decision, not the first.</p>
+  </div>
+</section>
+
+<section id="tools">
+  <div class="wrap">
+    <div class="kicker">Tools &amp; products</div>
+    <h2>Try the thinking before you spend a dollar.</h2>
+    <p class="intro">We productise what we learn. Each tool below began as a client problem — and each one lets you evaluate our approach free, on your own data, before any engagement.</p>
+    <div class="tools-grid">
+      <div class="tool">
+        <span class="tag">Live — free</span>
+        <h3>Inbox Intelligence Scanner</h3>
+        <p>Upload a redacted export of any busy shared mailbox. In two minutes: the questions your team answers repeatedly, their share of volume, and the estimated hours and dollars they cost each week. Personal information is redacted before analysis — including Australian identifiers.</p>
+        <a href="https://mailbox-knowledge-gap-analyzer.streamlit.app">Run the free scan</a>
+      </div>
+      <div class="tool">
+        <span class="tag">Sample deliverable</span>
+        <h3>See a full report first</h3>
+        <p>A complete demonstration report on a fictional accounting firm — the cost figures, the ranked evidence, a drafted knowledge article, and the honest recommendation. Exactly what a paid analysis contains.</p>
+        <a href="sample-report.html">Read the sample report</a>
       </div>
     </div>
   </div>
+</section>
 
-  <section id="services">
-    <div class="wrap">
-      <h2>What we do</h2>
-      <p class="section-intro">Every engagement is fixed-price and fixed-scope. You always know the cost and the deliverable before you commit.</p>
-      <div class="problem-list">
-        <div class="problem">
-          <strong>Process improvement consulting</strong>
-          <p>We map how the work actually happens, find where the hours and errors go, and fix the process itself — Lean Six Sigma methods, plain-language deliverables. Often the fix needs no technology at all.</p>
-        </div>
-        <div class="problem">
-          <strong>Problem &amp; opportunity assessments</strong>
-          <p>Bring one frustrating problem. In five business days you get a written, honest answer: what's causing it, whether AI or automation genuinely fits, what the fix costs — or why you shouldn't spend the money.</p>
-        </div>
-        <div class="problem">
-          <strong>Discovery workshops</strong>
-          <p>A half-day with your team to surface the manual work eating their week and rank where technology would actually pay off. You leave with a prioritised list and honest costings, not a sales pitch.</p>
-        </div>
-        <div class="problem">
-          <strong>Prototype sprints</strong>
-          <p>Two weeks from problem to working prototype your team tests with real work — knowledge assistants, document review tools, automated reporting, intake and triage systems. Pass/fail results reported plainly.</p>
-        </div>
-        <div class="problem">
-          <strong>Solution builds</strong>
-          <p>The prototype made real: deployed where your team works, documented, handed over. You own everything we build — no lock-in, ever. Thirty days of support included.</p>
-        </div>
-        <div class="problem">
-          <strong>Team training</strong>
-          <p>Practical workshops for analysts, ops and admin teams: how to spot AI-fixable problems in your own work and use the tools properly. Built from real engagements, not slideware.</p>
-        </div>
+<section id="about">
+  <div class="wrap">
+    <div class="kicker">The firm</div>
+    <h2>Boutique by design. Senior on every engagement.</h2>
+    <div class="about-grid">
+      <div>
+        <p class="lede">Smart Technology Australia is led by Abhishek Arora — a process improvement consultant with more than fifteen years inside large Australian organisations across telecommunications, energy, FMCG and medical research.</p>
+        <p>The premise of the firm is simple: the person who analyses your problem is the person who designs and delivers the fix. No leverage model, no handoffs to juniors, no forty-page decks where four pages of plain language will do.</p>
+        <p>What has changed is what can now be built. Answer systems, document analysers, assurance registers and automated reporting — work that once required a development team — can be delivered in weeks at a fraction of the historical cost. We pair traditional process analysis with that capability, end to end.</p>
+        <p>Every deliverable is written in plain language. If a report needs a glossary, we've failed.</p>
+      </div>
+      <div class="facts">
+        <div class="fact"><span>Founded</span><span>Melbourne, Australia</span></div>
+        <div class="fact"><span>Experience</span><span>15+ years, enterprise &amp; SME</span></div>
+        <div class="fact"><span>Sectors</span><span>Telco · Energy · FMCG · Research · Education</span></div>
+        <div class="fact"><span>Method</span><span>Lean Six Sigma, process-first</span></div>
+        <div class="fact"><span>Commercials</span><span>Fixed price, fixed scope, published</span></div>
+        <div class="fact"><span>Ownership</span><span>Clients own everything we build</span></div>
+        <div class="fact"><span>Privacy</span><span>Personal data redacted before analysis</span></div>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <section id="tools">
-    <div class="wrap">
-      <h2>Free tools — try before you spend a dollar</h2>
-      <p class="section-intro">We build tools from the problems clients bring us. The first is live: a free scanner that reads a redacted export of your shared inbox and shows what the repeat questions cost you. More tools are coming — each one born from a real engagement.</p>
-      <p class="hookline" style="margin-top:36px;">Your team has answered that question 400 times. <em>We make the 401st answer itself.</em></p>
-      <div class="product-grid">
-        <div>
-          <h3>The Inbox Audit</h3>
-          <p>We analyse one busy shared mailbox — accounts, admin, support, enquiries — with all personal details redacted before anything is read. You get a written report: the questions your team answers over and over, what percentage of the inbox they make up, and the hours they cost you every week. In plain numbers, from your real data. Not a survey, not a workshop.</p>
-          <h3>The Answer System</h3>
-          <p>Here's the part nobody tells you: your knowledge base is already written. Every repeat question has been answered by your best people, one email at a time. We turn those answers — plus your policies, price lists and procedures — into a system your whole business can ask. Staff get instant answers with the source shown. Customer replies start as one-click drafts and earn the right to send themselves, one question type at a time. You decide what the system is allowed to own.</p>
-        </div>
-        <div>
-          <div class="stage-table">
-            <div class="stage">
-              <span class="stage-badge">DAY 1</span>
-              <div>
-                <strong>Staff self-serve</strong>
-                <span>Internal questions answered instantly, sources cited. No more asking the one person who knows.</span>
-              </div>
-            </div>
-            <div class="stage">
-              <span class="stage-badge">WEEK 1</span>
-              <div>
-                <strong>Draft mode</strong>
-                <span>Customer replies drafted and waiting. Your team reads, clicks send. Zero risk.</span>
-              </div>
-            </div>
-            <div class="stage">
-              <span class="stage-badge">EARNED</span>
-              <div>
-                <strong>Auto-answer</strong>
-                <span>Your top question types reply themselves. Everything unusual still reaches a human. Weekly accuracy report.</span>
-              </div>
-            </div>
-          </div>
-          <div class="guarantee">
-            If the audit doesn't find at least 5 recoverable hours a week, the $490 comes back.
-            <small>The guarantee is in the engagement letter, not just the website.</small>
-          </div>
-          <div style="display:flex;flex-direction:column;gap:12px;margin-top:20px;">
-            <a class="btn btn-solid" href="https://mailbox-knowledge-gap-analyzer.streamlit.app" style="text-align:center;">Scan your inbox free — 2 minutes</a>
-            <a class="btn btn-outline" href="sample-report.html" style="text-align:center;">See a sample report</a>
-          </div>
-        </div>
-      </div>
+<section id="contact" class="contact">
+  <div class="wrap contact-inner">
+    <div>
+      <div class="kicker">Start a conversation</div>
+      <h2>What's the problem costing your team hours every week?</h2>
+      <p>Describe it in a few sentences. We respond within one business day with an honest view of whether it's a fit — and if it is, the assessment begins when you're ready.</p>
     </div>
-  </section>
-
-  <section id="problems">
-    <div class="wrap">
-      <h2>The kinds of problems we take on</h2>
-      <p class="section-intro">If your team is doing repetitive, manual or knowledge-heavy work that a system should be doing, that's our territory. Common jobs:</p>
-      <div class="problem-list">
-        <div class="problem">
-          <strong>Manual document review</strong>
-          <p>Contracts, applications, invoices and reports read line-by-line by people. We build extraction and review tools that flag what matters and leave the decision with a human.</p>
-        </div>
-        <div class="problem">
-          <strong>Reporting that eats your week</strong>
-          <p>Hours spent copying numbers between spreadsheets and slide decks. We automate the pipeline from source data to finished report.</p>
-        </div>
-        <div class="problem">
-          <strong>Requests living in email</strong>
-          <p>Approvals, enquiries and jobs tracked by memory and forwarding. We build intake and routing so the right things reach the right people, with a record.</p>
-        </div>
-        <div class="problem">
-          <strong>Processes nobody can see</strong>
-          <p>Work that happens differently every time, depending on who does it. We map the current state, find where the time and errors actually go, and fix the process before adding any technology.</p>
-        </div>
-      </div>
+    <div class="contact-actions">
+      <a class="btn btn-solid" href="mailto:hello@smarttechno.com.au?subject=Engagement%20enquiry&body=The%20problem%20in%20a%20few%20sentences%3A%0A%0AWhat%20it%20costs%20us%20(time%2C%20money%2C%20frustration)%3A%0A%0ABest%20way%20to%20reach%20me%3A">Email the problem</a>
+      <a class="btn btn-ghost" href="https://mailbox-knowledge-gap-analyzer.streamlit.app">Start with the free scan</a>
+      <span class="contact-note">hello@smarttechno.com.au · Melbourne, Victoria</span>
     </div>
-  </section>
-
-  <section id="method">
-    <div class="wrap">
-      <h2>The Evolve Method: find it, prove it, fix it, assure it</h2>
-      <p class="section-intro">Every engagement starts small and earns the next step. Fixed prices, fixed scope, and you own everything we build — no lock-in, ever.</p>
-
-      <div class="jobcard">
-        <div class="jobcard-head">
-          <span>JOB CARD</span>
-          <span>All prices AUD, ex GST</span>
-        </div>
-
-        <div class="tier">
-          <div class="tier-step">FIND IT</div>
-          <div>
-            <h3>Opportunity Assessment</h3>
-            <div class="time">5 business days</div>
-          </div>
-          <div class="desc">
-            The Inbox Audit, or a written assessment of any one problem:
-            <ul>
-              <li>What's actually causing it</li>
-              <li>Whether AI or automation genuinely fits</li>
-              <li>The recommended fix and what it would cost</li>
-              <li>The honest option to do nothing</li>
-            </ul>
-          </div>
-          <div class="tier-price">$490<small>guaranteed</small></div>
-        </div>
-
-        <div class="tier">
-          <div class="tier-step">PROVE IT</div>
-          <div>
-            <h3>Prototype Sprint</h3>
-            <div class="time">2 weeks</div>
-          </div>
-          <div class="desc">
-            A working prototype your team tests with real work:
-            <ul>
-              <li>Built on the assessment's recommendation</li>
-              <li>Tested against agreed success criteria</li>
-              <li>Results reported plainly: what passed, what didn't</li>
-            </ul>
-          </div>
-          <div class="tier-price">$3,500<small>$490 credited</small></div>
-        </div>
-
-        <div class="tier">
-          <div class="tier-step">FIX IT</div>
-          <div>
-            <h3>Solution Build</h3>
-            <div class="time">4–6 weeks</div>
-          </div>
-          <div class="desc">
-            The prototype made real:
-            <ul>
-              <li>Deployed where your team works</li>
-              <li>Documented and handed over — you own it outright</li>
-              <li>30 days of post-handover support included</li>
-            </ul>
-          </div>
-          <div class="tier-price">from $8,000<small>scoped in the sprint</small></div>
-        </div>
-
-        <div class="tier">
-          <div class="tier-step">ASSURE IT</div>
-          <div>
-            <h3>Ongoing Assurance</h3>
-            <div class="time">month to month, cancel anytime</div>
-          </div>
-          <div class="desc">
-            For systems that keep earning trust:
-            <ul>
-              <li>Accuracy monitoring and a monthly report</li>
-              <li>Knowledge updates when your prices, policies or processes change</li>
-              <li>Graduating answer types from draft to auto as they prove out</li>
-            </ul>
-          </div>
-          <div class="tier-price">from $450/mo<small>optional — self-manage if you prefer</small></div>
-        </div>
-
-        <div class="jobcard-foot">
-          Your <strong>$490 assessment is credited in full</strong> against the Prototype Sprint. If our assessment says AI won't help, you'll have saved yourself a much bigger bill.
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section id="assurance">
-    <div class="wrap">
-      <h2>Paying hundreds of people against rules held in spreadsheets?</h2>
-      <div class="assure-grid">
-        <div>
-          <p class="lead">Somewhere in your organisation, someone administers recurring payments — stipends, scholarships, grants, entitlements, rebates — governed by rules that live in spreadsheets and one person's head. When that person leaves, you find the errors.</p>
-          <p>Our Payment &amp; Entitlement Assurance Register checks every payment against your rules, flags exceptions before they compound, and keeps a full correction trail — so when the auditor asks, the answer is a report, not a scramble. Built from a real assurance engagement at a major Australian research institution, configured to your rules.</p>
-          <p>If you run stipends, scholarships, grant acquittals, NDIS payments or member entitlements, this is worth twenty minutes of your time.</p>
-        </div>
-        <div class="assure-list">
-          <div class="assure-item"><strong>Rules, not memory.</strong> Eligibility, rates and lifecycle gates configured once, applied to every payment.</div>
-          <div class="assure-item"><strong>Exceptions surfaced early.</strong> Discrepancies flagged when they're one correction, not a year of back-pay.</div>
-          <div class="assure-item"><strong>A trail that stands up.</strong> Every correction recorded — who, what, when, why.</div>
-          <div class="assure-item"><strong>Fits how you work.</strong> Runs alongside Excel and your existing finance systems. No platform migration.</div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="honesty">
-    <div class="wrap">
-      <h2>The part most AI companies won't say</h2>
-      <blockquote>Sometimes the right answer is: don't buy AI.</blockquote>
-      <p class="after">Plenty of problems are process problems, not technology problems. If a checklist, a form redesign or a clearer handoff fixes it, that's what we'll recommend — because we'd rather you come back with the next problem than regret this one. Fifteen years of process improvement taught us that the tool is the last decision, not the first.</p>
-    </div>
-  </section>
-
-  <section id="about">
-    <div class="wrap">
-      <h2>Who you're dealing with</h2>
-      <div class="about-grid">
-        <div>
-          <p>Smart Technology Australia is led by <strong>Abhishek Arora</strong>, a process improvement consultant with over 15 years across telecommunications, energy, FMCG and medical research — mapping broken processes, finding where the hours and errors go, and fixing them.</p>
-          <p>What's changed is what can now be built. Solutions that once needed a development team — answer systems, document analysers, automated reporting, assurance registers — can now be delivered in weeks at a fraction of the old cost. We combine traditional process analysis with modern AI tooling to go from your problem statement to a working solution you can see and test.</p>
-          <p>Every deliverable is written in plain language. If a report needs a glossary to read, we've failed.</p>
-        </div>
-        <div class="about-facts">
-          <div class="fact"><span>Based in</span><span>Melbourne, Australia</span></div>
-          <div class="fact"><span>Experience</span><span>15+ years, enterprise &amp; SME</span></div>
-          <div class="fact"><span>Method</span><span>Lean Six Sigma, process-first</span></div>
-          <div class="fact"><span>Engagement</span><span>Fixed price, fixed scope</span></div>
-          <div class="fact"><span>Ownership</span><span>You keep everything we build</span></div>
-          <div class="fact"><span>Privacy</span><span>Personal data redacted before analysis</span></div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section id="contact">
-    <div class="wrap">
-      <div class="contact-box">
-        <div>
-          <h3>Got a problem that's costing you hours every week?</h3>
-          <p>Tell us about it in a couple of sentences. We'll reply within one business day with whether it's a fit — and if it is, the assessment starts as soon as you're ready.</p>
-        </div>
-        <div class="contact-actions">
-          <a class="btn btn-solid" href="mailto:hello@smarttechno.com.au?subject=Assessment%20enquiry&body=The%20problem%20in%20a%20couple%20of%20sentences%3A%0A%0AHow%20much%20time%20it%20costs%20us%3A%0A%0ABest%20way%20to%20reach%20me%3A">Email us the problem</a>
-          <a class="btn btn-outline" href="https://mailbox-knowledge-gap-analyzer.streamlit.app">Start with the free scan</a>
-          <span class="contact-note">The scan shows your numbers first — no payment, no commitment.</span>
-        </div>
-      </div>
-    </div>
-  </section>
+  </div>
+</section>
 
 </main>
 
 <footer>
-  <div class="wrap foot-row">
-    <span>© 2026 Smart Technology Australia, trading as Smart Techno. ABN on request.</span>
-    <span>Melbourne, Victoria</span>
+  <div class="wrap foot">
+    <span>© 2026 Smart Technology Australia Pty Ltd, trading as Smart Techno. ABN on request.</span>
+    <span>Melbourne, Victoria, Australia</span>
   </div>
 </footer>
 
