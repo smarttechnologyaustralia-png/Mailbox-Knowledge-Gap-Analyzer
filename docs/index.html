@@ -1,591 +1,353 @@
 <!DOCTYPE html>
-<html lang="en-AU">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Smart Techno — Better ways of working. Built.</title>
-<meta name="description" content="We find where work is leaking time and money, redesign it, and build the fix. Process improvement, automation and AI for Australian organisations.">
+<html lang="en-AU"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Smart Techno — Better ways of working. Built.</title><meta name="description" content="We find where your operations leak time and money, redesign the work, and build the fix. Process improvement, automation and AI consulting in Melbourne.">
+<meta name="theme-color" content="#1256D3">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,400..800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 :root{
-  --ink:#0C1720;         /* schematic ground */
-  --ink-2:#132534;
-  --paper:#FFFFFF;
-  --mist:#EEF2F4;        /* pale technical grey */
-  --line:#D3DBE0;
-  --line-dark:#2C4356;
-  --blue:#1F7A8C;        /* drawing line */
-  --signal:#E2703A;      /* friction / attention */
-  --grey:#5A6873;
-  --max:1180px;
+  --ink:#0F1B2D; --ink-2:#1C3252; --body:#4A5A70; --mute:#7C8CA0;
+  --blue:#1256D3; --blue-d:#0B3E9E; --blue-l:#E8F0FE; --blue-xl:#F4F8FF;
+  --amber:#E8833A; --green:#12876F;
+  --paper:#FFFFFF; --wash:#F6F9FC; --line:#E2E9F0;
+  --sh:0 1px 2px rgba(15,27,45,.05),0 8px 24px rgba(15,27,45,.06);
+  --sh-h:0 2px 4px rgba(15,27,45,.06),0 16px 40px rgba(15,27,45,.10);
+  --max:1180px; --r:10px;
 }
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
-@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation:none!important;transition:none!important}}
-body{font-family:'Inter',system-ui,sans-serif;background:var(--paper);color:var(--ink);font-size:16.5px;line-height:1.6;-webkit-font-smoothing:antialiased}
-.wrap{max-width:var(--max);margin:0 auto;padding:0 32px}
-h1,h2,h3,.dsp{font-family:'Archivo',system-ui,sans-serif;font-variation-settings:'wdth' 112;font-weight:700;letter-spacing:-.028em;line-height:1.02}
-h1{font-size:clamp(2.7rem,7vw,5.4rem)}
-h2{font-size:clamp(2rem,4.4vw,3.3rem)}
-h3{font-size:1.16rem;font-variation-settings:'wdth' 105;letter-spacing:-.015em;line-height:1.25}
-p{max-width:62ch}
-a{color:inherit}
-a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var(--blue);outline-offset:4px}
-.btn{display:inline-block;font-weight:600;font-size:.95rem;text-decoration:none;padding:16px 30px;background:var(--ink);color:#fff;border:2px solid var(--ink);transition:background .16s,color .16s}
-.btn:hover{background:transparent;color:var(--ink)}
-.btn-o{background:transparent;color:var(--ink)}
-.btn-o:hover{background:var(--ink);color:#fff}
-.btn-l{background:#fff;color:var(--ink);border-color:#fff}
-.btn-l:hover{background:transparent;color:#fff}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important;animation:none!important}}
+body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--paper);color:var(--body);font-size:16.5px;line-height:1.62;-webkit-font-smoothing:antialiased}
+.wrap{max-width:var(--max);margin:0 auto;padding:0 28px}
+h1,h2,h3,h4,.dsp{font-family:'Archivo',system-ui,sans-serif;color:var(--ink);font-variation-settings:'wdth' 108;font-weight:700;letter-spacing:-.022em;line-height:1.12}
+h1{font-size:clamp(2.3rem,4.6vw,3.7rem);line-height:1.05;letter-spacing:-.03em}
+h2{font-size:clamp(1.75rem,3.2vw,2.5rem)}
+h3{font-size:1.14rem;line-height:1.3}
+p{max-width:66ch}
+a{color:var(--blue);text-decoration:none}
+a:hover{color:var(--blue-d)}
+a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var(--blue);outline-offset:3px;border-radius:3px}
+.eyebrow{font-size:.78rem;font-weight:600;color:var(--blue);letter-spacing:.04em;margin-bottom:12px}
+.lead{font-size:1.06rem;color:var(--body);margin-top:16px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-family:inherit;font-weight:600;font-size:.94rem;padding:14px 26px;border-radius:var(--r);background:var(--blue);color:#fff;border:1.5px solid var(--blue);transition:background .16s,box-shadow .16s,transform .16s;box-shadow:var(--sh)}
+.btn:hover{background:var(--blue-d);border-color:var(--blue-d);color:#fff;box-shadow:var(--sh-h)}
+.btn-o{background:#fff;color:var(--ink);border-color:var(--line)}
+.btn-o:hover{background:var(--wash);color:var(--ink);border-color:var(--mute)}
+.btn-w{background:#fff;color:var(--blue-d);border-color:#fff}
+.btn-w:hover{background:var(--blue-l);color:var(--blue-d)}
+.btn-gw{background:transparent;color:#fff;border-color:rgba(255,255,255,.45)}
+.btn-gw:hover{background:rgba(255,255,255,.12);color:#fff}
 
 /* header */
-header{position:sticky;top:0;z-index:40;background:rgba(255,255,255,.95);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
-.head{display:flex;justify-content:space-between;align-items:center;padding:16px 0;gap:20px}
-.logo{display:flex;align-items:center;gap:11px;text-decoration:none}
-.logo svg{display:block}
-.logo b{font-family:'Archivo',sans-serif;font-variation-settings:'wdth' 118;font-weight:700;font-size:1.06rem;letter-spacing:-.02em}
-nav{display:flex;gap:26px;align-items:center}
-nav a{text-decoration:none;font-size:.88rem;font-weight:500;color:var(--grey)}
-nav a:hover{color:var(--ink)}
-nav a.on{background:var(--ink);color:#fff;padding:11px 20px;font-weight:600}
-nav a.on:hover{background:var(--ink-2);color:#fff}
-@media(max-width:900px){nav a:not(.on){display:none}}
+header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.96);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.head{display:flex;justify-content:space-between;align-items:center;padding:14px 0;gap:22px}
+.logo{display:flex;align-items:center;gap:10px}
+.logo b{font-family:'Archivo',sans-serif;font-variation-settings:'wdth' 112;font-weight:700;font-size:1.05rem;color:var(--ink);letter-spacing:-.02em}
+nav{display:flex;gap:24px;align-items:center}
+nav a{font-size:.9rem;font-weight:500;color:var(--body)}
+nav a:hover,nav a[aria-current]{color:var(--ink)}
+nav a.on{background:var(--blue);color:#fff;padding:11px 20px;border-radius:var(--r);font-weight:600;box-shadow:var(--sh)}
+nav a.on:hover{background:var(--blue-d);color:#fff}
+@media(max-width:960px){nav a:not(.on){display:none}}
 
 /* hero */
-.hero{padding:66px 0 0;border-bottom:1px solid var(--line);overflow:hidden}
-.hgrid{display:grid;grid-template-columns:1fr 1.02fr;gap:52px;align-items:center}
-.hero h1{max-width:11ch}
-.hero .say{margin-top:26px;font-size:1.2rem;color:var(--grey);max-width:40ch}
-.hero .acts{margin-top:34px;display:flex;gap:13px;flex-wrap:wrap}
-.hero .cred{margin-top:44px;padding:18px 0 0;border-top:1px solid var(--line);font-size:.83rem;color:var(--grey);display:flex;gap:22px;flex-wrap:wrap}
-.hero .cred b{color:var(--ink);font-weight:600}
-.hfig{padding:26px 0 30px}
-@media(max-width:940px){.hgrid{grid-template-columns:1fr;gap:14px}.hero{padding-top:48px}.hfig{padding-bottom:10px}}
+.hero{background:linear-gradient(170deg,var(--blue-xl) 0%,#fff 62%);border-bottom:1px solid var(--line);padding:64px 0 56px}
+.hgrid{display:grid;grid-template-columns:1.08fr 1fr;gap:52px;align-items:center}
+.hero h1{max-width:15ch}
+.hero .say{margin-top:22px;font-size:1.14rem;max-width:48ch}
+.hero .acts{margin-top:30px;display:flex;gap:12px;flex-wrap:wrap}
+.chips{margin-top:32px;display:flex;flex-wrap:wrap;gap:10px}
+.chip{display:inline-flex;align-items:center;gap:7px;background:#fff;border:1px solid var(--line);border-radius:100px;padding:8px 15px;font-size:.83rem;font-weight:500;color:var(--ink);box-shadow:var(--sh)}
+.chip svg{flex:none}
+@media(max-width:940px){.hgrid{grid-template-columns:1fr;gap:32px}}
 
-/* schematic primitives */
-.sch text{font-family:'Inter',sans-serif}
-.nd{fill:#fff;stroke:var(--ink);stroke-width:2}
-.nd-d{fill:var(--ink);stroke:var(--ink)}
-.ln{stroke:var(--line-dark);stroke-width:1.6;fill:none}
-.ln-g{stroke:var(--line);stroke-width:1.4;fill:none}
-.lbl{font-size:11px;font-weight:600;letter-spacing:.02em;fill:var(--ink)}
-.lbl-s{font-size:10px;fill:var(--grey);font-weight:500}
-.sig{fill:var(--signal)}
+/* proof strip */
+.proof{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:-34px;position:relative;z-index:2}
+.pf{background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:22px 22px 24px;box-shadow:var(--sh)}
+.pf .n{font-family:'Archivo',sans-serif;font-variation-settings:'wdth' 112;font-weight:800;font-size:2.15rem;color:var(--ink);letter-spacing:-.035em;line-height:1}
+.pf .t{font-size:.88rem;margin-top:9px;color:var(--body)}
+.pf .w{font-size:.76rem;font-weight:600;color:var(--blue);margin-top:12px;padding-top:11px;border-top:1px solid var(--line)}
+@media(max-width:940px){.proof{grid-template-columns:1fr 1fr;margin-top:26px}}
+@media(max-width:520px){.proof{grid-template-columns:1fr}}
 
-/* bands */
-section{padding:104px 0}
-.band-dark{background:var(--ink);color:#fff}
-.band-dark h2,.band-dark h3{color:#fff}
-.band-dark p{color:#9FB2C0}
-.band-mist{background:var(--mist)}
-.lead{margin-top:20px;font-size:1.1rem;color:var(--grey)}
-.band-dark .lead{color:#9FB2C0}
+section{padding:82px 0}
+.wash{background:var(--wash);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.dark{background:var(--ink);color:#B9C7D8}
+.dark h2,.dark h3,.dark h4{color:#fff}
+.dark .eyebrow{color:#6FA0F5}
+.dark .lead{color:#B9C7D8}
+.shead{max-width:70ch;margin-bottom:8px}
 
-/* leaks */
-.leaks{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;margin-top:52px;background:var(--line)}
-.lk{background:var(--paper);padding:30px 26px 32px}
-.band-mist .lk{background:var(--mist)}
-.lk svg{margin-bottom:18px;display:block}
-.lk h3{font-size:1.05rem}
-.lk p{color:var(--grey);font-size:.93rem;margin-top:8px}
-@media(max-width:880px){.leaks{grid-template-columns:1fr 1fr}}
-@media(max-width:560px){.leaks{grid-template-columns:1fr}}
+/* cards */
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:40px}
+.grid2{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;margin-top:40px}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:40px}
+.card{background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:26px 24px 28px;box-shadow:var(--sh);transition:box-shadow .18s,transform .18s}
+a.card:hover{box-shadow:var(--sh-h);transform:translateY(-2px)}
+.card h3{margin-top:14px}
+.card p{font-size:.93rem;margin-top:9px}
+.card .more{display:inline-block;margin-top:16px;font-size:.87rem;font-weight:600;color:var(--blue)}
+.ic{width:40px;height:40px;border-radius:9px;background:var(--blue-l);display:flex;align-items:center;justify-content:center}
+@media(max-width:940px){.grid3,.grid4{grid-template-columns:1fr 1fr}}
+@media(max-width:620px){.grid3,.grid2,.grid4{grid-template-columns:1fr}}
 
-/* method */
-.mflow{margin-top:56px}
-.msteps{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line-dark);margin-top:8px}
-.ms{background:var(--ink);padding:26px 24px 30px}
-.ms .mk{font-family:'Archivo',sans-serif;font-variation-settings:'wdth' 118;font-weight:700;font-size:.9rem;color:var(--blue);letter-spacing:.04em}
-.ms h3{margin-top:12px;font-size:1.22rem}
-.ms ul{list-style:none;margin-top:14px}
-.ms li{font-size:.87rem;color:#9FB2C0;padding:5px 0 5px 15px;position:relative}
-.ms li::before{content:"";position:absolute;left:0;top:13px;width:6px;height:1.5px;background:var(--blue)}
-@media(max-width:900px){.msteps{grid-template-columns:1fr 1fr}}
-@media(max-width:540px){.msteps{grid-template-columns:1fr}}
+/* certainty */
+.cert{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-top:40px;border:1px solid var(--line);border-radius:var(--r);overflow:hidden;background:#fff}
+.ce{padding:24px 22px 26px;border-left:1px solid var(--line)}
+.ce:first-child{border-left:none}
+.ce h4{font-size:.97rem}
+.ce p{font-size:.87rem;margin-top:7px}
+.ce .tick{color:var(--green);font-weight:700;font-size:.8rem;letter-spacing:.06em;margin-bottom:9px;display:block}
+@media(max-width:940px){.cert{grid-template-columns:1fr 1fr}.ce{border-top:1px solid var(--line)}.ce:nth-child(-n+2){border-top:none}.ce:nth-child(odd){border-left:none}}
+@media(max-width:560px){.cert{grid-template-columns:1fr}.ce{border-left:none}}
 
-/* proof */
-.case{display:grid;grid-template-columns:.85fr 1.15fr;gap:56px;align-items:center;padding:56px 0;border-top:1px solid var(--line)}
-.case:nth-child(even) .cfig{order:-1}
-.big{font-family:'Archivo',sans-serif;font-variation-settings:'wdth' 122;font-weight:800;font-size:clamp(4.4rem,11vw,8rem);line-height:.86;letter-spacing:-.05em}
-.cwho{font-size:.82rem;font-weight:600;color:var(--blue);letter-spacing:.09em;margin-bottom:14px}
-.cwhat{font-size:1.05rem;font-weight:600;margin-top:14px}
-.case p{color:var(--grey);font-size:.95rem;margin-top:12px;max-width:46ch}
-@media(max-width:900px){.case{grid-template-columns:1fr;gap:26px;padding:42px 0}.case:nth-child(even) .cfig{order:0}}
+/* steps */
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin-top:40px}
+.st{background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:24px 22px 26px;box-shadow:var(--sh);position:relative}
+.st .no{width:30px;height:30px;border-radius:8px;background:var(--blue);color:#fff;font-family:'Archivo',sans-serif;font-weight:700;font-size:.88rem;display:flex;align-items:center;justify-content:center}
+.st h3{margin-top:14px;font-size:1.05rem}
+.st ul{list-style:none;margin-top:12px}
+.st li{font-size:.86rem;padding:4px 0 4px 14px;position:relative}
+.st li::before{content:"";position:absolute;left:0;top:12px;width:5px;height:5px;border-radius:50%;background:var(--blue)}
+@media(max-width:940px){.steps{grid-template-columns:1fr 1fr}}
+@media(max-width:560px){.steps{grid-template-columns:1fr}}
 
-/* capability */
-.caps{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--line);margin-top:52px}
-.cp{background:var(--paper);padding:34px 32px 38px}
-.cp h3{font-size:1.3rem}
-.cp p{color:var(--grey);font-size:.95rem;margin-top:10px}
-.cp ul{list-style:none;margin-top:18px;font-size:.9rem;color:var(--grey);columns:2;column-gap:26px}
-.cp li{padding:4px 0;break-inside:avoid}
-@media(max-width:880px){.caps{grid-template-columns:1fr}.cp ul{columns:1}}
+/* founder */
+.founder{display:grid;grid-template-columns:280px 1fr;gap:44px;align-items:start;margin-top:36px}
+.fphoto{border-radius:var(--r);overflow:hidden;border:1px solid var(--line);background:var(--blue-l);aspect-ratio:1/1;display:flex;align-items:center;justify-content:center;box-shadow:var(--sh)}
+.fbio p+p{margin-top:14px}
+.fbio .sig{margin-top:22px;font-family:'Archivo',sans-serif;font-weight:600;color:var(--ink);font-size:1rem}
+.fbio .sig span{display:block;font-family:'Inter',sans-serif;font-weight:400;font-size:.86rem;color:var(--mute);margin-top:3px}
+@media(max-width:800px){.founder{grid-template-columns:1fr;gap:26px}.fphoto{max-width:230px}}
 
-/* engage */
-.eng{margin-top:52px;display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line)}
-.eg{background:var(--paper);padding:30px 26px 34px}
-.band-mist .eg{background:var(--mist)}
-.eg .step{font-size:.78rem;font-weight:600;color:var(--blue);letter-spacing:.09em}
-.eg h3{margin-top:12px}
-.eg p{color:var(--grey);font-size:.9rem;margin-top:10px}
-.eg .when{margin-top:16px;font-size:.8rem;color:var(--ink);font-weight:600;border-top:1px solid var(--line);padding-top:12px}
-@media(max-width:900px){.eng{grid-template-columns:1fr 1fr}}
-@media(max-width:520px){.eng{grid-template-columns:1fr}}
+/* table-ish */
+.spec{border:1px solid var(--line);border-radius:var(--r);overflow:hidden;background:#fff}
+.sp{display:flex;justify-content:space-between;gap:16px;padding:13px 20px;border-bottom:1px solid var(--line);font-size:.9rem}
+.sp:last-child{border-bottom:none}
+.sp span:first-child{color:var(--mute)}
+.sp span:last-child{font-weight:600;color:var(--ink);text-align:right}
 
-/* quote band */
-.qt{font-family:'Archivo',sans-serif;font-variation-settings:'wdth' 108;font-weight:700;font-size:clamp(1.9rem,4.6vw,3.4rem);line-height:1.08;letter-spacing:-.03em;max-width:20ch}
-.commit{display:grid;grid-template-columns:repeat(4,1fr);gap:36px;margin-top:64px;padding-top:34px;border-top:1px solid var(--line-dark)}
-.cmt h3{font-size:1rem}
-.cmt p{font-size:.88rem;margin-top:9px}
-@media(max-width:880px){.commit{grid-template-columns:1fr 1fr;gap:28px}}
-@media(max-width:520px){.commit{grid-template-columns:1fr}}
-
-/* tool */
-.toolgrid{display:grid;grid-template-columns:1fr 1.1fr;gap:56px;align-items:center;margin-top:48px}
-.screen{border:2px solid var(--ink);background:#fff}
-.screen .bar{background:var(--ink);padding:9px 12px;display:flex;gap:6px}
-.screen .bar i{width:8px;height:8px;border-radius:50%;background:#3C5568;display:block}
-@media(max-width:900px){.toolgrid{grid-template-columns:1fr;gap:32px}}
-
-/* firm + faq + contact */
-.firm{display:grid;grid-template-columns:1.25fr .95fr;gap:60px;margin-top:44px;align-items:start}
-.firm .op{font-family:'Archivo',sans-serif;font-variation-settings:'wdth' 106;font-weight:600;font-size:1.32rem;line-height:1.36;letter-spacing:-.02em;max-width:34ch}
-.firm p+p{margin-top:15px;color:var(--grey);font-size:.97rem}
-.spec{border-top:2px solid var(--ink)}
-.sp{display:flex;justify-content:space-between;gap:16px;padding:13px 0;border-bottom:1px solid var(--line);font-size:.89rem}
-.sp span:first-child{color:var(--grey)}
-.sp span:last-child{font-weight:600;text-align:right}
-@media(max-width:880px){.firm{grid-template-columns:1fr;gap:32px}}
-
-.faq{margin-top:44px;border-top:2px solid var(--ink)}
-details{border-bottom:1px solid var(--line);padding:22px 0}
-summary{cursor:pointer;font-weight:600;font-size:1.03rem;list-style:none;display:flex;justify-content:space-between;gap:20px;align-items:center}
+details{background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:18px 22px;margin-top:12px;box-shadow:var(--sh)}
+summary{cursor:pointer;font-weight:600;color:var(--ink);list-style:none;display:flex;justify-content:space-between;gap:18px;align-items:center;font-size:1rem}
 summary::-webkit-details-marker{display:none}
-summary i{width:13px;height:13px;position:relative;flex:none}
-summary i::before,summary i::after{content:"";position:absolute;background:var(--blue);left:0;top:6px;width:13px;height:1.8px}
+summary i{width:12px;height:12px;flex:none;position:relative}
+summary i::before,summary i::after{content:"";position:absolute;background:var(--blue);left:0;top:5px;width:12px;height:2px;border-radius:2px}
 summary i::after{transform:rotate(90deg)}
 details[open] summary i::after{transform:rotate(0)}
-details p{margin-top:12px;color:var(--grey);font-size:.95rem}
+details p{margin-top:11px;font-size:.94rem}
 
-.cgrid{display:grid;grid-template-columns:1.2fr .9fr;gap:56px;margin-top:40px;align-items:start}
-.reply{list-style:none;margin-top:24px}
-.reply li{padding:14px 0 14px 30px;border-top:1px solid var(--line-dark);position:relative;font-size:.95rem;color:#9FB2C0}
-.reply li b{color:#fff;font-weight:600}
-.reply li::before{content:"";position:absolute;left:0;top:22px;width:16px;height:1.6px;background:var(--blue)}
-.cbox{background:var(--ink-2);padding:32px 30px;border:1px solid var(--line-dark)}
-.cline{display:flex;justify-content:space-between;gap:14px;padding:12px 0;border-bottom:1px solid var(--line-dark);font-size:.89rem}
-.cline span{color:#8FA3B2}
-.cline b,.cline a{font-weight:600;text-align:right;text-decoration:none;color:#fff}
-.cacts{display:flex;flex-direction:column;gap:12px;margin-top:26px}
-.cacts .btn{text-align:center}
-@media(max-width:880px){.cgrid{grid-template-columns:1fr;gap:32px}}
+.cta{background:linear-gradient(160deg,var(--blue-d),var(--blue));color:#fff;border-radius:14px;padding:52px 46px;display:grid;grid-template-columns:1.3fr auto;gap:40px;align-items:center;box-shadow:var(--sh-h)}
+.cta h2{color:#fff;max-width:20ch}
+.cta p{color:#D6E4FB;margin-top:14px;max-width:52ch}
+.cta .acts{display:flex;flex-direction:column;gap:12px}
+@media(max-width:860px){.cta{grid-template-columns:1fr;padding:38px 28px}}
 
-footer{background:var(--ink);color:#7E93A3;padding:30px 0 44px;font-size:.83rem;border-top:1px solid var(--line-dark)}
-.fr{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
-</style>
-</head>
-<body>
-<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
-  <marker id="ar" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,1 L7,4.5 L0,8" fill="none" stroke="#2C4356" stroke-width="1.4"/></marker>
-  <pattern id="gd" width="26" height="26" patternUnits="userSpaceOnUse"><path d="M26 0 L0 0 0 26" fill="none" stroke="#EEF2F4" stroke-width="1"/></pattern>
-</defs></svg>
+footer{background:var(--ink);color:#8DA0B8;padding:52px 0 40px;font-size:.88rem}
+.fgrid{display:grid;grid-template-columns:1.6fr 1fr 1fr 1.2fr;gap:34px}
+footer h4{font-size:.8rem;color:#fff;letter-spacing:.06em;margin-bottom:14px}
+footer a{color:#8DA0B8;display:block;padding:4px 0;font-size:.88rem}
+footer a:hover{color:#fff}
+.fbot{margin-top:38px;padding-top:22px;border-top:1px solid #24374F;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;font-size:.82rem}
+@media(max-width:860px){.fgrid{grid-template-columns:1fr 1fr;gap:28px}}
+@media(max-width:520px){.fgrid{grid-template-columns:1fr}}
+</style></head><body>
+<header><div class="wrap head">
+<a class="logo" href="index.html" aria-label="Smart Techno home"><svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true"><rect width="30" height="30" rx="7" fill="#1256D3"/><circle cx="10" cy="10" r="2.6" fill="#fff"/><circle cx="10" cy="20" r="2.6" fill="#fff"/><circle cx="21" cy="15" r="3.4" fill="#fff" opacity=".9"/><path d="M12.4 11.2 L18.4 13.8 M12.4 18.8 L18.4 16.2" stroke="#fff" stroke-width="1.6" opacity=".75"/></svg><b>Smart Techno</b></a>
+<nav aria-label="Main">
+<a href="services.html">Services</a>
+<a href="method.html">How we work</a>
+<a href="work.html">Results</a>
+<a href="about.html">About</a>
+<a href="notes.html">Notes</a>
+<a class="on" href="contact.html">Bring us a problem</a>
+</nav></div></header>
+<main>
+<div class="hero"><div class="wrap hgrid">
+<div>
+<h1>Better ways of working. Built.</h1>
+<p class="say">We find where your operations leak time and money, redesign how the work should run, then build the fix — process improvement, automation and AI for Australian organisations.</p>
+<div class="acts"><a class="btn" href="contact.html">Bring us a problem</a><a class="btn btn-o" href="https://mailbox-knowledge-gap-analyzer.streamlit.app">Run the free diagnostic</a></div>
+<div class="chips">
+<span class="chip">Melbourne, Victoria</span>
+<span class="chip">15+ years in transformation</span>
+<span class="chip">Telstra · NBN · EnergyAustralia · Asahi</span>
+<span class="chip">Reply within one business day</span>
+</div>
+</div>
+<div>
+<svg viewBox="0 0 520 380" width="100%" role="img" aria-label="Diagram: people, process, data and technology run through today's workflow where friction is found, redesigned, and measured as an outcome">
+<defs><marker id="ar" markerWidth="9" markerHeight="9" refX="7.5" refY="4.5" orient="auto"><path d="M0,1 L7,4.5 L0,8" fill="none" stroke="#7C8CA0" stroke-width="1.5"/></marker></defs>
+<rect x="0" y="0" width="520" height="380" rx="12" fill="#fff" stroke="#E2E9F0"/>
+<g font-family="Inter" font-size="11" font-weight="600" fill="#0F1B2D">
+<rect x="22" y="30" width="104" height="34" rx="8" fill="#F4F8FF" stroke="#D3E1F7"/><text x="74" y="51" text-anchor="middle">People</text>
+<rect x="22" y="86" width="104" height="34" rx="8" fill="#F4F8FF" stroke="#D3E1F7"/><text x="74" y="107" text-anchor="middle">Process</text>
+<rect x="22" y="142" width="104" height="34" rx="8" fill="#F4F8FF" stroke="#D3E1F7"/><text x="74" y="163" text-anchor="middle">Data</text>
+<rect x="22" y="198" width="104" height="34" rx="8" fill="#F4F8FF" stroke="#D3E1F7"/><text x="74" y="219" text-anchor="middle">Technology</text>
+</g>
+<g fill="none" stroke="#C6D2E0" stroke-width="1.5" marker-end="url(#ar)">
+<path d="M126 47 C168 47 168 118 200 128"/><path d="M126 103 C168 103 168 124 200 132"/>
+<path d="M126 159 C168 159 168 142 200 138"/><path d="M126 215 C172 215 172 152 200 144"/>
+</g>
+<rect x="204" y="72" width="154" height="132" rx="10" fill="#F6F9FC" stroke="#C6D2E0" stroke-dasharray="5 4"/>
+<text x="281" y="64" font-family="Inter" font-size="10.5" fill="#7C8CA0" text-anchor="middle">how the work runs today</text>
+<g stroke="#B9C6D6" stroke-width="1.4" fill="none">
+<path d="M222 104 L258 94 L296 114 L338 100"/><path d="M222 140 L266 156 L306 132 L344 148"/><path d="M226 178 L270 166 L310 184 L346 172"/>
+</g>
+<g><circle cx="266" cy="156" r="5.5" fill="#E8833A"/><circle cx="266" cy="156" r="10" fill="none" stroke="#E8833A" stroke-width="1.3"/>
+<circle cx="296" cy="114" r="5.5" fill="#E8833A"/><circle cx="296" cy="114" r="10" fill="none" stroke="#E8833A" stroke-width="1.3"/>
+<circle cx="310" cy="184" r="5.5" fill="#E8833A"/><circle cx="310" cy="184" r="10" fill="none" stroke="#E8833A" stroke-width="1.3"/></g>
+<text x="281" y="222" font-family="Inter" font-size="10.5" fill="#E8833A" text-anchor="middle">friction: manual steps, rework, waiting</text>
+<path d="M358 138 L398 138" stroke="#C6D2E0" stroke-width="1.5" marker-end="url(#ar)" fill="none"/>
+<text x="378" y="128" font-family="Inter" font-size="10" fill="#7C8CA0" text-anchor="middle">redesign</text>
+<rect x="402" y="100" width="96" height="78" rx="10" fill="#1256D3"/>
+<text x="450" y="133" font-family="Inter" font-size="11" font-weight="600" fill="#fff" text-anchor="middle">Measurable</text>
+<text x="450" y="150" font-family="Inter" font-size="11" font-weight="600" fill="#fff" text-anchor="middle">outcome</text>
+<path d="M450 178 L450 268 L281 268 L281 208" fill="none" stroke="#C6D2E0" stroke-width="1.4" stroke-dasharray="4 4" marker-end="url(#ar)"/>
+<text x="366" y="286" font-family="Inter" font-size="10" fill="#7C8CA0" text-anchor="middle">measure, then improve again</text>
+<path d="M22 316 L498 316" stroke="#E2E9F0"/>
+<g font-family="Inter" font-size="10.5" fill="#7C8CA0"><text x="22" y="340">Discover</text><text x="146" y="340">Analyse</text><text x="270" y="340">Design</text><text x="394" y="340">Deliver &amp; improve</text></g>
+<g fill="#1256D3"><circle cx="26" cy="316" r="4"/><circle cx="150" cy="316" r="4"/><circle cx="274" cy="316" r="4"/><circle cx="398" cy="316" r="4"/></g>
+</svg>
+</div></div></div>
 
-<header>
-  <div class="wrap head">
-    <a class="logo" href="#top" aria-label="Smart Techno home">
-      <svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true">
-        <circle cx="6" cy="7" r="3.1" fill="none" stroke="#0C1720" stroke-width="2"/>
-        <circle cx="6" cy="23" r="3.1" fill="none" stroke="#0C1720" stroke-width="2"/>
-        <circle cx="24" cy="15" r="3.6" fill="#0C1720"/>
-        <path d="M8.6 8.6 L20.6 13.6 M8.6 21.4 L20.6 16.4" stroke="#1F7A8C" stroke-width="1.8" fill="none"/>
-      </svg>
-      <b>Smart Techno</b>
-    </a>
-    <nav aria-label="Main">
-      <a href="#leaks">What we fix</a>
-      <a href="#method">How we work</a>
-      <a href="#proof">Results</a>
-      <a href="notes.html">Notes</a>
-      <a class="on" href="#contact">Bring us a problem</a>
-    </nav>
-  </div>
-</header>
-
-<main id="top">
-
-<!-- HERO -->
-<div class="hero">
-  <div class="wrap hgrid">
-    <div>
-      <h1>Better ways of working. Built.</h1>
-      <p class="say">We find where your operations leak time and money, redesign how the work should run, then build the fix.</p>
-      <div class="acts">
-        <a class="btn" href="#contact">Bring us a problem</a>
-        <a class="btn btn-o" href="https://mailbox-knowledge-gap-analyzer.streamlit.app">Run the free diagnostic</a>
-      </div>
-      <div class="cred">
-        <span><b>15+ years</b> in transformation</span>
-        <span><b>Telstra · NBN · EnergyAustralia · Asahi</b></span>
-        <span><b>Melbourne</b></span>
-      </div>
-    </div>
-    <div class="hfig">
-      <svg class="sch" viewBox="0 0 560 430" width="100%" role="img" aria-label="Diagram: people, process, data and technology feed an operating system; friction points are found and redesigned into measurable outcomes">
-        <rect x="0" y="0" width="560" height="430" fill="url(#gd)"/>
-
-        <!-- four inputs -->
-        <g>
-          <rect class="nd" x="14" y="26" width="118" height="40"/><text class="lbl" x="73" y="51" text-anchor="middle">People</text>
-          <rect class="nd" x="14" y="106" width="118" height="40"/><text class="lbl" x="73" y="131" text-anchor="middle">Process</text>
-          <rect class="nd" x="14" y="186" width="118" height="40"/><text class="lbl" x="73" y="211" text-anchor="middle">Data</text>
-          <rect class="nd" x="14" y="266" width="118" height="40"/><text class="lbl" x="73" y="291" text-anchor="middle">Technology</text>
-        </g>
-        <path class="ln" d="M132 46 C180 46 180 150 218 160" marker-end="url(#ar)"/>
-        <path class="ln" d="M132 126 C180 126 180 155 218 166" marker-end="url(#ar)"/>
-        <path class="ln" d="M132 206 C180 206 180 180 218 174" marker-end="url(#ar)"/>
-        <path class="ln" d="M132 286 C186 286 186 195 218 182" marker-end="url(#ar)"/>
-
-        <!-- the system box -->
-        <rect x="220" y="96" width="180" height="152" fill="none" stroke="#0C1720" stroke-width="2" stroke-dasharray="5 4"/>
-        <text class="lbl-s" x="310" y="88" text-anchor="middle">how the work runs today</text>
-        <!-- tangled internals -->
-        <g class="ln-g" stroke="#B9C6CE">
-          <path d="M240 130 L280 118 L322 140 L364 124"/>
-          <path d="M240 168 L286 186 L330 160 L376 178"/>
-          <path d="M244 212 L292 200 L336 220 L378 206"/>
-          <path d="M280 118 L286 186 M322 140 L336 220 M364 124 L376 178"/>
-        </g>
-        <!-- friction points -->
-        <g>
-          <circle class="sig" cx="286" cy="186" r="6"/><circle cx="286" cy="186" r="11" fill="none" stroke="#E2703A" stroke-width="1.3"/>
-          <circle class="sig" cx="336" cy="220" r="6"/><circle cx="336" cy="220" r="11" fill="none" stroke="#E2703A" stroke-width="1.3"/>
-          <circle class="sig" cx="322" cy="140" r="6"/><circle cx="322" cy="140" r="11" fill="none" stroke="#E2703A" stroke-width="1.3"/>
-        </g>
-        <text class="lbl-s" x="310" y="268" text-anchor="middle" fill="#E2703A">friction: manual steps, rework, waiting</text>
-
-        <!-- redesign arrow -->
-        <path class="ln" d="M400 172 L448 172" marker-end="url(#ar)"/>
-        <text class="lbl-s" x="424" y="162" text-anchor="middle">redesign</text>
-
-        <!-- outcome -->
-        <rect class="nd nd-d" x="450" y="126" width="96" height="92"/>
-        <text class="lbl" x="498" y="164" text-anchor="middle" fill="#fff">Measurable</text>
-        <text class="lbl" x="498" y="182" text-anchor="middle" fill="#fff">outcome</text>
-
-        <!-- feedback loop -->
-        <path class="ln" d="M498 218 L498 340 L310 340 L310 250" marker-end="url(#ar)" stroke-dasharray="4 4"/>
-        <text class="lbl-s" x="404" y="358" text-anchor="middle">measure, then improve again</text>
-
-        <!-- baseline annotation -->
-        <path d="M14 392 L546 392" stroke="#D3DBE0" stroke-width="1"/>
-        <text class="lbl-s" x="14" y="410">Discover</text>
-        <text class="lbl-s" x="150" y="410">Analyse</text>
-        <text class="lbl-s" x="286" y="410">Design</text>
-        <text class="lbl-s" x="422" y="410">Deliver &amp; improve</text>
-        <g fill="#1F7A8C"><circle cx="8" cy="392" r="3.4"/><circle cx="144" cy="392" r="3.4"/><circle cx="280" cy="392" r="3.4"/><circle cx="416" cy="392" r="3.4"/></g>
-      </svg>
-    </div>
-  </div>
+<div class="wrap"><div class="proof">
+<div class="pf"><div class="n">30%</div><div class="t">fewer exceptions in customer onboarding and smart metering</div><div class="w">EnergyAustralia</div></div>
+<div class="pf"><div class="n">15%</div><div class="t">less manual HR intervention after payroll consolidation</div><div class="w">Asahi Beverages</div></div>
+<div class="pf"><div class="n">National</div><div class="t">field-operations remediation capability, tested with crews</div><div class="w">NBN</div></div>
+<div class="pf"><div class="n">15+ yrs</div><div class="t">process and transformation work inside large organisations</div><div class="w">Telstra, and others</div></div>
+</div>
+<p style="font-size:.83rem;color:var(--mute);margin-top:14px">Outcomes delivered by the principal in prior roles — sourced from real engagements, not marketing estimates.</p>
 </div>
 
-<!-- WHERE IT LEAKS -->
-<section id="leaks" class="band-mist">
-  <div class="wrap">
-    <h2>Where performance leaks</h2>
-    <p class="lead">Six patterns behind almost every engagement we take on.</p>
-    <div class="leaks">
-      <div class="lk">
-        <svg width="70" height="46" viewBox="0 0 70 46" aria-hidden="true"><rect x="1" y="6" width="30" height="22" class="nd"/><path class="ln" d="M31 17 L48 17" marker-end="url(#ar)"/><circle class="sig" cx="57" cy="17" r="5"/><path d="M53 30 L61 42 M61 30 L53 42" stroke="#E2703A" stroke-width="1.6"/></svg>
-        <h3>The same questions, answered by hand</h3>
-        <p>Your best people retype answers they have already written a hundred times.</p>
-      </div>
-      <div class="lk">
-        <svg width="70" height="46" viewBox="0 0 70 46" aria-hidden="true"><circle class="nd" cx="9" cy="14" r="6"/><circle class="nd" cx="35" cy="30" r="6"/><circle class="nd" cx="61" cy="12" r="6"/><path class="ln" d="M15 17 L29 27" stroke-dasharray="3 3"/><path class="ln" d="M41 27 L55 16" stroke-dasharray="3 3"/><circle class="sig" cx="24" cy="23" r="4"/><circle class="sig" cx="48" cy="21" r="4"/></svg>
-        <h3>Handoffs nobody owns</h3>
-        <p>Work waits between teams because the space between them belongs to no one.</p>
-      </div>
-      <div class="lk">
-        <svg width="70" height="46" viewBox="0 0 70 46" aria-hidden="true"><path class="ln" d="M6 38 L6 8 L26 8" /><path class="ln" d="M26 8 L26 38 L46 38 L46 8 L66 8"/><circle class="sig" cx="46" cy="38" r="5"/></svg>
-        <h3>Nobody sees the whole process</h3>
-        <p>Everyone knows their part. No one can describe it end to end — including the risks.</p>
-      </div>
-      <div class="lk">
-        <svg width="70" height="46" viewBox="0 0 70 46" aria-hidden="true"><rect class="nd" x="2" y="8" width="20" height="26"/><rect class="nd" x="26" y="8" width="20" height="26"/><rect class="nd" x="50" y="8" width="18" height="26"/><path d="M22 21 L26 21 M46 21 L50 21" stroke="#E2703A" stroke-width="2" stroke-dasharray="2 2"/><text x="35" y="45" font-size="9" fill="#5A6873" text-anchor="middle" font-family="Inter">no single source</text></svg>
-        <h3>Systems that don't talk</h3>
-        <p>Three spreadsheets, two systems and a person copying between them at month end.</p>
-      </div>
-      <div class="lk">
-        <svg width="70" height="46" viewBox="0 0 70 46" aria-hidden="true"><circle class="nd" cx="16" cy="21" r="12"/><text x="16" y="25" font-size="11" text-anchor="middle" fill="#0C1720" font-family="Inter" font-weight="600">?</text><path class="ln" d="M30 21 L48 21" marker-end="url(#ar)"/><rect class="nd" x="50" y="10" width="18" height="22"/></svg>
-        <h3>Knowledge inside one head</h3>
-        <p>The rules live with the person who's about to take leave, or leave for good.</p>
-      </div>
-      <div class="lk">
-        <svg width="70" height="46" viewBox="0 0 70 46" aria-hidden="true"><path class="ln" d="M4 34 L22 34 L22 14 L40 14"/><path d="M40 14 L58 14" stroke="#E2703A" stroke-width="1.8" stroke-dasharray="4 4"/><circle class="sig" cx="62" cy="14" r="4"/><text x="35" y="45" font-size="9" fill="#5A6873" text-anchor="middle" font-family="Inter">stops here</text></svg>
-        <h3>Improvement that never ships</h3>
-        <p>A recommendation was accepted, then nothing changed on the floor.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- METHOD -->
-<section id="method" class="band-dark">
-  <div class="wrap">
-    <h2>Understand the work. Find the friction. Build the fix.</h2>
-    <p class="lead">The same four steps on every engagement — because the hardest problems are systems problems that look like process problems.</p>
-    <div class="mflow">
-      <svg class="sch" viewBox="0 0 1100 92" width="100%" role="img" aria-label="Four-step cycle: discover, analyse, design, deliver and improve, feeding back to discover">
-        <path d="M60 46 L1040 46" stroke="#2C4356" stroke-width="1.6"/>
-        <path d="M1040 46 C1080 46 1080 86 1040 86 L110 86 C64 86 64 52 88 47" fill="none" stroke="#2C4356" stroke-width="1.4" stroke-dasharray="5 5"/>
-        <g>
-          <circle cx="60" cy="46" r="9" fill="#1F7A8C"/><circle cx="386" cy="46" r="9" fill="#1F7A8C"/><circle cx="713" cy="46" r="9" fill="#1F7A8C"/><circle cx="1040" cy="46" r="9" fill="#1F7A8C"/>
-        </g>
-        <text x="556" y="24" font-size="12" fill="#7E93A3" text-anchor="middle" font-family="Inter">evidence collected at every step</text>
-      </svg>
-      <div class="msteps">
-        <div class="ms"><div class="mk">01 / Discover</div><h3>Understand how work really happens</h3>
-          <ul><li>Workshops and interviews</li><li>Process walk-throughs</li><li>Voice of the user</li><li>Current-state mapping</li></ul></div>
-        <div class="ms"><div class="mk">02 / Analyse</div><h3>Find what's not working, and why</h3>
-          <ul><li>Time and motion studies</li><li>Root-cause analysis</li><li>Data and performance</li><li>Waste and handoffs</li></ul></div>
-        <div class="ms"><div class="mk">03 / Design</div><h3>Design the future state</h3>
-          <ul><li>North Star and MVP pathway</li><li>Solution options</li><li>Automation and AI where it fits</li><li>Prioritisation</li></ul></div>
-        <div class="ms"><div class="mk">04 / Deliver</div><h3>Build it, test it, embed it</h3>
-          <ul><li>Prototypes and MVP builds</li><li>Requirements and delivery</li><li>Testing with real users</li><li>Measure, then improve</li></ul></div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- PROOF -->
-<section id="proof">
-  <div class="wrap">
-    <h2>Outcomes, not activity reports</h2>
-    <p class="lead">Three engagements from fifteen years inside large Australian organisations.</p>
-
-    <div class="case">
-      <div>
-        <div class="cwho">EnergyAustralia</div>
-        <div class="big">30%</div>
-        <div class="cwhat">Fewer exceptions in customer onboarding</div>
-        <p>Time and motion studies located the real bottlenecks. Validation and business rules were strengthened and the workflow redesigned — improving first-bill outcomes.</p>
-      </div>
-      <div class="cfig">
-        <svg class="sch" viewBox="0 0 520 190" width="100%" role="img" aria-label="Before: many exceptions falling out of the flow. After: most cases flow straight through.">
-          <text class="lbl-s" x="0" y="14">Before</text>
-          <path class="ln" d="M0 46 L440 46"/>
-          <g fill="#0C1720"><circle cx="60" cy="46" r="4"/><circle cx="120" cy="46" r="4"/><circle cx="180" cy="46" r="4"/><circle cx="240" cy="46" r="4"/><circle cx="300" cy="46" r="4"/><circle cx="360" cy="46" r="4"/></g>
-          <g stroke="#E2703A" stroke-width="1.6" fill="none"><path d="M120 46 L120 78"/><path d="M240 46 L240 78"/><path d="M300 46 L300 78"/><path d="M180 46 L180 78"/></g>
-          <g class="sig"><circle cx="120" cy="82" r="4.5"/><circle cx="180" cy="82" r="4.5"/><circle cx="240" cy="82" r="4.5"/><circle cx="300" cy="82" r="4.5"/></g>
-          <text class="lbl-s" x="452" y="86" fill="#E2703A">manual rework</text>
-          <text class="lbl-s" x="0" y="132">After</text>
-          <path class="ln" d="M0 160 L440 160"/>
-          <g fill="#0C1720"><circle cx="60" cy="160" r="4"/><circle cx="120" cy="160" r="4"/><circle cx="180" cy="160" r="4"/><circle cx="240" cy="160" r="4"/><circle cx="300" cy="160" r="4"/><circle cx="360" cy="160" r="4"/></g>
-          <path d="M240 160 L240 184" stroke="#E2703A" stroke-width="1.6"/><circle class="sig" cx="240" cy="184" r="4"/>
-          <rect x="396" y="148" width="44" height="24" fill="#0C1720"/><text x="418" y="164" font-size="10" fill="#fff" text-anchor="middle" font-family="Inter" font-weight="600">bill</text>
-        </svg>
-      </div>
-    </div>
-
-    <div class="case">
-      <div>
-        <div class="cwho">Asahi Beverages</div>
-        <div class="big">15%</div>
-        <div class="cwhat">Less manual HR intervention</div>
-        <p>Three payroll systems after multiple acquisitions. Discovery across HR, payroll, operations and technology separated policy problems from system problems, then designed one consolidated model.</p>
-      </div>
-      <div class="cfig">
-        <svg class="sch" viewBox="0 0 520 190" width="100%" role="img" aria-label="Three separate payroll systems consolidated into one model">
-          <rect class="nd" x="4" y="18" width="104" height="38"/><text class="lbl" x="56" y="42" text-anchor="middle">Payroll A</text>
-          <rect class="nd" x="4" y="76" width="104" height="38"/><text class="lbl" x="56" y="100" text-anchor="middle">Payroll B</text>
-          <rect class="nd" x="4" y="134" width="104" height="38"/><text class="lbl" x="56" y="158" text-anchor="middle">Payroll C</text>
-          <g class="sig"><circle cx="130" cy="37" r="4"/><circle cx="130" cy="95" r="4"/><circle cx="130" cy="153" r="4"/></g>
-          <path class="ln" d="M140 37 C210 37 220 80 268 92" marker-end="url(#ar)"/>
-          <path class="ln" d="M140 95 L268 95" marker-end="url(#ar)"/>
-          <path class="ln" d="M140 153 C210 153 220 110 268 98" marker-end="url(#ar)"/>
-          <text class="lbl-s" x="196" y="26" fill="#E2703A">manual reconciliation</text>
-          <rect class="nd nd-d" x="272" y="60" width="150" height="70"/>
-          <text class="lbl" x="347" y="90" text-anchor="middle" fill="#fff">One consolidated</text>
-          <text class="lbl" x="347" y="108" text-anchor="middle" fill="#fff">workforce model</text>
-          <path class="ln" d="M422 95 L470 95" marker-end="url(#ar)"/>
-          <text class="lbl-s" x="474" y="99">standard</text>
-        </svg>
-      </div>
-    </div>
-
-    <div class="case">
-      <div>
-        <div class="cwho">NBN</div>
-        <div class="big dsp" style="font-size:clamp(2.6rem,6vw,4.4rem);">National</div>
-        <div class="cwhat">Field-operations remediation capability</div>
-        <p>As capability and product owner: quality management and remediation redesigned with field teams, the improvement backlog owned end to end, and the interface designed around how crews actually work — tested with frontline users before release.</p>
-      </div>
-      <div class="cfig">
-        <svg class="sch" viewBox="0 0 520 190" width="100%" role="img" aria-label="Fragmented field practices unified into one national capability tested with frontline crews">
-          <g class="ln-g"><path d="M20 30 L90 60 L40 96 L110 130 L30 160"/></g>
-          <g fill="#0C1720"><circle cx="20" cy="30" r="4"/><circle cx="90" cy="60" r="4"/><circle cx="40" cy="96" r="4"/><circle cx="110" cy="130" r="4"/><circle cx="30" cy="160" r="4"/></g>
-          <text class="lbl-s" x="14" y="182">inconsistent practice</text>
-          <path class="ln" d="M140 96 L196 96" marker-end="url(#ar)"/>
-          <rect class="nd" x="204" y="36" width="150" height="120"/>
-          <path class="ln" d="M222 66 L336 66 M222 96 L336 96 M222 126 L336 126"/>
-          <g fill="#1F7A8C"><circle cx="214" cy="66" r="3.4"/><circle cx="214" cy="96" r="3.4"/><circle cx="214" cy="126" r="3.4"/></g>
-          <text class="lbl-s" x="204" y="176">one standard, tested with crews</text>
-          <path class="ln" d="M356 96 L406 96" marker-end="url(#ar)"/>
-          <rect class="nd nd-d" x="410" y="70" width="104" height="52"/>
-          <text class="lbl" x="462" y="100" text-anchor="middle" fill="#fff">Better utilisation</text>
-        </svg>
-      </div>
-    </div>
-    <p class="lead" style="font-size:.88rem;margin-top:30px;">Outcomes delivered by the principal in prior roles. Client engagements are described only in anonymised terms — yours would be treated the same way.</p>
-  </div>
-</section>
-
-<!-- CAPABILITIES -->
-<section class="band-mist">
-  <div class="wrap">
-    <h2>Problem statement to tested solution</h2>
-    <p class="lead">Consultancies stop at the recommendation. Development shops start at the code. We work in the gap between them, with no hand-offs.</p>
-    <div class="caps">
-      <div class="cp"><h3>Discovery and process excellence</h3><p>Seeing the work as it actually is, and where the hours and errors really go.</p>
-        <ul><li>Problem definition</li><li>Discovery workshops</li><li>Process mapping (BPMN)</li><li>Time and motion studies</li><li>Root-cause analysis</li><li>Future-state design</li><li>Lean Six Sigma</li><li>Operating metrics</li></ul></div>
-      <div class="cp"><h3>Automation and AI</h3><p>Solutions that once needed a development team, built around your rules and risk appetite.</p>
-        <ul><li>Opportunity assessment</li><li>Prototype sprints</li><li>MVP builds</li><li>Answer systems</li><li>Document automation</li><li>Assurance registers</li><li>Automated reporting</li><li>Human-in-the-loop design</li></ul></div>
-      <div class="cp"><h3>Delivery and transformation</h3><p>Staying through the unglamorous phase where the value is actually realised.</p>
-        <ul><li>Business requirements</li><li>Scrum team leadership</li><li>Test strategy and cases</li><li>Testing lifecycle</li><li>Business walkthroughs</li><li>Executive communications</li><li>Vendor evaluation</li><li>Benefits and ROI cases</li></ul></div>
-      <div class="cp"><h3>Capability building</h3><p>Leaving your team able to do this without us.</p>
-        <ul><li>Practical AI workshops</li><li>Improvement training</li><li>Facilitation</li><li>Playbooks and templates</li><li>Coaching through delivery</li><li>Knowledge transfer</li></ul></div>
-    </div>
-  </div>
-</section>
-
-<!-- ENGAGE -->
-<section id="engage">
-  <div class="wrap">
-    <h2>Start small. Each stage earns the next.</h2>
-    <p class="lead">Every engagement is fixed-scope and fixed-fee, quoted in a short written proposal once we understand the problem.</p>
-    <div class="eng">
-      <div class="eg"><div class="step">STAGE 01</div><h3>Assess</h3><p>A written answer on one problem: what's causing it, whether technology genuinely helps, and what we'd do — including the case for doing nothing.</p><div class="when">5 business days</div></div>
-      <div class="eg"><div class="step">STAGE 02</div><h3>Prove</h3><p>A working prototype your team tests with real work, measured against criteria agreed up front. Pass and fail both reported.</p><div class="when">2 weeks · assessment fee credited</div></div>
-      <div class="eg"><div class="step">STAGE 03</div><h3>Build</h3><p>Deployed where your team works, documented and handed over. You own everything — no lock-in, no licence trap.</p><div class="when">4–6 weeks · 30 days support</div></div>
-      <div class="eg"><div class="step">STAGE 04</div><h3>Assure</h3><p>Accuracy monitoring and updates as the business changes. Entirely optional — plenty of clients self-manage.</p><div class="when">Monthly · cancel anytime</div></div>
-    </div>
-  </div>
-</section>
-
-<!-- PERSPECTIVE -->
-<section class="band-dark">
-  <div class="wrap">
-    <p class="qt">Sometimes the right advice is: don't buy AI.</p>
-    <p class="lead" style="margin-top:26px;max-width:60ch;">A great deal of what presents as a technology problem is a process problem, and some of it is a leadership or measurement problem wearing a process costume. If a redesigned form or a clearer handoff fixes it, that's what we'll say — because this practice depends on you coming back with the next problem, not regretting this one.</p>
-    <div class="commit">
-      <div class="cmt"><h3>We show the assumptions</h3><p>Every estimate arrives with the maths printed beside it, so you can argue with the numbers instead of trusting the messenger.</p></div>
-      <div class="cmt"><h3>We talk to the people doing the work</h3><p>Not only the managers describing it. The gap between the documented process and the real one is where the problem lives.</p></div>
-      <div class="cmt"><h3>Nothing ships untested</h3><p>Piloted with real users on real work. A prototype that failed honestly is worth more than one that demoed well.</p></div>
-      <div class="cmt"><h3>We hand over the keys</h3><p>If we vanished tomorrow, nothing we built would stop working and nobody would need to call us.</p></div>
-    </div>
-  </div>
-</section>
-
-<!-- TOOL -->
 <section>
-  <div class="wrap">
-    <div class="toolgrid">
-      <div>
-        <h2 style="font-size:clamp(1.7rem,3.4vw,2.5rem);">See what one inbox is costing you</h2>
-        <p class="lead">Upload a redacted export of any busy shared mailbox. Two minutes later: the questions your team answers over and over, and what they cost in hours and dollars a year. Personal information is stripped before anything is analysed.</p>
-        <div class="acts" style="margin-top:28px;display:flex;gap:13px;flex-wrap:wrap;">
-          <a class="btn" href="https://mailbox-knowledge-gap-analyzer.streamlit.app">Run the free diagnostic</a>
-          <a class="btn btn-o" href="sample-report.html">See a sample report</a>
-        </div>
-      </div>
-      <div class="screen">
-        <div class="bar"><i></i><i></i><i></i></div>
-        <svg class="sch" viewBox="0 0 520 300" width="100%" role="img" aria-label="Diagnostic output: repeat question themes ranked, with estimated weekly hours and annual cost">
-          <rect x="0" y="0" width="520" height="300" fill="#fff"/>
-          <text x="24" y="42" font-size="13" font-weight="600" fill="#0C1720" font-family="Inter">Repeat questions, ranked</text>
-          <g font-family="Inter" font-size="11" fill="#5A6873">
-            <text x="24" y="76">Tax return documents</text><rect x="230" y="66" width="200" height="13" fill="#0C1720"/><text x="440" y="76">28%</text>
-            <text x="24" y="106">Payment plans</text><rect x="230" y="96" width="150" height="13" fill="#1F7A8C"/><text x="440" y="106">21%</text>
-            <text x="24" y="136">Software access</text><rect x="230" y="126" width="112" height="13" fill="#1F7A8C" opacity=".7"/><text x="440" y="136">16%</text>
-            <text x="24" y="166">BAS due dates</text><rect x="230" y="156" width="86" height="13" fill="#1F7A8C" opacity=".45"/><text x="440" y="166">12%</text>
-          </g>
-          <path d="M24 196 L496 196" stroke="#D3DBE0"/>
-          <g font-family="Archivo" font-weight="700">
-            <text x="24" y="248" font-size="34" fill="#0C1720">11.2</text><text x="24" y="270" font-size="11" fill="#5A6873" font-family="Inter" font-weight="400">hours / week</text>
-            <text x="200" y="248" font-size="34" fill="#0C1720">$24k</text><text x="200" y="270" font-size="11" fill="#5A6873" font-family="Inter" font-weight="400">per year, estimated</text>
-            <text x="380" y="248" font-size="34" fill="#E2703A">63%</text><text x="380" y="270" font-size="11" fill="#5A6873" font-family="Inter" font-weight="400">of inbox is repeats</text>
-          </g>
-        </svg>
-      </div>
-    </div>
-  </div>
+<div class="wrap">
+<div class="eyebrow">What we do</div>
+<h2 class="shead">Problem statement to tested solution, without hand-offs</h2>
+<p class="lead">Consultancies stop at the recommendation. Development shops start at the code. We work in the gap between them.</p>
+<div class="grid4">
+<a class="card" href="services.html#discovery"><div class="ic"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="8.5" cy="8.5" r="5.5" stroke="#1256D3" stroke-width="1.8"/><path d="M12.5 12.5 L18 18" stroke="#1256D3" stroke-width="1.8" stroke-linecap="round"/></svg></div>
+<h3>Process discovery</h3><p>Workshops, current-state mapping, root-cause analysis and future-state design that shows where the hours actually go.</p><span class="more">Explore</span></a>
+<a class="card" href="services.html#ai"><div class="ic"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="3" y="3" width="14" height="14" rx="3" stroke="#1256D3" stroke-width="1.8"/><path d="M7 10 L9 12 L13 8" stroke="#1256D3" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+<h3>Automation &amp; AI</h3><p>Answer systems, document automation, assurance registers and reporting — built around your rules, with humans in the loop.</p><span class="more">Explore</span></a>
+<a class="card" href="services.html#delivery"><div class="ic"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M3 15 L7 15 L7 5 L13 5 L13 15 L17 15" stroke="#1256D3" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+<h3>Delivery &amp; testing</h3><p>Requirements, scrum leadership, test strategy and UAT — staying through the phase where value is actually realised.</p><span class="more">Explore</span></a>
+<a class="card" href="services.html#capability"><div class="ic"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 3 L17 7 L10 11 L3 7 Z" stroke="#1256D3" stroke-width="1.8" stroke-linejoin="round"/><path d="M6 9 L6 13.5 C6 13.5 7.6 15.5 10 15.5 C12.4 15.5 14 13.5 14 13.5 L14 9" stroke="#1256D3" stroke-width="1.8" stroke-linecap="round"/></svg></div>
+<h3>Training &amp; capability</h3><p>Practical workshops and playbooks that leave your team able to run improvement without us.</p><span class="more">Explore</span></a>
+</div>
+</div>
 </section>
 
-<!-- FIRM -->
-<section id="firm" class="band-mist">
-  <div class="wrap">
-    <h2>The person who analyses your problem is the person who fixes it</h2>
-    <div class="firm">
-      <div>
-        <p class="op">Smart Techno is led by Abhishek Arora — a senior business analyst and process improvement specialist with more than fifteen years inside Telstra, NBN, EnergyAustralia and Asahi Beverages.</p>
-        <p>No leverage model. No pitch team that disappears after signing, no handover to juniors, no forty-page deck where four pages of plain language will do.</p>
-        <p>What has changed is what one experienced practitioner can now build. Answer systems, document analysers, assurance registers, automated reporting — work that once required a development team — delivered in weeks. We pair process analysis with that capability, end to end.</p>
-        <p>Every deliverable is written in plain language. If a report needs a glossary, we've failed.</p>
-      </div>
-      <div class="spec">
-        <div class="sp"><span>Entity</span><span>Smart Technology Australia</span></div>
-        <div class="sp"><span>Based in</span><span>Melbourne, Victoria</span></div>
-        <div class="sp"><span>Experience</span><span>15+ years</span></div>
-        <div class="sp"><span>Sectors</span><span>Telco, energy, FMCG, research, education</span></div>
-        <div class="sp"><span>Method</span><span>Lean Six Sigma, process-first</span></div>
-        <div class="sp"><span>Ownership</span><span>Clients own what we build</span></div>
-        <div class="sp"><span>Privacy</span><span>Data redacted before analysis</span></div>
-      </div>
-    </div>
-    <div class="faq">
-      <details><summary>We're small. Is this only for big organisations?<i></i></summary><p>No. The opening assessment is deliberately small enough for a five-person business to justify. One honest qualifier: the inbox diagnostic assumes a shared mailbox handling roughly 400+ emails a month — below that, the numbers won't justify the work, and we'll say so rather than take the fee.</p></details>
-      <details><summary>What does it cost?<i></i></summary><p>Fixed fee, fixed scope, quoted in a short written proposal once we understand the problem — because a number quoted before that is either a guess or a hedge. Entry assessments are priced so a small business can start without a business case. Ask, and you'll have a written figure quickly.</p></details>
-      <details><summary>What happens to our data?<i></i></summary><p>For inbox work you provide an export, not access to your live mail. Names, email addresses, phone numbers and Australian identifiers including TFNs, Medicare numbers and ABNs are redacted automatically before any content is analysed. Nothing is used to train AI models, and exports are deleted within fourteen days of delivery, confirmed in writing on request. This is in the engagement letter, not just on this page.</p></details>
-      <details><summary>What if the answer is that we shouldn't do anything?<i></i></summary><p>Then that's the deliverable, and it's a good one — you've avoided a much larger bill. If an inbox assessment doesn't identify at least five recoverable hours a week, the fee is refunded in full.</p></details>
-      <details><summary>Can you work with our existing team or vendor?<i></i></summary><p>Regularly. Much of the work is defining requirements clearly enough for an internal team or external vendor to deliver well, then leading the testing that proves they did. We're as comfortable handing designs to your developers as building it ourselves.</p></details>
-    </div>
-  </div>
+<section class="wash">
+<div class="wrap">
+<div class="eyebrow">How we engage</div>
+<h2 class="shead">What you can count on before you sign anything</h2>
+<div class="cert">
+<div class="ce"><span class="tick">YOU OWN IT</span><h4>Everything we build is yours</h4><p>Code, documentation and decisions handed over. No lock-in, no licence needed to keep using it.</p></div>
+<div class="ce"><span class="tick">SENIOR ONLY</span><h4>No handover to juniors</h4><p>The person who analyses your problem is the person who designs and delivers the fix.</p></div>
+<div class="ce"><span class="tick">FIXED SCOPE</span><h4>Written proposal before work starts</h4><p>Scope, deliverables, timeline and fixed fee on one page. No hourly drift.</p></div>
+<div class="ce"><span class="tick">DATA SAFE</span><h4>Redacted before analysis</h4><p>Personal data including TFNs, Medicare numbers and ABNs stripped first. Deleted within 14 days.</p></div>
+</div>
+<div style="margin-top:26px"><a class="btn btn-o" href="engagement.html">See the engagement models</a></div>
+</div>
 </section>
 
-<!-- CONTACT -->
-<section id="contact" class="band-dark">
-  <div class="wrap">
-    <h2>Tell us what's broken</h2>
-    <div class="cgrid">
-      <div>
-        <p class="lead">Three or four sentences is plenty — what the work is, how often it happens, and who it frustrates. No brief, no NDA needed to describe a problem in general terms. You'll hear back directly, usually the same day, with one of three things.</p>
-        <ol class="reply">
-          <li><b>Here's what I think is actually going on</b> — and what I'd look at first, in plain language.</li>
-          <li><b>This is a fit. Here's the proposal</b> — scope, deliverables, timeline and fixed fee on one page.</li>
-          <li><b>This isn't worth paying us for</b> — with what to try instead, or who's better suited. Saying so is cheaper for both of us than a bad engagement.</li>
-        </ol>
-      </div>
-      <div class="cbox">
-        <div class="cline"><span>Email</span><a href="mailto:hello@smarttechno.com.au">hello@smarttechno.com.au</a></div>
-        <div class="cline"><span>Based in</span><b>Melbourne</b></div>
-        <div class="cline"><span>Response</span><b>Within one business day</b></div>
-        <div class="cacts">
-          <a class="btn btn-l" href="mailto:hello@smarttechno.com.au?subject=A%20problem%20we%27d%20like%20fixed&body=What%20the%20work%20is%3A%0A%0AHow%20often%20it%20happens%2C%20and%20who%20does%20it%3A%0A%0AWhat%20it%20costs%20us%20today%3A%0A%0AWhat%20we%27ve%20already%20tried%3A%0A%0ABest%20way%20to%20reach%20me%3A">Email the problem</a>
-          <a class="btn btn-l" style="background:transparent;color:#fff;" href="https://mailbox-knowledge-gap-analyzer.streamlit.app">Run the free diagnostic</a>
-        </div>
-      </div>
-    </div>
-  </div>
+<section>
+<div class="wrap">
+<div class="eyebrow">Where performance leaks</div>
+<h2 class="shead">Six patterns behind almost every engagement</h2>
+<div class="grid3">
+<div class="card"><h3>The same questions, answered by hand</h3><p>Your best people retype answers they have already written a hundred times.</p></div>
+<div class="card"><h3>Handoffs nobody owns</h3><p>Work waits between teams because the space between them belongs to no one.</p></div>
+<div class="card"><h3>Nobody sees the whole process</h3><p>Everyone knows their part. No one can describe it end to end — including the risks.</p></div>
+<div class="card"><h3>Systems that don't talk</h3><p>Three spreadsheets, two systems, and a person copying between them at month end.</p></div>
+<div class="card"><h3>Knowledge inside one head</h3><p>The rules live with the person who is about to take leave, or leave for good.</p></div>
+<div class="card"><h3>Improvement that never ships</h3><p>A recommendation was accepted, then nothing changed on the floor.</p></div>
+</div>
+</div>
 </section>
 
+<section class="dark">
+<div class="wrap">
+<div class="eyebrow">Our perspective</div>
+<h2 style="max-width:22ch">Sometimes the right advice is: don't buy AI.</h2>
+<p class="lead" style="max-width:62ch">A great deal of what presents as a technology problem is a process problem — and some of it is a leadership or measurement problem wearing a process costume. If a redesigned form or a clearer handoff fixes it, that is what we will say, because this practice depends on you coming back with the next problem rather than regretting this one.</p>
+<div class="grid4" style="margin-top:44px">
+<div><h4 style="font-size:1rem">We show the assumptions</h4><p style="font-size:.88rem;margin-top:8px">Every estimate arrives with the maths beside it, so you can argue with the numbers instead of trusting the messenger.</p></div>
+<div><h4 style="font-size:1rem">We talk to the people doing the work</h4><p style="font-size:.88rem;margin-top:8px">Not only the managers describing it. The gap between the documented process and the real one is where the problem lives.</p></div>
+<div><h4 style="font-size:1rem">Nothing ships untested</h4><p style="font-size:.88rem;margin-top:8px">Piloted with real users on real work. A prototype that failed honestly is worth more than one that demoed well.</p></div>
+<div><h4 style="font-size:1rem">We hand over the keys</h4><p style="font-size:.88rem;margin-top:8px">If we vanished tomorrow, nothing we built would stop working and nobody would need to call us.</p></div>
+</div>
+</div>
+</section>
+
+<section>
+<div class="wrap">
+<div class="eyebrow">Try it first</div>
+<h2 class="shead">See what one inbox is costing you</h2>
+<p class="lead">Upload a redacted export of any busy shared mailbox. Two minutes later: the questions your team answers over and over, and what they cost in hours and dollars a year. Free, no account, personal data stripped before anything is analysed.</p>
+<div class="grid2" style="align-items:center">
+<div>
+<div class="acts" style="display:flex;gap:12px;flex-wrap:wrap;margin-top:8px"><a class="btn" href="https://mailbox-knowledge-gap-analyzer.streamlit.app">Run the free diagnostic</a><a class="btn btn-o" href="sample-report.html">See a sample report</a></div>
+</div>
+<div class="card" style="padding:0;overflow:hidden">
+<div style="background:var(--ink);padding:9px 14px;display:flex;gap:6px"><span style="width:8px;height:8px;border-radius:50%;background:#3C5568"></span><span style="width:8px;height:8px;border-radius:50%;background:#3C5568"></span><span style="width:8px;height:8px;border-radius:50%;background:#3C5568"></span></div>
+<svg viewBox="0 0 520 300" width="100%" role="img" aria-label="Diagnostic output showing ranked repeat questions and estimated cost">
+<rect width="520" height="300" fill="#fff"/>
+<text x="24" y="40" font-family="Inter" font-size="13" font-weight="600" fill="#0F1B2D">Repeat questions, ranked</text>
+<g font-family="Inter" font-size="11" fill="#4A5A70">
+<text x="24" y="76">Tax return documents</text><rect x="230" y="65" width="200" height="14" rx="3" fill="#1256D3"/><text x="442" y="76">28%</text>
+<text x="24" y="106">Payment plans</text><rect x="230" y="95" width="150" height="14" rx="3" fill="#1256D3" opacity=".78"/><text x="442" y="106">21%</text>
+<text x="24" y="136">Software access</text><rect x="230" y="125" width="112" height="14" rx="3" fill="#1256D3" opacity=".56"/><text x="442" y="136">16%</text>
+<text x="24" y="166">BAS due dates</text><rect x="230" y="155" width="86" height="14" rx="3" fill="#1256D3" opacity=".34"/><text x="442" y="166">12%</text>
+</g>
+<path d="M24 194 L496 194" stroke="#E2E9F0"/>
+<g font-family="Archivo" font-weight="700" fill="#0F1B2D">
+<text x="24" y="248" font-size="32">11.2</text><text x="176" y="248" font-size="32">$24k</text><text x="352" y="248" font-size="32" fill="#E8833A">63%</text>
+</g>
+<g font-family="Inter" font-size="10.5" fill="#7C8CA0"><text x="24" y="270">hours / week</text><text x="176" y="270">per year, estimated</text><text x="352" y="270">of inbox is repeats</text></g>
+</svg>
+</div>
+</div>
+</div>
+</section>
+
+<section class="wash"><div class="wrap">
+<div class="eyebrow">Who you're working with</div>
+<h2 class="shead">One senior practitioner, from first conversation to handover</h2>
+<div class="founder">
+<div class="fphoto"><svg width="90" height="90" viewBox="0 0 90 90" fill="none" aria-hidden="true"><circle cx="45" cy="34" r="17" fill="#1256D3" opacity=".22"/><path d="M14 84 C14 63 76 63 76 84" fill="#1256D3" opacity=".22"/><text x="45" y="52" font-family="Archivo" font-size="10" fill="#1256D3" text-anchor="middle" font-weight="600">PHOTO</text></svg></div>
+<div class="fbio">
+<p>Smart Techno is led by <strong style="color:var(--ink)">Abhishek Arora</strong>, a senior business analyst and process improvement specialist with more than fifteen years inside large Australian organisations — Telstra, NBN, EnergyAustralia and Asahi Beverages — across telecommunications, energy, FMCG, education and medical research.</p>
+<p>There is no leverage model here. No pitch team that disappears after signing, no handover to juniors, no forty-page deck where four pages of plain language will do.</p>
+<p>What has changed is what one experienced practitioner can now build. Answer systems, document analysers, assurance registers and automated reporting — work that once required a development team — delivered in weeks. We pair traditional process analysis with that capability, end to end.</p>
+<div class="sig">Abhishek Arora<span>Principal · Smart Technology Australia · Melbourne</span></div>
+<div style="margin-top:22px"><a class="btn btn-o" href="about.html">More about the firm</a></div>
+</div>
+</div>
+</div></section>
+
+<section><div class="wrap"><div class="cta">
+<div><h2>Tell us what's broken</h2>
+<p>Three or four sentences is plenty. You'll get an honest answer within one business day — including "this isn't worth paying us for" when that's the truth.</p></div>
+<div class="acts">
+<a class="btn btn-w" href="contact.html">Bring us a problem</a>
+<a class="btn btn-gw" href="https://mailbox-knowledge-gap-analyzer.streamlit.app">Run the free diagnostic</a>
+</div></div></div></section>
 </main>
-
-<footer>
-  <div class="wrap fr">
-    <span>© 2026 Smart Technology Australia, trading as Smart Techno. ABN on request.</span>
-    <span>Melbourne, Victoria</span>
-  </div>
-</footer>
-
-</body>
-</html>
+<footer><div class="wrap">
+<div class="fgrid">
+<div>
+<a class="logo" href="index.html" style="margin-bottom:14px"><svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true"><rect width="30" height="30" rx="7" fill="#1256D3"/><circle cx="10" cy="10" r="2.6" fill="#fff"/><circle cx="10" cy="20" r="2.6" fill="#fff"/><circle cx="21" cy="15" r="3.4" fill="#fff" opacity=".9"/><path d="M12.4 11.2 L18.4 13.8 M12.4 18.8 L18.4 16.2" stroke="#fff" stroke-width="1.6" opacity=".75"/></svg><b style="color:#fff">Smart Techno</b></a>
+<p style="color:#8DA0B8;font-size:.88rem;max-width:34ch">We find where your operations leak time and money, redesign the work, and build the fix. Melbourne.</p>
+</div>
+<div><h4>Services</h4>
+<a href="services.html#discovery">Process discovery</a><a href="services.html#ai">Automation &amp; AI</a><a href="services.html#delivery">Delivery &amp; testing</a><a href="services.html#capability">Training</a></div>
+<div><h4>Company</h4>
+<a href="about.html">About</a><a href="method.html">How we work</a><a href="work.html">Results</a><a href="notes.html">Notes</a><a href="engagement.html">Engagement models</a></div>
+<div><h4>Talk to us</h4>
+<a href="mailto:hello@smarttechno.com.au">hello@smarttechno.com.au</a>
+<p style="color:#8DA0B8;font-size:.86rem;margin-top:10px">Melbourne, Victoria<br>Mon–Fri · 9am–6pm AEST<br>Reply within one business day</p>
+<a href="https://mailbox-knowledge-gap-analyzer.streamlit.app" style="margin-top:10px;color:#6FA0F5;font-weight:600">Run the free diagnostic</a></div>
+</div>
+<div class="fbot"><span>© 2026 Smart Technology Australia, trading as Smart Techno. ABN on request.</span><span>Melbourne, Victoria, Australia</span></div>
+</div></footer></body></html>
