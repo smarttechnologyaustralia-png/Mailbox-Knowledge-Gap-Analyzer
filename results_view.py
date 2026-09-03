@@ -6,6 +6,36 @@ import pandas as pd
 import streamlit as st
 
 
+def _check_license_key(code, secrets):
+    """Validate a per-sale Lemon Squeezy license key. Returns tier string
+    ("49"/"99") on success, or an error message string on failure.
+    Uses the public License API (no auth token needed client-side)."""
+    try:
+        import requests
+        r = requests.post(
+            "https://api.lemonsqueezy.com/v1/licenses/activate",
+            headers={"Accept": "application/json"},
+            data={"license_key": code,
+                  "instance_name": st.session_state.get("lead_email", "inbox-analyzer")},
+            timeout=10)
+        j = r.json()
+    except Exception:
+        return "Couldn't reach the licensing service — try again in a minute."
+    if not j.get("activated"):
+        err = str(j.get("error") or "That key isn't valid.")
+        if "activation limit" in err.lower():
+            return "This key has already been used the maximum number of times."
+        return err
+    pid = str((j.get("meta") or {}).get("product_id", ""))
+    if pid and pid == str(secrets.get("LS_PRODUCT_ID_99", "")):
+        return_tier = "99"
+    elif pid and pid == str(secrets.get("LS_PRODUCT_ID_49", "")):
+        return_tier = "49"
+    else:
+        return "This key belongs to a different product."
+    return return_tier
+
+
 def _post_lead(payload):
     """Best-effort lead/intake POST to Formspree. Never blocks the user:
     endpoint unset or request failure just means the lead stays session-only."""
@@ -34,8 +64,8 @@ def _semantic_upgrade(llm_available, llm_models, key_prefix="semantic"):
         st.warning("Verified analysis is temporarily unavailable in this deployment.")
         return
 
-    TIER_49_LINK = st.secrets.get("STRIPE_LINK_49", "#")   # set in Streamlit secrets
-    TIER_99_LINK = st.secrets.get("STRIPE_LINK_99", "#")
+    TIER_49_LINK = st.secrets.get("PAY_LINK_49", st.secrets.get("STRIPE_LINK_49", "#"))
+    TIER_99_LINK = st.secrets.get("PAY_LINK_99", st.secrets.get("STRIPE_LINK_99", "#"))
     AUDIT_LINK = "mailto:hello@smarttechno.com.au?subject=Inbox%20Audit%20enquiry"
 
     st.markdown("#### Choose how deep to go")
@@ -56,19 +86,26 @@ def _semantic_upgrade(llm_available, llm_models, key_prefix="semantic"):
             st.caption("Everything above plus consultant review, the fix recommendation, and our guarantee: 5+ recoverable hours/week found or the fee comes back.")
             st.link_button("Talk to us", AUDIT_LINK, width="stretch")
 
-    st.caption("After payment, your unlock code is shown on the confirmation page and emailed with your receipt.")
+    st.caption("After payment, your personal unlock key is emailed to you with your receipt. Each key works once.")
     u1, u2 = st.columns([2, 1])
     code = u1.text_input("Unlock code", key=f"{key_prefix}_unlock", placeholder="e.g. ST-XXXX",
                          label_visibility="collapsed")
     if u2.button("Unlock & continue", type="primary", width="stretch", key=f"{key_prefix}_submit"):
-        code_norm = (code or "").strip().upper()
+        code_norm = (code or "").strip()
         tier = None
-        if code_norm and code_norm == str(st.secrets.get("UNLOCK_CODE_99", "")).upper():
+        err_msg = None
+        if code_norm and code_norm.upper() == str(st.secrets.get("UNLOCK_CODE_99", "")).upper():
             tier = "99"
-        elif code_norm and code_norm == str(st.secrets.get("UNLOCK_CODE_49", "")).upper():
+        elif code_norm and code_norm.upper() == str(st.secrets.get("UNLOCK_CODE_49", "")).upper():
             tier = "49"
+        elif code_norm and (st.secrets.get("LS_PRODUCT_ID_49", "") or st.secrets.get("LS_PRODUCT_ID_99", "")):
+            result = _check_license_key(code_norm, st.secrets)
+            if result in ("49", "99"):
+                tier = result
+            else:
+                err_msg = result
         if tier is None:
-            st.error("That code isn't valid. Check the confirmation page or receipt email, or contact hello@smarttechno.com.au.")
+            st.error(err_msg or "That code isn't valid. Check your receipt email, or contact hello@smarttechno.com.au.")
         else:
             st.session_state.tier = tier
             st.session_state.llm_model = "claude-haiku-4-5-20251001"
