@@ -54,6 +54,24 @@ def _confidence_label(coverage):
 TIER_49_MAX = 500
 
 
+@st.cache_resource
+def _ai_result_cache():
+    """Cross-session cache of paid AI runs, keyed by dataset content + scope.
+    Same file, same scope, same model = results served from memory, zero API
+    cost. Lives while the app process is up; clears on restart/redeploy."""
+    return {}
+
+
+def _dataset_fingerprint(df, subj_col, body_col, model, scope_note):
+    import hashlib
+    h = hashlib.sha256()
+    h.update(str(model).encode()); h.update(str(scope_note).encode())
+    for col in (subj_col, body_col):
+        for v in df[col].fillna("").astype(str):
+            h.update(v.encode("utf-8", "ignore"))
+    return h.hexdigest()
+
+
 st.set_page_config(page_title="Smart Technology | Mailbox Knowledge Gap Analyzer", layout="wide", page_icon="◆")
 
 st.markdown("""
@@ -647,6 +665,29 @@ elif st.session_state.stage == "analyzing":
             data_to_analyze = st.session_state.working_df
             st.caption(f"Analyzing all {len(data_to_analyze)} emails, as chosen in the previous step.")
 
+        _cache = _ai_result_cache()
+        _fp = _dataset_fingerprint(
+            data_to_analyze,
+            st.session_state.subject_col + "_redacted", st.session_state.body_col + "_redacted",
+            st.session_state.llm_model, f"{len(data_to_analyze)}")
+        if _fp in _cache:
+            cached = _cache[_fp]
+            st.session_state.ai_failed_batches = cached["failed"]
+            st.session_state.ai_draft_articles = cached["drafts"]
+            if cached.get("draft_warning"):
+                st.session_state.ai_draft_warning = cached["draft_warning"]
+            else:
+                st.session_state.pop("ai_draft_warning", None)
+            st.session_state.ai_analyzed_df = cached["analyzed"]
+            st.session_state.ai_backlog = cached["backlog"]
+            st.session_state.ai_type_summary = cached["types"]
+            st.session_state.sample_size_used = len(data_to_analyze)
+            st.session_state.population_size = len(st.session_state.working_df)
+            st.session_state.active_result = "ai"
+            st.session_state.stage = "results"
+            st.info("This exact dataset and scope were verified recently — showing the saved results (no new analysis charge).")
+            st.rerun()
+
         try:
             analyzed_df, backlog, type_summary, failed_batches = run_llm_analysis(
                 data_to_analyze,
@@ -680,6 +721,10 @@ elif st.session_state.stage == "analyzing":
                     st.session_state.ai_draft_warning = str(draft_error)
             st.session_state.sample_size_used = len(data_to_analyze)
             st.session_state.population_size = len(st.session_state.working_df)
+            _cache[_fp] = {"analyzed": analyzed_df, "backlog": backlog, "types": type_summary,
+                           "failed": failed_batches,
+                           "drafts": st.session_state.ai_draft_articles,
+                           "draft_warning": st.session_state.get("ai_draft_warning")}
             status.empty()
             draft_count = len(st.session_state.ai_draft_articles)
             completion_note = f" and {draft_count} knowledge article drafts were prepared" if draft_count else ""
@@ -690,7 +735,7 @@ elif st.session_state.stage == "analyzing":
         except Exception as e:
             status.empty()
             st.error(f"AI-powered analysis failed: {e}")
-            st.caption("Check your API key is valid and has available credit, or switch back to fast/rule-based mode by starting over.")
+            st.caption("Nothing was charged against your unlock. Please try again in a minute, or email hello@smarttechno.com.au and we'll run it for you.")
             st.stop()
     else:
         status.text("Classifying messages and ranking topic demand...")
