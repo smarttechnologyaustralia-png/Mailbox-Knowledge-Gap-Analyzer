@@ -50,6 +50,19 @@ def make_client(api_key):
     return anthropic.Anthropic(api_key=api_key, timeout=60.0, max_retries=2)
 
 
+def _create_message(client, **kwargs):
+    """SDK-compat wrapper: anthropic <1.0 accepts temperature (kept for
+    deterministic runs); anthropic >=1.0 removed it. Try with, fall back
+    without, so the app works on either SDK generation."""
+    try:
+        return client.messages.create(**kwargs)
+    except TypeError as e:
+        if "temperature" in str(e) and "temperature" in kwargs:
+            kwargs.pop("temperature")
+            return client.messages.create(**kwargs)
+        raise
+
+
 def _get_response_text(response):
     """Robustly pulls the text out of a Claude API response. Some
     responses include a 'thinking' block before the actual text block --
@@ -131,7 +144,7 @@ or one-off unrelated messages.
 Return ONLY a JSON array of topic name strings, nothing else. Example format:
 ["Topic One", "Topic Two", "Topic Three"]"""
 
-    response = client.messages.create(
+    response = _create_message(client, 
         model=model, max_tokens=500,
         temperature=0,  # deterministic topic discovery for reproducible runs
         messages=[{"role": "user", "content": prompt}],
@@ -189,7 +202,7 @@ Return ONLY a JSON array with exactly {len(email_batch)} objects, in the
 same order as the emails above. Example format:
 [{{"type": "genuine_question", "topic": "Billing", "specificity": "generic"}}, ...]"""
 
-    response = client.messages.create(
+    response = _create_message(client, 
         model=model, max_tokens=200 * len(email_batch),
         temperature=0,  # deterministic classification for reproducible runs
         messages=[{"role": "user", "content": prompt}],
@@ -244,7 +257,7 @@ Rules:
 Return ONLY a JSON array with exactly {len(article_briefs)} objects in the
 same order. Each object must contain these string fields:
 "topic", "title", "audience", "summary", and "body_markdown"."""
-    response = client.messages.create(
+    response = _create_message(client, 
         model=model,
         max_tokens=min(5000, 1400 * len(article_briefs)),
         temperature=0.2,  # near-deterministic; a little latitude for prose quality
