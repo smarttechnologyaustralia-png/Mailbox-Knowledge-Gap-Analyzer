@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Notes — Smart Techno</title>
+<meta name="description" content="Practical writing on process improvement, operational excellence and where AI genuinely helps Australian businesses.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..600;1,9..144,300..400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#14161A;--paper:#FBFAF7;--sand:#F2EFE8;--navy:#11304C;--bronze:#A6864A;--grey:#5D5F5C;--hair:#E3E0D8;--max:1140px}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important;animation:none!important}}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--paper);color:var(--ink);font-size:16.5px;line-height:1.62;-webkit-font-smoothing:antialiased}
+.wrap{max-width:var(--max);margin:0 auto;padding:0 30px}
+h1,h2,h3,blockquote,.fr{font-family:'Fraunces',Georgia,serif;font-weight:400;letter-spacing:-.015em}
+.kicker{font-size:.7rem;letter-spacing:.24em;text-transform:uppercase;font-weight:600;color:var(--bronze);display:block;margin-bottom:18px}
+a{color:inherit}a:focus-visible,button:focus-visible{outline:2px solid var(--navy);outline-offset:3px}
+.btn{display:inline-block;font-size:.9rem;font-weight:600;text-decoration:none;padding:15px 28px;border:1px solid var(--ink);transition:background .18s,color .18s,border-color .18s}
+.btn-solid{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.btn-solid:hover{background:var(--navy);border-color:var(--navy)}
+.btn-ghost:hover{background:var(--ink);color:var(--paper)}
+.btn-light{border-color:rgba(251,250,247,.5);color:var(--paper)}
+.btn-light:hover{background:var(--paper);color:var(--navy)}
+
+/* header */
+header{position:sticky;top:0;z-index:30;background:rgba(251,250,247,.93);backdrop-filter:blur(10px);border-bottom:1px solid var(--hair)}
+.head{display:flex;justify-content:space-between;align-items:center;padding:19px 0;gap:20px}
+.mark{font-family:'Fraunces',serif;font-weight:600;font-size:1.22rem;text-decoration:none;white-space:nowrap}
+.mark em{font-style:normal;color:var(--navy)}
+nav{display:flex;gap:28px;align-items:center}
+nav a{text-decoration:none;font-size:.855rem;font-weight:500}
+nav a:not(.navcta):hover{color:var(--navy)}
+.navcta{border:1px solid var(--ink);padding:9px 17px}
+.navcta:hover{background:var(--ink);color:var(--paper)}
+@media(max-width:900px){nav a:not(.navcta){display:none}}
+
+/* hero */
+.hero{padding:104px 0 84px;position:relative;overflow:hidden}
+.hero::after{content:"";position:absolute;right:-140px;top:-90px;width:520px;height:520px;border-radius:50%;background:var(--sand);z-index:-1}
+.hero h1{font-size:clamp(2.35rem,5.3vw,4.15rem);line-height:1.07;max-width:20ch}
+.hero h1 i{font-style:italic;color:var(--navy)}
+.hero .sub{margin-top:28px;max-width:54ch;font-size:1.11rem;color:var(--grey)}
+.hero-actions{margin-top:38px;display:flex;gap:14px;flex-wrap:wrap;align-items:center}
+.hero-meta{margin-top:30px;font-size:.85rem;color:var(--grey)}
+.hero-meta strong{color:var(--ink);font-weight:600}
+
+/* generic section */
+section{padding:92px 0;border-top:1px solid var(--hair)}
+h2{font-size:clamp(1.65rem,3.1vw,2.4rem);line-height:1.14;max-width:26ch}
+.lede{margin-top:18px;max-width:60ch;color:var(--grey)}
+.foot-note{margin-top:26px;font-size:.88rem;color:var(--grey);max-width:72ch}
+
+/* problem list */
+.symptoms{display:grid;grid-template-columns:1fr 1fr;gap:0;margin-top:46px;border-top:1px solid var(--ink)}
+.sym{padding:26px 30px 26px 0;border-bottom:1px solid var(--hair);display:flex;gap:16px}
+.sym:nth-child(even){padding-left:30px;border-left:1px solid var(--hair)}
+.sym span{color:var(--bronze);font-family:'Fraunces',serif;font-size:.95rem;padding-top:2px}
+.sym p{font-size:.99rem}
+@media(max-width:780px){.symptoms{grid-template-columns:1fr}.sym:nth-child(even){padding-left:0;border-left:none}}
+
+/* method cycle */
+.cycle{display:grid;grid-template-columns:repeat(4,1fr);margin-top:46px;border:1px solid var(--ink)}
+.cstep{padding:30px 24px;border-left:1px solid var(--hair)}
+.cstep:first-child{border-left:none}
+.cstep .cn{font-family:'Fraunces',serif;color:var(--bronze);font-size:1rem}
+.cstep h3{font-size:1.2rem;margin-top:8px}
+.cstep p{color:var(--grey);font-size:.9rem;margin-top:9px}
+@media(max-width:900px){.cycle{grid-template-columns:1fr 1fr}.cstep{border-top:1px solid var(--hair)}.cstep:nth-child(-n+2){border-top:none}.cstep:nth-child(odd){border-left:none}}
+@media(max-width:520px){.cycle{grid-template-columns:1fr}.cstep{border-left:none!important}}
+.dims{margin-top:34px;display:flex;flex-wrap:wrap;gap:8px}
+.dims span{font-size:.78rem;letter-spacing:.06em;padding:7px 14px;border:1px solid var(--hair);background:var(--sand);color:var(--grey)}
+
+/* cases */
+.cases{display:grid;grid-template-columns:repeat(3,1fr);gap:28px;margin-top:48px}
+.case{border-top:2px solid var(--ink);padding-top:22px}
+.case .co{font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;font-weight:600;color:var(--navy)}
+.case .num{font-family:'Fraunces',serif;font-size:2.7rem;line-height:1;margin:14px 0 4px;letter-spacing:-.03em}
+.case .numlbl{font-size:.86rem;color:var(--grey);display:block;margin-bottom:18px}
+.case dl{font-size:.92rem}
+.case dt{font-weight:600;font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;color:var(--bronze);margin-top:13px}
+.case dd{color:var(--grey);margin-top:4px}
+@media(max-width:900px){.cases{grid-template-columns:1fr;gap:34px}}
+
+/* capabilities */
+.caps{display:grid;grid-template-columns:1fr 1fr;gap:0;margin-top:46px;border-top:1px solid var(--ink)}
+.cap{padding:32px 34px 32px 0;border-bottom:1px solid var(--hair)}
+.cap:nth-child(even){padding-left:34px;border-left:1px solid var(--hair)}
+.cap h3{font-size:1.28rem}
+.cap p{color:var(--grey);font-size:.94rem;margin-top:10px}
+.cap ul{list-style:none;margin-top:16px;font-size:.9rem;color:var(--grey)}
+.cap li{padding:6px 0 6px 16px;position:relative}
+.cap li::before{content:"—";position:absolute;left:0;color:var(--bronze)}
+@media(max-width:820px){.caps{grid-template-columns:1fr}.cap:nth-child(even){padding-left:0;border-left:none}}
+
+/* engagement */
+.eng{margin-top:46px;border-top:1px solid var(--ink)}
+.tier{display:grid;grid-template-columns:130px 1.15fr 1.9fr auto;gap:26px;padding:28px 0;border-bottom:1px solid var(--hair);align-items:start}
+.tier .st{font-family:'Fraunces',serif;font-size:.95rem;color:var(--bronze);letter-spacing:.1em;text-transform:uppercase;padding-top:4px}
+.tier h3{font-size:1.2rem}
+.tier .dur{font-size:.85rem;color:var(--grey);margin-top:3px}
+.tier .what{color:var(--grey);font-size:.94rem}
+.tier .amt{text-align:right;white-space:nowrap;font-weight:600;font-size:1.12rem}
+.tier .amt small{display:block;font-weight:400;font-size:.78rem;color:var(--grey);margin-top:5px;white-space:normal;max-width:22ch;margin-left:auto}
+@media(max-width:860px){.tier{grid-template-columns:1fr;gap:8px}.tier .amt{text-align:left}.tier .amt small{margin-left:0}}
+
+/* perspective */
+.persp{background:var(--navy);color:var(--paper);border-top:none}
+.persp .kicker{color:var(--bronze)}
+.persp blockquote{font-size:clamp(1.65rem,3.6vw,2.7rem);line-height:1.22;max-width:27ch;font-weight:300}
+.persp p{margin-top:26px;max-width:60ch;color:#C3CCD6}
+.commits{margin-top:52px;display:grid;grid-template-columns:1fr 1fr;gap:0;border-top:1px solid rgba(251,250,247,.25)}
+.cm{padding:28px 34px 28px 0;border-bottom:1px solid rgba(251,250,247,.14)}
+.cm:nth-child(even){padding-left:34px;border-left:1px solid rgba(251,250,247,.14)}
+.cm:nth-last-child(-n+2){border-bottom:none}
+.cm h3{font-size:1.15rem;color:var(--paper)}
+.cm p{margin-top:9px;color:#B7C2CE;font-size:.92rem}
+@media(max-width:820px){.commits{grid-template-columns:1fr}.cm:nth-child(even){padding-left:0;border-left:none}.cm{border-bottom:1px solid rgba(251,250,247,.14)!important}.cm:last-child{border-bottom:none!important}}
+
+/* tools */
+.tools{display:grid;grid-template-columns:1.5fr 1fr;gap:0;margin-top:46px;border:1px solid var(--ink)}
+.tool{padding:38px 34px}
+.tool+.tool{border-left:1px solid var(--ink);background:var(--sand)}
+.tool .tg{font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;font-weight:600;color:var(--bronze)}
+.tool h3{font-size:1.4rem;margin-top:12px}
+.tool p{color:var(--grey);font-size:.95rem;margin-top:12px}
+.tool .lk{display:inline-block;margin-top:22px;font-weight:600;font-size:.9rem;text-decoration:none;border-bottom:2px solid var(--bronze);padding-bottom:2px}
+@media(max-width:820px){.tools{grid-template-columns:1fr}.tool+.tool{border-left:none;border-top:1px solid var(--ink)}}
+
+/* firm */
+.firm{display:grid;grid-template-columns:1.3fr 1fr;gap:60px;margin-top:44px}
+.firm .big{font-family:'Fraunces',serif;font-size:1.3rem;line-height:1.42}
+.firm p+p{margin-top:16px;color:var(--grey)}
+.facts{border-top:1px solid var(--ink)}
+.f{display:flex;justify-content:space-between;gap:16px;padding:14px 0;border-bottom:1px solid var(--hair);font-size:.9rem}
+.f span:first-child{color:var(--grey)}
+.f span:last-child{font-weight:600;text-align:right}
+@media(max-width:860px){.firm{grid-template-columns:1fr;gap:34px}}
+
+/* faq */
+.faq{margin-top:44px;border-top:1px solid var(--ink)}
+details{border-bottom:1px solid var(--hair);padding:20px 0}
+summary{cursor:pointer;font-weight:600;font-size:1.02rem;list-style:none;display:flex;justify-content:space-between;gap:20px}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";color:var(--bronze);font-family:'Fraunces',serif;font-size:1.3rem;line-height:1}
+details[open] summary::after{content:"–"}
+details p{margin-top:12px;color:var(--grey);font-size:.96rem;max-width:74ch}
+
+/* contact */
+.contact{background:var(--sand)}
+.cgrid{display:grid;grid-template-columns:1.35fr 1fr;gap:56px;margin-top:34px;align-items:start}
+.ctext{color:var(--grey);max-width:56ch}
+.ctext+.ctext{margin-top:16px}
+.cwhat{margin:20px 0 0 20px;font-size:.96rem;color:var(--grey)}
+.cwhat li{padding:9px 0;padding-left:6px}
+.cwhat strong{color:var(--ink);font-weight:600}
+.cbox{background:var(--paper);border:1px solid var(--ink);padding:30px 28px}
+.cline{display:flex;justify-content:space-between;gap:14px;padding:12px 0;border-bottom:1px solid var(--hair);font-size:.9rem}
+.cline span{color:var(--grey)}
+.cline a,.cline strong{font-weight:600;text-align:right;text-decoration:none}
+.cline a{border-bottom:2px solid var(--bronze)}
+.cact{display:flex;flex-direction:column;gap:12px;margin-top:26px}
+.cact .btn{text-align:center}
+@media(max-width:860px){.cgrid{grid-template-columns:1fr;gap:32px}}
+
+footer{padding:32px 0 44px;font-size:.83rem;color:var(--grey)}
+.fr2{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+</style>
+</head>
+<body>
+<style>
+.post-list{margin-top:46px;border-top:1px solid var(--ink)}
+.post{display:grid;grid-template-columns:150px 1fr;gap:32px;padding:30px 0;border-bottom:1px solid var(--hair);text-decoration:none}
+.post:hover h3{color:var(--navy)}
+.post .meta{font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;color:var(--bronze);font-weight:600;padding-top:5px}
+.post h3{font-size:1.35rem;line-height:1.2}
+.post p{color:var(--grey);font-size:.95rem;margin-top:9px;max-width:64ch}
+.post .soon{display:inline-block;margin-top:12px;font-size:.76rem;letter-spacing:.12em;text-transform:uppercase;color:var(--grey);border:1px solid var(--hair);padding:4px 10px}
+@media(max-width:760px){.post{grid-template-columns:1fr;gap:8px}}
+.sub-box{margin-top:56px;border:1px solid var(--ink);padding:34px 30px;background:var(--sand);display:grid;grid-template-columns:1.3fr 1fr;gap:36px;align-items:center}
+.sub-box h3{font-size:1.3rem}
+.sub-box p{color:var(--grey);font-size:.95rem;margin-top:10px;max-width:48ch}
+@media(max-width:760px){.sub-box{grid-template-columns:1fr}}
+</style><header>
+  <div class="wrap head">
+    <a class="mark" href="index.html">Smart <em>Techno</em></a>
+    <nav aria-label="Main">
+      <a href="index.html#capabilities">Capabilities</a>
+      <a href="index.html#results">Results</a>
+      <a href="notes.html">Notes</a>
+      <a href="index.html#tools">Tools</a>
+      <a class="navcta" href="index.html#contact">Start</a>
+    </nav>
+  </div>
+</header>
+<main>
+<div class="hero" style="padding:88px 0 56px;">
+  <div class="wrap">
+    <span class="kicker">Notes</span>
+    <h1 style="max-width:24ch;">Writing about the work, <i>not about AI hype.</i></h1>
+    <p class="sub">Short, practical pieces from live engagements: how to tell a process problem from a systems problem, where automation actually pays off, and what goes wrong when it doesn't. Written for the people doing the work, not for a conference stage.</p>
+  </div>
+</div>
+
+<section>
+  <div class="wrap">
+    <div class="post-list">
+
+      <a class="post" href="#">
+        <span class="meta">Planned · Method</span>
+        <div>
+          <h3>Your process problem probably isn't a process problem</h3>
+          <p>Most improvement work fails because the wrong lens picked the problem. A walk through eight ways to look at the same broken workflow — and how the lens you choose determines the fix you'll find.</p>
+          <span class="soon">Coming soon</span>
+        </div>
+      </a>
+
+      <a class="post" href="#">
+        <span class="meta">Planned · AI</span>
+        <div>
+          <h3>The knowledge base you already wrote</h3>
+          <p>Every business has answered its top twenty questions hundreds of times — one email at a time. Why the sent folder is the fastest route to a working answer system, and how to build one without a documentation project.</p>
+          <span class="soon">Coming soon</span>
+        </div>
+      </a>
+
+      <a class="post" href="#">
+        <span class="meta">Planned · Honest advice</span>
+        <div>
+          <h3>Five problems AI won't fix (and what will)</h3>
+          <p>The requests we decline, and why. Unclear accountability, missing data, one-off decisions, low-volume exceptions, and processes nobody has agreed on yet — each with the cheaper fix that actually works.</p>
+          <span class="soon">Coming soon</span>
+        </div>
+      </a>
+
+      <a class="post" href="#">
+        <span class="meta">Planned · Delivery</span>
+        <div>
+          <h3>Why improvement projects die at the recommendation</h3>
+          <p>The gap between a signed-off business case and a change people actually use. What we've learned about testing with real users, and why a prototype that fails honestly beats one that demos well.</p>
+          <span class="soon">Coming soon</span>
+        </div>
+      </a>
+
+      <a class="post" href="#">
+        <span class="meta">Planned · Benchmarks</span>
+        <div>
+          <h3>What a shared inbox actually costs: numbers from real scans</h3>
+          <p>Aggregated, anonymised findings from inbox diagnostics across accounting, property, health and retail — how much of a typical inbox is the same handful of questions, and what that works out to per year.</p>
+          <span class="soon">Coming soon</span>
+        </div>
+      </a>
+
+    </div>
+
+    <div class="sub-box">
+      <div>
+        <h3>Want these when they're published?</h3>
+        <p>No newsletter, no drip sequence. Email us and we'll send new pieces as they go up — a few times a quarter at most.</p>
+      </div>
+      <div class="cact">
+        <a class="btn btn-solid" href="mailto:hello@smarttechno.com.au?subject=Send%20me%20new%20Notes&body=Please%20add%20me%20to%20the%20list%20for%20new%20articles.">Email to be notified</a>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+<footer>
+  <div class="wrap fr2">
+    <span>© 2026 Smart Technology Australia, trading as Smart Techno. ABN on request.</span>
+    <span>Melbourne, Victoria, Australia</span>
+  </div>
+</footer>
+</body></html>
