@@ -78,7 +78,7 @@ h2{font-family:'Fraunces',serif;font-weight:400;font-size:clamp(1.7rem,3.2vw,2.5
 .tool .tag{display:inline-block;font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;font-weight:600;color:var(--bronze);margin-bottom:14px}
 .tool p{color:var(--grey);margin-top:12px;font-size:.96rem}
 .tool a{display:inline-block;margin-top:22px;font-weight:600;font-size:.92rem;text-decoration:none;border-bottom:2px solid var(--bronze);padding-bottom:2px}
-@media(max-width:760px){.tools-grid{grid-template-columns:1fr}.tool+.tool{border-left:none;border-top:1px solid var(--ink)}}
+@media(max-width:960px){.tools-grid{grid-template-columns:1fr!important}.tool+.tool{border-left:none;border-top:1px solid var(--ink)}}
 
 .about-grid{display:grid;grid-template-columns:1.25fr 1fr;gap:64px;margin-top:52px}
 .about-grid p+p{margin-top:18px}
@@ -124,7 +124,7 @@ footer{border-top:1px solid var(--hair);padding:34px 0 48px;font-size:.84rem;col
   <div class="wrap">
     <div class="kicker">Process · AI · Transformation — Melbourne</div>
     <h1>From business problem to <em>working solution.</em></h1>
-    <p>Smart Technology Australia is a consulting studio for organisations whose operations have outgrown their processes. We bring fifteen years of process improvement across telecommunications, energy, FMCG and medical research — combined with the ability to design, prototype and ship AI-enabled solutions in weeks. Fixed prices. Senior attention on every engagement. And the honest answer, even when it's "don't buy anything."</p>
+    <p>Smart Technology Australia is a consulting studio for organisations whose operations have outgrown their processes. We bring fifteen years of process improvement across telecommunications, energy, FMCG and medical research — combined with the ability to design, prototype and ship AI-enabled solutions in weeks. We stay end to end — from problem statement to tested, adopted solution — at fixed prices, with senior attention on every engagement, and the honest answer even when it's "don't buy anything."</p>
     <div class="hero-actions">
       <a class="btn btn-solid" href="#contact">Bring us a problem</a>
       <a class="btn btn-ghost" href="#capabilities">Explore capabilities</a>
@@ -145,9 +145,12 @@ footer{border-top:1px solid var(--hair);padding:34px 0 48px;font-size:.84rem;col
         <p class="desc">The discipline the firm was built on: seeing how work really flows, and where the hours, errors and frustration actually go.</p>
       </div>
       <ul class="plist">
+        <li>Problem statement definition &amp; documentation</li>
         <li>Current-state process mapping &amp; analysis</li>
+        <li>Pain-point identification workshops</li>
+        <li>Process excellence reviews — process, people, systems &amp; data</li>
+        <li>Future-state design — North Star vision and MVP pathway</li>
         <li>Lean Six Sigma continuous improvement</li>
-        <li>Workflow &amp; service redesign</li>
         <li>Standard operating procedures &amp; documentation</li>
         <li>Operational reporting &amp; performance metrics</li>
       </ul>
@@ -161,7 +164,7 @@ footer{border-top:1px solid var(--hair);padding:34px 0 48px;font-size:.84rem;col
       </div>
       <ul class="plist">
         <li>AI opportunity &amp; suitability assessment</li>
-        <li>Prototype sprints — working proof in two weeks</li>
+        <li>Prototype sprints &amp; MVP builds — working software in weeks</li>
         <li>Production solution builds, documented &amp; handed over</li>
         <li>Knowledge &amp; answer systems built from your own material</li>
         <li>Document review, extraction &amp; intake automation</li>
@@ -172,15 +175,16 @@ footer{border-top:1px solid var(--hair);padding:34px 0 48px;font-size:.84rem;col
     <div class="practice">
       <div class="pnum">03</div>
       <div>
-        <h3>Advisory &amp; Transformation</h3>
-        <p class="desc">Senior analysis for decisions that are expensive to get wrong — grounded in delivery experience inside large Australian organisations.</p>
+        <h3>Delivery &amp; Transformation</h3>
+        <p class="desc">We don't hand over a deck and leave. We stay through requirements, build, testing and adoption — the phase where most transformations quietly fail.</p>
       </div>
       <ul class="plist">
-        <li>Business analysis &amp; requirements definition</li>
-        <li>Discovery &amp; prioritisation workshops</li>
-        <li>Digital transformation advisory</li>
+        <li>Business requirements &amp; user stories</li>
+        <li>Agile delivery — scrum team leadership</li>
+        <li>Test strategy, test cases &amp; testing lifecycle leadership</li>
+        <li>Business walkthroughs &amp; user acceptance testing</li>
+        <li>Executive communications &amp; stakeholder management</li>
         <li>Vendor evaluation &amp; proposal support</li>
-        <li>Change &amp; stakeholder engagement</li>
         <li>Benefits, ROI &amp; business-case development</li>
       </ul>
     </div>
@@ -252,12 +256,18 @@ footer{border-top:1px solid var(--hair);padding:34px 0 48px;font-size:.84rem;col
     <div class="kicker">Tools &amp; products</div>
     <h2>Try the thinking before you spend a dollar.</h2>
     <p class="intro">We productise what we learn. Each tool below began as a client problem — and each one lets you evaluate our approach free, on your own data, before any engagement.</p>
-    <div class="tools-grid">
+    <div class="tools-grid" style="grid-template-columns:1fr 1fr 1fr;">
       <div class="tool">
         <span class="tag">Live — free</span>
         <h3>Inbox Intelligence Scanner</h3>
         <p>Upload a redacted export of any busy shared mailbox. In two minutes: the questions your team answers repeatedly, their share of volume, and the estimated hours and dollars they cost each week. Personal information is redacted before analysis — including Australian identifiers.</p>
         <a href="https://mailbox-knowledge-gap-analyzer.streamlit.app">Run the free scan</a>
+      </div>
+      <div class="tool">
+        <span class="tag">Engagement platform</span>
+        <h3>Evolve Process Engine</h3>
+        <p>The platform we run engagements through — problem statements, process maps, pain points, requirements, test coverage and status in one place, visible to you throughout. Our method, built into software.</p>
+        <a href="#contact">See it in a conversation</a>
       </div>
       <div class="tool">
         <span class="tag">Sample deliverable</span>
