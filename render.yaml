@@ -1,0 +1,31 @@
+# Deploy target for scan.smarttechno.com.au
+# Render.com → New → Blueprint → connect this repo. Starter plan ($7/mo) is
+# required for a custom domain and to stop the app sleeping between visitors.
+services:
+  - type: web
+    name: smarttechno-inbox-audit
+    runtime: python
+    plan: starter
+    region: singapore          # closest Render region to Australia
+    buildCommand: pip install -r requirements.txt
+    startCommand: streamlit run app.py --server.port $PORT --server.address 0.0.0.0 --server.headless true --server.enableCORS false --server.enableXsrfProtection true
+    healthCheckPath: /_stcore/health
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.12.3"
+      - key: ANTHROPIC_API_KEY
+        sync: false            # set in the Render dashboard, never in this file
+      - key: LEAD_EMAIL
+        sync: false
+      - key: PAY_LINK_49
+        sync: false
+      - key: PAY_LINK_99
+        sync: false
+      - key: LS_PRODUCT_ID_49
+        sync: false
+      - key: LS_PRODUCT_ID_99
+        sync: false
+      - key: UNLOCK_CODE_49
+        sync: false
+      - key: UNLOCK_CODE_99
+        sync: false

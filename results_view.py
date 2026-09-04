@@ -6,7 +6,21 @@ import pandas as pd
 import streamlit as st
 
 
-def _check_license_key(code, secrets):
+def _cfg(key, default=""):
+    """Read config from Streamlit secrets (Streamlit Cloud) or environment
+    variables (Render/Railway/Docker). Lets the same code run on either."""
+    import os
+    try:
+        v = st.secrets.get(key, "")
+        if v:
+            return v
+    except Exception:
+        pass
+    return os.environ.get(key, default)
+
+
+
+def _check_license_key(code):
     """Validate a per-sale Lemon Squeezy license key. Returns tier string
     ("49"/"99") on success, or an error message string on failure.
     Uses the public License API (no auth token needed client-side)."""
@@ -27,9 +41,9 @@ def _check_license_key(code, secrets):
             return "This key has already been used the maximum number of times."
         return err
     pid = str((j.get("meta") or {}).get("product_id", ""))
-    if pid and pid == str(secrets.get("LS_PRODUCT_ID_99", "")):
+    if pid and pid == str(_cfg("LS_PRODUCT_ID_99")):
         return_tier = "99"
-    elif pid and pid == str(secrets.get("LS_PRODUCT_ID_49", "")):
+    elif pid and pid == str(_cfg("LS_PRODUCT_ID_49")):
         return_tier = "49"
     else:
         return "This key belongs to a different product."
@@ -41,9 +55,9 @@ def _post_lead(payload):
     endpoint unset or request failure just means the lead stays session-only."""
     endpoint = ""
     try:
-        endpoint = st.secrets.get("FORMSPREE_ENDPOINT", "")
+        endpoint = _cfg("FORMSPREE_ENDPOINT")
         if not endpoint:
-            lead_email = st.secrets.get("LEAD_EMAIL", "")
+            lead_email = _cfg("LEAD_EMAIL")
             if lead_email:
                 # FormSubmit: free, no-signup form-to-email relay. First
                 # submission triggers a one-time activation email to LEAD_EMAIL.
@@ -70,8 +84,8 @@ def _semantic_upgrade(llm_available, llm_models, key_prefix="semantic"):
         st.warning("Verified analysis is temporarily unavailable in this deployment.")
         return
 
-    TIER_49_LINK = st.secrets.get("PAY_LINK_49", st.secrets.get("STRIPE_LINK_49", "#"))
-    TIER_99_LINK = st.secrets.get("PAY_LINK_99", st.secrets.get("STRIPE_LINK_99", "#"))
+    TIER_49_LINK = _cfg("PAY_LINK_49") or _cfg("STRIPE_LINK_49", "#")
+    TIER_99_LINK = _cfg("PAY_LINK_99") or _cfg("STRIPE_LINK_99", "#")
     AUDIT_LINK = "mailto:hello@smarttechno.com.au?subject=Inbox%20Audit%20enquiry"
 
     st.markdown("#### Choose how deep to go")
@@ -100,12 +114,12 @@ def _semantic_upgrade(llm_available, llm_models, key_prefix="semantic"):
         code_norm = (code or "").strip()
         tier = None
         err_msg = None
-        if code_norm and code_norm.upper() == str(st.secrets.get("UNLOCK_CODE_99", "")).upper():
+        if code_norm and code_norm.upper() == str(_cfg("UNLOCK_CODE_99")).upper():
             tier = "99"
-        elif code_norm and code_norm.upper() == str(st.secrets.get("UNLOCK_CODE_49", "")).upper():
+        elif code_norm and code_norm.upper() == str(_cfg("UNLOCK_CODE_49")).upper():
             tier = "49"
-        elif code_norm and (st.secrets.get("LS_PRODUCT_ID_49", "") or st.secrets.get("LS_PRODUCT_ID_99", "")):
-            result = _check_license_key(code_norm, st.secrets)
+        elif code_norm and (_cfg("LS_PRODUCT_ID_49") or _cfg("LS_PRODUCT_ID_99")):
+            result = _check_license_key(code_norm)
             if result in ("49", "99"):
                 tier = result
             else:

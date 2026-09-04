@@ -15,6 +15,20 @@ import re
 import pandas as pd
 import streamlit as st
 
+
+def _cfg(key, default=""):
+    """Read config from Streamlit secrets (Streamlit Cloud) or environment
+    variables (Render/Railway/Docker). Lets the same code run on either."""
+    import os
+    try:
+        v = st.secrets.get(key, "")
+        if v:
+            return v
+    except Exception:
+        pass
+    return os.environ.get(key, default)
+
+
 try:
     import anthropic  # noqa: F401 -- presence check for the optional semantic path
     from llm_classifier import (discover_topics_with_llm, draft_kb_articles_with_llm,
