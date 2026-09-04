@@ -275,6 +275,24 @@ def render_results_page(llm_available, llm_models, confidence_band, suggest_form
                                       value=int(st.session_state.get("eco_rate", 45)), key="eco_rate")
         st.caption("Defaults are deliberately conservative. Every derived figure below recalculates from these three inputs and is labelled as an estimate.")
 
+    # ---------- Internal vs external: decides which fix applies ----------
+    own_domain = st.text_input(
+        "Your business email domain (optional)", key="own_domain",
+        placeholder="e.g. yourcompany.com.au",
+        help="Used only to split staff questions from customer enquiries. Sender addresses stay redacted.")
+    if own_domain:
+        from analysis_core import sender_domain_split
+        _int, _ext, _unk = sender_domain_split(
+            analyzed_df,
+            st.session_state.get("sender_col"), own_domain)
+        _tot = max(_int + _ext, 1)
+        st.markdown(f"""
+        <div class="results-kpis" style="grid-template-columns:repeat(2,1fr);">
+          <div class="result-kpi"><span>Internal — your own staff asking</span><strong>{_int / _tot:.0%}</strong><small>Points to a staff knowledge assistant</small></div>
+          <div class="result-kpi"><span>External — customers and suppliers asking</span><strong>{_ext / _tot:.0%}</strong><small>Points to a drafted-reply answer system</small></div>
+        </div>
+        """, unsafe_allow_html=True)
+
     handled_hours_total = (genuine_total * mins_per_reply) / 60.0
     hours_per_week = handled_hours_total / max(export_weeks, 1)
     weekly_cost = hours_per_week * hourly_cost

@@ -356,6 +356,27 @@ def redact_dataframe(df, text_columns, progress_callback=None):
 # ============================================================
 # Rule-based analysis (free path)
 # ============================================================
+def sender_domain_split(df, sender_col, own_domain):
+    """Split emails into internal (same domain as the business) vs external.
+    Drives the fix recommendation: internal load points to a staff knowledge
+    assistant, external load points to a customer answer/reply system.
+    Returns (internal_count, external_count, unknown_count)."""
+    import re as _re
+    if not sender_col or sender_col not in df.columns or not own_domain:
+        return (0, 0, len(df))
+    dom = str(own_domain).strip().lower().lstrip("@")
+    internal = external = unknown = 0
+    for v in df[sender_col].fillna("").astype(str):
+        m = _re.search(r"@([A-Za-z0-9.\-]+)", v)
+        if not m:
+            unknown += 1
+        elif m.group(1).lower().endswith(dom):
+            internal += 1
+        else:
+            external += 1
+    return (internal, external, unknown)
+
+
 def run_analysis(df, topic_patterns, subject_col, body_col, sender_col):
     df = df.copy()
     df["new_content"] = df[body_col].fillna("").astype(str).apply(strip_html).apply(strip_quotes)
